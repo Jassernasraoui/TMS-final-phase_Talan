@@ -1,6 +1,7 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
-
+#Route Planning and Execution for Sales and Technicians on BC365 :
+# Introduction :
+Description
+This project aims to optimize the management of routes for sales and technicians in a company using Microsoft Business Central 365 (BC365). The main goal is to facilitate route planning, task assignment, and real-time route management while enabling field teams to track and record their progress via a mobile application or a web interface.
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
 1.	Installation process
