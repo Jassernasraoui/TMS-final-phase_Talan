@@ -46,7 +46,7 @@ page 50119 "Carte Expédition"
                 }
             }
 
-            part(SalesShipmLines; "Posted Sales Shpt. Subform")
+            part("Tour Planning Line"; "Planning Lines ListPart")
             {
                 // ApplicationArea = Basic, Suite;
                 // SubPageLink = "Document No." = field("No.");

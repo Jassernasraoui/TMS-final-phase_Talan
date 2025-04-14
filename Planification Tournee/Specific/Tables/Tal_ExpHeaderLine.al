@@ -4,6 +4,10 @@ table 50147 "Expédition Header"
 
     fields
     {
+        field(1; "Document Type"; Enum "Sales Document Type")
+        {
+            Caption = 'Document Type';
+        }
         field(6; "Logistic Tour No."; Code[20])
         {
             DataClassification = CustomerContent;
@@ -11,7 +15,7 @@ table 50147 "Expédition Header"
             trigger OnValidate()
             var
                 TourNo: Record "Expédition Header";
-                SetupRec: Record "Sales & Receivables Setup"; // Replace with your actual setup table name
+                SetupRec: Record "Sales & Receivables Setup";
                 NoSeries: Codeunit "No. Series";
             begin
                 if "Logistic Tour No." < xRec."Logistic Tour No." then
@@ -61,7 +65,6 @@ table 50147 "Expédition Header"
             TableRelation = "No. Series";
         }
     }
-
     keys
     {
         key(PK; "Logistic Tour No.") { Clustered = true; }
@@ -81,5 +84,4 @@ table 50147 "Expédition Header"
             "Logistic Tour No." := NoSeries.GetNextNo("No. Series", Today, true);
         end;
     end;
-
 }
