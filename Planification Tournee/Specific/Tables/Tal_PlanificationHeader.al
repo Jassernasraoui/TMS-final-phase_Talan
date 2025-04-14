@@ -1,4 +1,4 @@
-table 50147 "Expédition Header"
+table 50147 "Planification Header"
 {
     DataClassification = CustomerContent;
 
@@ -14,7 +14,7 @@ table 50147 "Expédition Header"
 
             trigger OnValidate()
             var
-                TourNo: Record "Expédition Header";
+                TourNo: Record "Planification Header";
                 SetupRec: Record "Sales & Receivables Setup";
                 NoSeries: Codeunit "No. Series";
             begin
@@ -63,6 +63,10 @@ table 50147 "Expédition Header"
             Caption = 'No. Series';
             Editable = false;
             TableRelation = "No. Series";
+        }
+        field(9; "No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
         }
     }
     keys

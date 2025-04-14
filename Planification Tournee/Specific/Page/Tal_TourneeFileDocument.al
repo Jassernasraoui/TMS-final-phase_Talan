@@ -1,9 +1,13 @@
-page 50119 "Carte Expédition"
+page 50119 "Planification Document"
 {
     PageType = document;
-    SourceTable = "Expédition Header";
+    SourceTable = "Planification Header";
     ApplicationArea = All;
     Caption = 'Tournee File ';
+    //ultipleNewLines = true;
+    // SourceTableView = where("Document Type" = filter(Order));
+    // RefreshOnActivate = true;
+
 
     layout
     {
@@ -15,7 +19,6 @@ page 50119 "Carte Expédition"
                 {
                     ApplicationArea = All;
                     Caption = 'Logistic Tour No ';
-                    // TableRelation = "Sales & Receivables Setup";
                 }
 
                 field("Date de Tournée"; Rec."Date de Tournée")
@@ -48,30 +51,79 @@ page 50119 "Carte Expédition"
 
             part("Tour Planning Line"; "Planning Lines ListPart")
             {
+                SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
+
                 // ApplicationArea = Basic, Suite;
-                // SubPageLink = "Document No." = field("No.");
+                // Editable = false;
+                // // SubPageLink = "Document No." = field("No.");
+                // // UpdatePropagation = Both;
             }
+
         }
 
 
+
+
     }
-
-
     actions
     {
+        area(Processing)
+        {
+            group("Fetch Planning Lines")
+            {
+                action("Get Sales Lines")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Get Sales Lines';
+                    Image = Import;
 
-        // area(navigation)
-        // {
-        //     group(Expédition)
-        //     {
-        //         action("Liste Expéditions")
-        //         {
-        //             ApplicationArea = All;
-        //             RunObject = page "Liste des Expéditions";
-        //             Image = List;
-        //         }
-        //     }
-        // }
+                    trigger OnAction()
+                    var
+                        PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+                    begin
+                        PlanningLineFetcher.FetchSalesLines(Rec."No.");
+                        CurrPage.Update(); // Pour rafraîchir le subform
+                    end;
+                }
+
+                action("Get Purchase Lines")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Get Purchase Lines';
+                    Image = Import;
+
+                    trigger OnAction()
+                    var
+                        PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+                    begin
+                        PlanningLineFetcher.FetchPurchaseLines(Rec."No.");
+                        CurrPage.Update(); // Pour rafraîchir le subform
+                    end;
+                }
+
+                action("Get Transfer Lines")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Get Transfer Lines';
+                    Image = Import;
+
+                    trigger OnAction()
+                    var
+                        PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+                    begin
+                        PlanningLineFetcher.FetchTransferLines(Rec."No.");
+                        CurrPage.Update(); // Pour rafraîchir le subform
+                    end;
+                }
+            }
+        }
     }
+
+
+
+
+
+
+
 }
 

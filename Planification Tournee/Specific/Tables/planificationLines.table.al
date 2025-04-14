@@ -4,7 +4,7 @@ table 50100 "Planning Line"
 
     fields
     {
-        field(1; "Document No."; Code[20])
+        field(1; "Logistic Tour No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
@@ -138,6 +138,6 @@ table 50100 "Planning Line"
 
     keys
     {
-        key(PK; "Document No.", "Line No.") { Clustered = true; }
+        key(PK; "Logistic Tour No.", "Line No.") { Clustered = true; }
     }
 }

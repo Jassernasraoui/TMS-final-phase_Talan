@@ -1,8 +1,8 @@
 page 50111 "Tour plannification list"
 {
     PageType = List;
-    SourceTable = "Expédition Header";
-    CardPageId = "Carte Expédition";
+    SourceTable = "Planification Header";
+    CardPageId = "Planification Document";
     ApplicationArea = Jobs;
     Caption = 'Tour plannification list';
     UsageCategory = lists;
@@ -18,7 +18,7 @@ page 50111 "Tour plannification list"
             repeater(Control1)
             {
                 ShowCaption = false;
-                field("Date de Tournée"; rec."Date de Tournée")
+                field("Logistic Tour No."; rec."Logistic Tour No.")
                 {
                     ApplicationArea = All;
                 }
@@ -43,6 +43,10 @@ page 50111 "Tour plannification list"
                     // OptionMembers = Planifiée,"En cours",Terminée;
                     OptionCaption = 'Planifiée,En cours,Terminée';
                 }
+                field("Date de Tournée"; rec."Date de Tournée")
+                {
+                    ApplicationArea = All;
+                }
 
                 field("Commentaire"; rec.Commentaire)
                 {
@@ -63,9 +67,11 @@ page 50111 "Tour plannification list"
 
     {
 
+
         area(processing)
 
         {
+
             action(CreateNewTour)
 
             {
@@ -77,21 +83,18 @@ page 50111 "Tour plannification list"
                 PromotedCategory = Process;
                 trigger OnAction()
                 var
-                    "createnewtour": Record "Expédition Header";
+                    "createnewtour": Record "Planification Header";
                 begin
                     Clear(createnewtour);
                     createnewtour.Init();
                     createnewtour.Insert(true);
-                    Page.Run(Page::"Carte Expédition", createnewtour);
+                    Page.Run(Page::"Planification Document", createnewtour);
                 end;
 
             }
         }
     }
-    // trigger OnOpenPage()
-    // begin
-    //     Rec.SETFILTER(Type, '%1', Rec.Type::Machine);
-    // end;
+
 
 
 }

@@ -10,7 +10,7 @@ page 50100 "Planning Lines ListPart"
         {
             repeater(Group)
             {
-                field("Document No."; rec."Document No.")
+                field("Source Type"; rec."Source Type")
                 {
                     ApplicationArea = All;
                 }
@@ -18,7 +18,7 @@ page 50100 "Planning Lines ListPart"
                 {
                     ApplicationArea = All;
                 }
-                field("Source Type"; rec."Source Type")
+                field("Logistic Tour No."; rec."Logistic Tour No.")
                 {
                     ApplicationArea = All;
                 }
@@ -141,5 +141,55 @@ page 50100 "Planning Lines ListPart"
             }
         }
     }
+    actions
+    {
+        // area(processing)
+        // {
+        //     group("Fetch Planning Lines")
+        //     {
+        //         action("Get Sales Lines")
+        //         {
+        //             ApplicationArea = All;
+        //             Caption = 'Get Sales Lines';
+        //             Image = Import;
 
+        //             trigger OnAction()
+        //             var
+        //                 PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+        //             begin
+        //                 PlanningLineFetcher.FetchSalesLines(Rec."Document No.");
+        //             end;
+        //         }
+
+        //         action("Get Purchase Lines")
+        //         {
+        //             ApplicationArea = All;
+        //             Caption = 'Get Purchase Lines';
+        //             Image = Import;
+
+        //             trigger OnAction()
+        //             var
+        //                 PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+        //             begin
+        //                 PlanningLineFetcher.FetchPurchaseLines(Rec."Document No.");
+        //             end;
+        //         }
+
+        //         action("Get Transfer Lines")
+        //         {
+        //             ApplicationArea = All;
+        //             Caption = 'Get Transfer Lines';
+        //             Image = Import;
+
+        //             trigger OnAction()
+        //             var
+        //                 PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+        //             begin
+        //                 PlanningLineFetcher.FetchTransferLines(Rec."Document No.");
+        //             end;
+        //         }
+        //     }
+        // }
+    }
 }
+
