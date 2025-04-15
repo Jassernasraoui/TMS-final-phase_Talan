@@ -1,4 +1,4 @@
-pageextension 50101 " TAL Resource Card" extends "Resource Card"
+pageextension 50101 " TAL_PersonResource Card" extends "Resource Card"
 {
     layout
     {
@@ -11,7 +11,7 @@ pageextension 50101 " TAL Resource Card" extends "Resource Card"
         modify("Job Title")
         { Visible = false; }
         modify("Social Security No.")
-        { Visible = false; }
+        { Visible = true; }
         moveafter(General; "Personal Data")
         addlast(General)
         {

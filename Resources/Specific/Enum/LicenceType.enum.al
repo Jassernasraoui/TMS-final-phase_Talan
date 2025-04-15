@@ -2,37 +2,37 @@ enum 50101 "Driver License Type"
 {
     Extensible = true;
 
-    value(0; "License B")
+    value(1; "License B")
     {
         Caption = 'License B-Cars and light vehicles';
     }
 
-    value(1; "License A1")
-    {
-        Caption = 'License A1 -Light motorcycles';
-    }
+    // value(1; "License A1")
+    // {
+    //     Caption = 'License A1 -Light motorcycles';
+    // }
 
-    value(2; "License A2")
-    {
-        Caption = 'License A2 - Motorcycles';
-    }
+    // value(2; "License A2")
+    // {
+    //     Caption = 'License A2 - Motorcycles';
+    // }
 
-    value(3; "License A")
+    value(0; "License A")
     {
         Caption = 'License A - Motorcycles with no power limit';
     }
 
-    value(4; "License C1")
-    {
-        Caption = 'License C1 - Medium trucks';
-    }
+    // value(4; "License C1")
+    // {
+    //     Caption = 'License C1 - Medium trucks';
+    // }
 
-    value(5; "License C")
+    value(2; "License C")
     {
         Caption = 'License C - Heavy trucks';
     }
 
-    value(7; "License D")
+    value(3; "License D")
     {
         Caption = 'License D - Buses';
     }

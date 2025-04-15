@@ -21,9 +21,24 @@ page 50119 "Planification Document"
                     Caption = 'Logistic Tour No ';
                 }
 
-                field("Date de Tournée"; Rec."Date de Tournée")
+                field("Tour Start Date"; Rec."Date de Tournée")
                 {
                     ApplicationArea = All;
+                }
+                field("Estimated Distance (km)"; Rec."Estimated Distance")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Estimated Duration (hrs)"; Rec."Estimated Duration")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Estimated Total Weight"; Rec."Estimated Total Weight")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
                 }
 
                 field("Driver No."; Rec."Driver No.")
@@ -42,18 +57,12 @@ page 50119 "Planification Document"
                 {
                     ApplicationArea = All;
                 }
-
-                field("Commentaire"; Rec."Commentaire")
-                {
-                    ApplicationArea = All;
-                }
             }
 
             part("Tour Planning Line"; "Planning Lines ListPart")
             {
                 SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
-
-                // ApplicationArea = Basic, Suite;
+                ApplicationArea = Basic, Suite;
                 // Editable = false;
                 // // SubPageLink = "Document No." = field("No.");
                 // // UpdatePropagation = Both;

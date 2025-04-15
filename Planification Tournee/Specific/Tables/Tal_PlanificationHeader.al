@@ -68,6 +68,43 @@ table 50147 "Planification Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(50100; "No. of Planning Lines"; Integer)
+        {
+            Caption = 'Number of Planning Lines';
+            Editable = false;
+        }
+
+        field(50101; "Total Quantity"; Decimal)
+        {
+            Caption = 'Total Quantity';
+            Editable = false;
+        }
+
+        field(50102; "Estimated Total Weight"; Decimal)
+        {
+            Caption = 'Estimated Total Weight (kg)';
+            Editable = false;
+        }
+
+        field(50103; "Estimated Distance"; Decimal)
+        {
+            Caption = 'Estimated Distance (km)';
+            Editable = false;
+        }
+
+        field(50104; "Estimated Duration"; Decimal)
+        {
+            Caption = 'Estimated Duration (hrs)';
+            Editable = false;
+        }
+
+        field(50105; "Load Utilization"; Decimal)
+        {
+            Caption = 'Load Utilization (%)';
+            DecimalPlaces = 0 : 2;
+            Editable = false;
+        }
+
     }
     keys
     {

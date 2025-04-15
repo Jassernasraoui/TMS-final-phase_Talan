@@ -30,10 +30,15 @@ page 50126 "Vehicule resources card "
                     ApplicationArea = Jobs;
                     ToolTip = 'Specifies a description of the resource.';
                 }
+                field("Vehicule Type"; Rec."vehicle Type")
+                {
+                    ApplicationArea = Jobs;
+                }
+
                 field(" License plate No."; rec." License plate No.")
                 {
-                    Caption = ' Specifies the vehicles registration number';
-                    ApplicationArea = all;
+                    Tooltip = ' Specifies the vehicles registration number';
+                    ApplicationArea = Jobs;
                 }
                 field("Name 2"; Rec."Name 2")
                 {
@@ -81,45 +86,45 @@ page 50126 "Vehicule resources card "
             {
                 field("Max Capacity Charge "; rec."Max Capacity Charge")
                 {
-                    Caption = ' Specifies the maximum load capacity of the vehicle in kilograms';
-                    ApplicationArea = all;
+                    ToolTip = ' Specifies the maximum load capacity of the vehicle in kilograms';
+                    ApplicationArea = Jobs;
                 }
                 field("Current kilometres"; rec."Current kilometres")
                 {
-                    Caption = 'Indicates the total distance traveled by the vehicle ';
-                    ApplicationArea = all;
+                    ToolTip = 'Indicates the total distance traveled by the vehicle ';
+                    ApplicationArea = Jobs;
                 }
 
                 field("Last Maintenance Date"; rec."Last Maintenance Date")
                 {
-                    Caption = 'Dernière Maintenance';
-                    ApplicationArea = all;
+                    ToolTip = 'Specifies the Last Maintenance date of the vehicle statut';
+                    ApplicationArea = Jobs;
                 }
                 field("Next Maintenance Date"; rec."Next Maintenance Date")
                 {
-                    Caption = 'Prochaine Maintenance';
-                    ApplicationArea = all;
+                    ToolTip = 'Specifies the next Maintenance date for the vehicle';
+                    ApplicationArea = Jobs;
                 }
             }
             group("Size")
 
             {
-                field("Vehicle Height"; rec."Vehicle Height")
+                field("vehicle Height"; rec."vehicle Height")
                 {
-                    ApplicationArea = all;
-                    Caption = 'Hauteur du véhicule (en mètres)';
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Hauteur du véhicule (en mètres)';
                 }
 
-                field("Vehicle Width"; rec."Vehicle Width")
+                field("vehicle Width"; rec."vehicle Width")
                 {
-                    ApplicationArea = all;
-                    Caption = 'Largeur du véhicule (en mètres)';
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Largeur du véhicule (en mètres)';
                 }
 
-                field("Vehicle Length"; rec."Vehicle Length")
+                field("vehicle Length"; rec."vehicle Length")
                 {
-                    ApplicationArea = all;
-                    Caption = 'Longueur du véhicule (en mètres)';
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Longueur du véhicule (en mètres)';
                 }
             }
             group(Invoicing)

@@ -10,6 +10,10 @@ tableextension 50115 " Ressources Table" extends Resource
         {
             DataClassification = CustomerContent;
         }
+        field(50011; "GPS Tracking Enabled "; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
 
         field(50005; "License No."; Code[25])
         {
@@ -38,58 +42,58 @@ tableextension 50115 " Ressources Table" extends Resource
         }
         field(50100; " License plate No."; Code[20])
         {
-            Caption = 'License plate No.';
+            // Caption = 'License plate No.';
             DataClassification = CustomerContent;
         }
         field(50101; "Machine Model"; Text[50])
         {
-            Caption = 'Specifies the Machine Model';
+            // Caption = 'Specifies the Machine Model';
             DataClassification = CustomerContent;
         }
         field(50102; "Vehicule Type"; enum "Vehicule Type")
         {
-            Caption = 'Specifies the Vehicule Type ';
+            // Caption = 'Specifies the Vehicule Type ';
             DataClassification = CustomerContent;
 
         }
 
         field(50103; "Max Capacity Charge"; Code[100])
         {
-            Caption = ' Specifies the Max Capacity Charge in KG';
+            // Caption = ' Specifies the Max Capacity Charge in KG';
             DataClassification = CustomerContent;
         }
         field(50104; "Current kilometres"; code[100])
         {
-            Caption = 'Specifies the total distance traveled by the vehicle';
+            // Caption = 'Specifies the total distance traveled by the vehicle';
             DataClassification = ToBeClassified;
         }
 
         field(50105; "Last Maintenance Date"; Date)
         {
-            Caption = 'Specifies the date of the last maintenance performed on the vehicle';
+            // Caption = 'Specifies the date of the last maintenance performed on the vehicle';
             DataClassification = CustomerContent;
         }
         field(50106; "Next Maintenance Date"; Date)
         {
-            Caption = 'Specifies the planned date for the next vehicle maintenance.';
+            // Caption = 'Specifies the planned date for the next vehicle maintenance.';
             DataClassification = CustomerContent;
         }
-        field(50107; "Vehicle Height"; Decimal)
+        field(50107; "Vehicule Height"; Decimal)
         {
             DataClassification = CustomerContent;
-            Caption = 'Specifies the Vehicle Height in Meters';
-        }
-
-        field(50108; "Vehicle Width"; Decimal)
-        {
-            DataClassification = CustomerContent;
-            Caption = 'Specifies the Vehicle Width in meters';
+            // Caption = 'Specifies the Vehicle Height in Meters';
         }
 
-        field(50109; "Vehicle Length"; Decimal)
+        field(50108; "Vehicule Width"; Decimal)
         {
             DataClassification = CustomerContent;
-            Caption = 'Specifies the Vehicle Length in meters';
+            // Caption = 'Specifies the Vehicle Width in meters';
+        }
+
+        field(50109; "Vehicule Length"; Decimal)
+        {
+            DataClassification = CustomerContent;
+            // Caption = 'Specifies the Vehicle Length in meters';
         }
     }
 
