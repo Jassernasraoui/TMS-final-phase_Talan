@@ -15,42 +15,36 @@ pageextension 50101 " TAL_PersonResource Card" extends "Resource Card"
         moveafter(General; "Personal Data")
         addlast(General)
         {
-
         }
         addlast("Personal Data")
         {
-            field(" Birth Date "; rec."Birth Date")
-            {
-                ApplicationArea = all;
-                ToolTip = 'Specifies the date of birth of the Person.';
-
-            }
             field("Identity Card No."; rec."Identity Card No.")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies the identity card number of the Person.';
-
-
             }
+            field(" Birth Date "; rec."Birth Date")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the date of birth of the Person.';
+            }
+
             field("additional certifications"; rec."Additional Certifications")
             {
                 ApplicationArea = all;
                 ToolTip = 'Specifies any additional certifications held by the person ';
             }
             group("Personal Contact")
-
             {
                 field("Phone No."; rec."Phone No.")
                 {
                     ApplicationArea = all;
                     ToolTip = 'specifies  the phone number of the person.';
-
                 }
                 field("Email"; rec.Email)
                 {
                     ApplicationArea = all;
                     ToolTip = 'specifies the email address of the person.';
-
                 }
             }
             group("License Details")
@@ -64,18 +58,15 @@ pageextension 50101 " TAL_PersonResource Card" extends "Resource Card"
                 {
                     ApplicationArea = All;
                     ToolTip = 'specifies the type of License held by the person.';
-
                 }
                 field("License Expiration Date"; rec."License Expiration Date")
                 {
                     ApplicationArea = all;
                     ToolTip = 'specifies the expiration date of license held by the person.';
-
                 }
             }
         }
     }
-
     actions
     {
 

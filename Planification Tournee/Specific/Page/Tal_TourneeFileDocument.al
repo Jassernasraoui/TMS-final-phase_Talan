@@ -20,6 +20,18 @@ page 50119 "Planification Document"
                     ApplicationArea = All;
                     Caption = 'Logistic Tour No ';
                 }
+                field("Created By"; rec."Created By")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Created By';
+                    LookupPageId = "Users";
+                    ToolTip = 'Specifies the user''s name. If the user is required to present credentials when starting the client, this is the name that the user must present.';
+
+                }
+                field("Delivery Area"; rec."Delivery Area")
+                {
+                    ;
+                }
 
                 field("Tour Start Date"; Rec."Date de Tournée")
                 {

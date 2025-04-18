@@ -30,15 +30,15 @@ page 50126 "Vehicule resources card "
                     ApplicationArea = Jobs;
                     ToolTip = 'Specifies a description of the resource.';
                 }
-                field("Vehicule Type"; Rec."vehicle Type")
-                {
-                    ApplicationArea = Jobs;
-                }
 
                 field(" License plate No."; rec." License plate No.")
                 {
                     Tooltip = ' Specifies the vehicles registration number';
                     ApplicationArea = Jobs;
+                }
+                field(" Vehicule Security No."; rec." Vehicule Security No.")
+                {
+                    ToolTip = ' Specifies the Vehicule Security  number';
                 }
                 field("Name 2"; Rec."Name 2")
                 {
@@ -77,11 +77,36 @@ page 50126 "Vehicule resources card "
                     ToolTip = 'Specifies that the related record is blocked from being posted in transactions, for example a customer that is declared insolvent or an item that is placed in quarantine.';
                 }
             }
-            group("Driver Identification")
+            group("Vehicle Type and size")
             {
+                field("Vehicule Type"; Rec."vehicle Type")
+                {
+                    ApplicationArea = Jobs;
+                }
+                field("vehicle Volume"; rec."Vehicule Volume")
+                {
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Vehicule Volume ( by m3 )';
+                }
+                field(IsTractor; Rec.IsTractor)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Indicates whether this vehicle is a tractor (the powered unit that pulls a trailer).';
+                }
 
+                field(IsTrailer; Rec.IsTrailer)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Indicates whether this vehicle is a trailer (non-powered unit pulled by a tractor).';
+                }
 
+                field(IsTanker; Rec.IsTanker)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Indicates whether this vehicle is a tanker (a trailer designed for transporting liquids or gases).';
+                }
             }
+
             group("Capacity")
             {
                 field("Max Capacity Charge "; rec."Max Capacity Charge")
@@ -109,23 +134,8 @@ page 50126 "Vehicule resources card "
             group("Size")
 
             {
-                field("vehicle Height"; rec."vehicle Height")
-                {
-                    ApplicationArea = Jobs;
-                    ToolTip = 'Hauteur du véhicule (en mètres)';
-                }
 
-                field("vehicle Width"; rec."vehicle Width")
-                {
-                    ApplicationArea = Jobs;
-                    ToolTip = 'Largeur du véhicule (en mètres)';
-                }
 
-                field("vehicle Length"; rec."vehicle Length")
-                {
-                    ApplicationArea = Jobs;
-                    ToolTip = 'Longueur du véhicule (en mètres)';
-                }
             }
             group(Invoicing)
             {
@@ -194,4 +204,11 @@ page 50126 "Vehicule resources card "
 
         }
     }
+    trigger OnOpenPage()
+    begin
+        if Rec.Type <> Rec.Type::Machine then begin
+            Rec.Type := Rec.Type::Machine;
+            Rec.Modify(); // Enregistre la modification dans la base de données
+        end;
+    end;
 }

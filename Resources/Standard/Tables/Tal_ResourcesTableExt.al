@@ -50,7 +50,11 @@ tableextension 50115 " Ressources Table" extends Resource
             // Caption = 'Specifies the Machine Model';
             DataClassification = CustomerContent;
         }
-        field(50102; "Vehicule Type"; enum "Vehicule Type")
+        field(50111; " Vehicule Security No."; code[30])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50102; "vehicle Type"; enum "vehicle Type")
         {
             // Caption = 'Specifies the Vehicule Type ';
             DataClassification = CustomerContent;
@@ -78,22 +82,44 @@ tableextension 50115 " Ressources Table" extends Resource
             // Caption = 'Specifies the planned date for the next vehicle maintenance.';
             DataClassification = CustomerContent;
         }
-        field(50107; "Vehicule Height"; Decimal)
+        field(50107; "vehicle Height"; Decimal)
         {
             DataClassification = CustomerContent;
             // Caption = 'Specifies the Vehicle Height in Meters';
         }
 
-        field(50108; "Vehicule Width"; Decimal)
+        field(50108; "vehicle Width"; Decimal)
         {
             DataClassification = CustomerContent;
             // Caption = 'Specifies the Vehicle Width in meters';
         }
 
-        field(50109; "Vehicule Length"; Decimal)
+        field(50109; "vehicle Length"; Decimal)
         {
             DataClassification = CustomerContent;
             // Caption = 'Specifies the Vehicle Length in meters';
+        }
+        field(50110; "Vehicule Volume"; Integer)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50112; "Resource Status"; Enum "Resource Status")
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50120; IsTractor; Boolean)
+        {
+            Caption = 'Tractor';
+        }
+
+        field(50121; IsTrailer; Boolean)
+        {
+            Caption = 'Trailer';
+        }
+
+        field(50122; IsTanker; Boolean)
+        {
+            Caption = 'Tanker';
         }
     }
 

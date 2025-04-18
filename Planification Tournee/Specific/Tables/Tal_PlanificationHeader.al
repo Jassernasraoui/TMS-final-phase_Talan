@@ -68,41 +68,63 @@ table 50147 "Planification Header"
         {
             DataClassification = ToBeClassified;
         }
-        field(50100; "No. of Planning Lines"; Integer)
+        field(10; "No. of Planning Lines"; Integer)
         {
+            DataClassification = ToBeClassified;
+
             Caption = 'Number of Planning Lines';
             Editable = false;
         }
 
-        field(50101; "Total Quantity"; Decimal)
+        field(11; "Total Quantity"; Decimal)
         {
+            DataClassification = ToBeClassified;
+
             Caption = 'Total Quantity';
             Editable = false;
         }
 
-        field(50102; "Estimated Total Weight"; Decimal)
+        field(12; "Estimated Total Weight"; Decimal)
         {
+            DataClassification = ToBeClassified;
+
             Caption = 'Estimated Total Weight (kg)';
             Editable = false;
         }
 
-        field(50103; "Estimated Distance"; Decimal)
+        field(13; "Estimated Distance"; Decimal)
         {
+            DataClassification = ToBeClassified;
+
             Caption = 'Estimated Distance (km)';
             Editable = false;
         }
 
-        field(50104; "Estimated Duration"; Decimal)
+        field(14; "Estimated Duration"; Decimal)
         {
+            DataClassification = ToBeClassified;
+
             Caption = 'Estimated Duration (hrs)';
             Editable = false;
         }
 
-        field(50105; "Load Utilization"; Decimal)
+        field(15; "Load Utilization"; Decimal)
         {
+            DataClassification = ToBeClassified;
+
             Caption = 'Load Utilization (%)';
             DecimalPlaces = 0 : 2;
             Editable = false;
+        }
+        field(16; "Created By"; code[50])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = User."User Name";
+
+        }
+        field(17; "Delivery Area"; Text[200])
+        {
+            DataClassification = ToBeClassified;
         }
 
     }

@@ -1,33 +1,32 @@
-enum 50100 "Vehicule Type"
+enum 50100 "vehicle Type"
 {
     Extensible = true;
-
-    value(0; "Véhicules utilitaires légers")
+    value(0; "Light Utility Vehicles")
     {
-        Caption = 'VUL - Livraison de petits colis ';
+        Caption = 'LUV - Small parcel delivery';
     }
-    value(1; "Véhicules poids moyen")
+    value(1; "Medium Weight Vehicles")
     {
-        Caption = 'Poids moyen ';
+        Caption = 'Medium weight';
     }
-    value(2; "Poids lourds")
+    value(2; "Heavy Vehicles")
     {
-        Caption = 'Poids lourds ';
+        Caption = 'Heavy vehicles';
     }
-    value(3; "Camions")
+    value(3; "Trucks")
     {
-        Caption = 'Transport de marchandises ';
+        Caption = 'Freight transport';
     }
-    value(4; "Voitures attelées")
+    value(4; "Towed Cars")
     {
-        Caption = 'Voitures attelées avec remorque ';
+        Caption = 'Cars with trailer';
     }
-    value(5; "Autobus et autocars")
+    value(5; "Buses and Coaches")
     {
-        Caption = 'Transport de personnes ';
+        Caption = 'Passenger transport';
     }
-    value(6; "Véhicules agricoles et forestiers")
+    value(6; "Agricultural and Forestry Vehicles")
     {
-        Caption = 'Services spécifiques ';
+        Caption = 'Special services';
     }
 }
