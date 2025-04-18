@@ -15,6 +15,14 @@ pageextension 50101 " TAL_PersonResource Card" extends "Resource Card"
         moveafter(General; "Personal Data")
         addlast(General)
         {
+            group("Person Status")
+            {
+                field(" Person Status"; rec."Resource Status")
+                {
+                    ApplicationArea = jobs;
+                    Caption = 'Person Status';
+                }
+            }
         }
         addlast("Personal Data")
         {

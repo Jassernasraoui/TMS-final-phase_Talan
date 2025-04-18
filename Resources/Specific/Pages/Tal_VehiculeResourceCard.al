@@ -25,6 +25,7 @@ page 50126 "Vehicule resources card "
                             CurrPage.Update();
                     end;
                 }
+
                 field(Name; Rec.Name)
                 {
                     ApplicationArea = Jobs;
@@ -76,6 +77,14 @@ page 50126 "Vehicule resources card "
                     ApplicationArea = Jobs;
                     ToolTip = 'Specifies that the related record is blocked from being posted in transactions, for example a customer that is declared insolvent or an item that is placed in quarantine.';
                 }
+                group("Vehicule Status")
+                {
+                    field("Vehicle Status"; rec."Resource Status")
+                    {
+                        ApplicationArea = jobs;
+                        Caption = 'Vehicle Status';
+                    }
+                }
             }
             group("Vehicle Type and size")
             {
@@ -87,23 +96,46 @@ page 50126 "Vehicule resources card "
                 {
                     ApplicationArea = Jobs;
                     ToolTip = 'Vehicule Volume ( by m3 )';
+
                 }
                 field(IsTractor; Rec.IsTractor)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Indicates whether this vehicle is a tractor (the powered unit that pulls a trailer).';
+                    ToolTip = 'Indicates whether this vehicle is a tractor (powered unit).';
+
+                }
+
+                field("Tractor No."; Rec."Tractor No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Enter the tractor number if applicable.';
+                    Editable = rec.IsTractor;
                 }
 
                 field(IsTrailer; Rec.IsTrailer)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Indicates whether this vehicle is a trailer (non-powered unit pulled by a tractor).';
+                    ToolTip = 'Indicates whether this vehicle is a trailer (non-powered unit).';
+                }
+
+                field("Trailer No."; Rec."Trailer No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Enter the trailer number if applicable.';
+                    Editable = rec.IsTrailer;
                 }
 
                 field(IsTanker; Rec.IsTanker)
                 {
                     ApplicationArea = All;
-                    ToolTip = 'Indicates whether this vehicle is a tanker (a trailer designed for transporting liquids or gases).';
+                    ToolTip = 'Indicates whether this vehicle is a tanker (for liquids/gases).';
+                }
+
+                field("Tanker No."; Rec."Tanker No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Enter the tanker number if applicable.';
+                    Editable = rec.IsTanker;
                 }
             }
 

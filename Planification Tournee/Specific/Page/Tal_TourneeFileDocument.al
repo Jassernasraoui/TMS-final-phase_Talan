@@ -138,6 +138,31 @@ page 50119 "Planification Document"
                 }
             }
         }
+        area(Navigation)
+    {
+        action("Create Vehicle Loading")
+        {
+            Caption = 'Create Vehicle Loading';
+            ApplicationArea = All;
+            Image = Add;
+
+            trigger OnAction()
+            var
+                VehicleLoadingRec: Record "Vehicle Loading";
+                VehicleLoadingPage: Page "Vehicle Loading Card";
+            begin
+                VehicleLoadingRec.Init();
+                VehicleLoadingRec."Loading Date" := Today;
+                VehicleLoadingRec."Vehicle No." := Rec."Véhicule No.";
+                VehicleLoadingRec."Driver Name" := Rec."Driver No.";
+                VehicleLoadingRec.Insert(true); // true = run trigger
+
+                // Ouvrir la page carte avec l’enregistrement nouvellement créé
+                VehicleLoadingPage.SetRecord(VehicleLoadingRec);
+                VehicleLoadingPage.Run();
+            end;
+        }
+    }
     }
 
 

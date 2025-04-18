@@ -110,17 +110,72 @@ tableextension 50115 " Ressources Table" extends Resource
         field(50120; IsTractor; Boolean)
         {
             Caption = 'Tractor';
+
+            trigger OnValidate()
+            var
+                Err: Label 'You must enter the Tractor Number when Tractor is selected.';
+            begin
+                if IsTractor then begin
+                    if "Tractor No." = '' then
+                        Error(Err);
+                end else begin
+                    "Tractor No." := '';
+                end;
+            end;
         }
 
-        field(50121; IsTrailer; Boolean)
+
+        field(50121; "Tractor No."; Code[20])
+        {
+            Caption = 'Tractor Number';
+        }
+
+        field(50122; IsTrailer; Boolean)
         {
             Caption = 'Trailer';
+
+            trigger OnValidate()
+            var
+                Err: Label 'You must enter the Trailer Number when Trailer is selected.';
+            begin
+                if IsTrailer then begin
+                    if "Trailer No." = '' then
+                        Error(Err);
+                end else begin
+                    "Trailer No." := '';
+                end;
+            end;
         }
 
-        field(50122; IsTanker; Boolean)
+
+        field(50123; "Trailer No."; Code[20])
+        {
+            Caption = 'Trailer Number';
+        }
+
+        field(50124; IsTanker; Boolean)
         {
             Caption = 'Tanker';
+
+            trigger OnValidate()
+            var
+                Err: Label 'You must enter the Tanker Number when Tanker is selected.';
+            begin
+                if IsTanker then begin
+                    if "Tanker No." = '' then
+                        Error(Err);
+                end else begin
+                    "Tanker No." := '';
+                end;
+            end;
         }
+
+
+        field(50125; "Tanker No."; Code[20])
+        {
+            Caption = 'Tanker Number';
+        }
+
     }
 
     var
