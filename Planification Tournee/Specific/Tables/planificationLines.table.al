@@ -12,7 +12,7 @@ table 50100 "Planning Line"
         {
             DataClassification = ToBeClassified;
         }
-        field(3; "Source Type"; Option)
+        field(3; "Type"; Option)
         {
             OptionMembers = Sales,Purchase,Transfer;
             DataClassification = ToBeClassified;
@@ -69,6 +69,7 @@ table 50100 "Planning Line"
         {
             DataClassification = ToBeClassified;
         }
+        field(80; "Transfer-from Code"; Code[100]) { }
         field(17; "Net Weight"; Decimal)
         {
             DataClassification = ToBeClassified;

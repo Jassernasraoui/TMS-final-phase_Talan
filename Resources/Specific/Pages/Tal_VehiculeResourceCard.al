@@ -31,15 +31,31 @@ page 50126 "Vehicule resources card "
                     ApplicationArea = Jobs;
                     ToolTip = 'Specifies a description of the resource.';
                 }
+                field("Machine Model"; Rec."Machine Model")
+                {
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Specifies the model of the vehicle.';
+                }
 
                 field(" License plate No."; rec." License plate No.")
                 {
                     Tooltip = ' Specifies the vehicles registration number';
                     ApplicationArea = Jobs;
                 }
-                field(" Vehicule Security No."; rec." Vehicule Security No.")
+                field(" Vehicule Insurance Security No."; rec." Vehicule Security No.")
                 {
                     ToolTip = ' Specifies the Vehicule Security  number';
+                    Caption = 'Vehicule Insurance Security No.';
+                }
+                field("Insurance Expiration Date "; rec."Insurance Expiration Date ")
+                {
+                    ToolTip = ' Specifies the expiration date of the vehicle insurance';
+                    ApplicationArea = Jobs;
+                }
+                field(vignette; rec.vignette)
+                {
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Specifies the vignette number of the vehicle.';
                 }
                 field("Name 2"; Rec."Name 2")
                 {
@@ -151,24 +167,21 @@ page 50126 "Vehicule resources card "
                     ToolTip = 'Indicates the total distance traveled by the vehicle ';
                     ApplicationArea = Jobs;
                 }
-
-                field("Last Maintenance Date"; rec."Last Maintenance Date")
+                group("Vehicle Visits")
                 {
-                    ToolTip = 'Specifies the Last Maintenance date of the vehicle statut';
-                    ApplicationArea = Jobs;
-                }
-                field("Next Maintenance Date"; rec."Next Maintenance Date")
-                {
-                    ToolTip = 'Specifies the next Maintenance date for the vehicle';
-                    ApplicationArea = Jobs;
+                    field("Last Maintenance Date"; rec."Last Maintenance Date")
+                    {
+                        ToolTip = 'Specifies the Last Maintenance date of the vehicle statut';
+                        ApplicationArea = Jobs;
+                    }
+                    field("Next Maintenance Date"; rec."Next Maintenance Date")
+                    {
+                        ToolTip = 'Specifies the next Maintenance date for the vehicle';
+                        ApplicationArea = Jobs;
+                    }
                 }
             }
-            group("Size")
 
-            {
-
-
-            }
             group(Invoicing)
             {
                 Caption = 'Invoicing';
@@ -231,11 +244,117 @@ page 50126 "Vehicule resources card "
                     ToolTip = 'Specifies the intercompany g/l account number in your partner''s company that the amount for this resource is posted to.';
                 }
             }
-
-
-
         }
     }
+
+    actions
+    {
+        area(Navigation)
+        {
+            action("Maintenance Planning")
+            {
+                ApplicationArea = All;
+                Caption = 'Maintenance Planning';
+                Image = Planning;
+                ToolTip = 'Plan and schedule maintenance activities for the vehicle.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic for maintenance planning
+                    Message('Maintenance planning initiated.');
+                end;
+            }
+
+            action("Maintenance History")
+            {
+                ApplicationArea = All;
+                Caption = 'Maintenance History';
+                Image = History;
+                ToolTip = 'View the history of maintenance activities for the vehicle.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to display maintenance history
+                    Message('Displaying maintenance history.');
+                end;
+            }
+
+            action("Vehicle Maintenance KPI")
+            {
+                ApplicationArea = All;
+                Caption = 'Vehicle Maintenance KPI';
+                Image = Capacity;
+                ToolTip = 'View key performance indicators related to vehicle maintenance.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to display maintenance KPIs
+                    Message('Displaying vehicle maintenance KPIs.');
+                end;
+            }
+
+            action("Maintenance Dashboard")
+            {
+                ApplicationArea = All;
+                Caption = 'Maintenance Dashboard';
+                Image = AnalysisView;
+                ToolTip = 'Access the dashboard for vehicle maintenance overview.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to open maintenance dashboard
+                    Message('Opening maintenance dashboard.');
+                end;
+            }
+
+            action("Usage and Costs Report")
+            {
+                ApplicationArea = All;
+                Caption = 'Usage and Costs Report';
+                Image = Report;
+                ToolTip = 'Generate a report on vehicle usage and associated costs.';
+                Promoted = true;
+                PromotedCategory = Report;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to generate usage and costs report
+                    Message('Usage and costs report generated.');
+                end;
+            }
+
+            action("Other Reports")
+            {
+                ApplicationArea = All;
+                Caption = 'Other Reports';
+                Image = Report;
+                ToolTip = 'Access other reports related to the vehicle.';
+                Promoted = true;
+                PromotedCategory = Report;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to display other reports
+                    Message('Displaying other reports.');
+                end;
+            }
+        }
+    }
+
     trigger OnOpenPage()
     begin
         if Rec.Type <> Rec.Type::Machine then begin

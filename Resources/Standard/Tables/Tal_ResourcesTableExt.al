@@ -107,6 +107,14 @@ tableextension 50115 " Ressources Table" extends Resource
         {
             DataClassification = ToBeClassified;
         }
+        field(50113; "Insurance Expiration Date "; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50114; vignette; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
         field(50120; IsTractor; Boolean)
         {
             Caption = 'Tractor';

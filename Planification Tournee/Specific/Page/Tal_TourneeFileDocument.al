@@ -30,6 +30,7 @@ page 50119 "Planification Document"
                 }
                 field("Delivery Area"; rec."Delivery Area")
                 {
+                    ApplicationArea = All;
                     ;
                 }
 
@@ -71,7 +72,7 @@ page 50119 "Planification Document"
                 }
             }
 
-            part("Tour Planning Line"; "Planning Lines ListPart")
+            part("Tour Planning Line"; "Planning Lines ")
             {
                 SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
                 ApplicationArea = Basic, Suite;
@@ -79,6 +80,7 @@ page 50119 "Planification Document"
                 // // SubPageLink = "Document No." = field("No.");
                 // // UpdatePropagation = Both;
             }
+
 
         }
 
@@ -88,88 +90,166 @@ page 50119 "Planification Document"
     }
     actions
     {
+
         area(Processing)
         {
-            group("Fetch Planning Lines")
-            {
-                action("Get Sales Lines")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Get Sales Lines';
-                    Image = Import;
+            // action(LoadPlanningLines)
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Charger les lignes de planification';
+            //     Image = Process;
+            //     Promoted = true;
+            //     PromotedCategory = Process;
+            //     PromotedIsBig = true;
 
-                    trigger OnAction()
-                    var
-                        PlanningLineFetcher: Codeunit "Planning Line Fetcher";
-                    begin
-                        PlanningLineFetcher.FetchSalesLines(Rec."No.");
-                        CurrPage.Update(); // Pour rafraîchir le subform
-                    end;
-                }
+            //     trigger OnAction()
+            //     var
+            //         PlanningLoader: Codeunit "Planning Line Loader";
+            //     begin
+            //         PlanningLoader.LoadLines(Rec."Logistic Tour No.", Rec."Date de Tournée");
+            //         CurrPage.Update(false);
+            //     end;
+            // }
+            // group("Charger les lignes")
+            // {
+            //     Caption = 'Charger les lignes';
+            //     Image = GetLines;
 
-                action("Get Purchase Lines")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Get Purchase Lines';
-                    Image = Import;
+            //     action(LoadAllLines)
+            //     {
+            //         ApplicationArea = All;
+            //         Caption = 'Charger toutes les lignes';
+            //         Image = GetLines;
 
-                    trigger OnAction()
-                    var
-                        PlanningLineFetcher: Codeunit "Planning Line Fetcher";
-                    begin
-                        PlanningLineFetcher.FetchPurchaseLines(Rec."No.");
-                        CurrPage.Update(); // Pour rafraîchir le subform
-                    end;
-                }
+            //         trigger OnAction()
+            //         var
+            //             PlanningLoader: Codeunit "Planning Line Loader";
+            //         begin
+            //             PlanningLoader.LoadLines(Rec."Logistic Tour No.", Rec."Date de Tournée");
+            //             CurrPage.Update(false);
+            //         end;
+            //     }
 
-                action("Get Transfer Lines")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Get Transfer Lines';
-                    Image = Import;
+            //     action(LoadSalesLines)
+            //     {
+            //         ApplicationArea = All;
+            //         Caption = 'Charger les lignes de vente';
+            //         Image = Sales;
 
-                    trigger OnAction()
-                    var
-                        PlanningLineFetcher: Codeunit "Planning Line Fetcher";
-                    begin
-                        PlanningLineFetcher.FetchTransferLines(Rec."No.");
-                        CurrPage.Update(); // Pour rafraîchir le subform
-                    end;
-                }
-            }
+            //         trigger OnAction()
+            //         var
+            //             PlanningLoader: Codeunit "Planning Line Loader";
+            //         begin
+            //             PlanningLoader.LoadSalesLines(Rec."Logistic Tour No.", Rec."Date de Tournée");
+            //             CurrPage.Update(false);
+            //         end;
+            //     }
+
+            //     action(LoadPurchaseLines)
+            //     {
+            //         ApplicationArea = All;
+            //         Caption = 'Charger les lignes d''achat';
+            //         Image = Purchase;
+
+            //         trigger OnAction()
+            //         var
+            //             PlanningLoader: Codeunit "Planning Line Loader";
+            //         begin
+            //             PlanningLoader.LoadPurchaseLines(Rec."Logistic Tour No.", Rec."Date de Tournée");
+            //             CurrPage.Update(false);
+            //         end;
+            //     }
+
+            //     action(LoadTransferLines)
+            //     {
+            //         ApplicationArea = All;
+            //         Caption = 'Charger les lignes de transfert';
+            //         Image = TransferOrder;
+
+            //         trigger OnAction()
+            //         var
+            //             PlanningLoader: Codeunit "Planning Line Loader";
+            //         begin
+            //             PlanningLoader.LoadTransferLines(Rec."Logistic Tour No.", Rec."Date de Tournée");
+            //             CurrPage.Update(false);
+            //         end;
+            //     }
+            // }
+
         }
-        area(Navigation)
-    {
-        action("Create Vehicle Loading")
-        {
-            Caption = 'Create Vehicle Loading';
-            ApplicationArea = All;
-            Image = Add;
 
-            trigger OnAction()
-            var
-                VehicleLoadingRec: Record "Vehicle Loading";
-                VehicleLoadingPage: Page "Vehicle Loading Card";
-            begin
-                VehicleLoadingRec.Init();
-                VehicleLoadingRec."Loading Date" := Today;
-                VehicleLoadingRec."Vehicle No." := Rec."Véhicule No.";
-                VehicleLoadingRec."Driver Name" := Rec."Driver No.";
-                VehicleLoadingRec.Insert(true); // true = run trigger
 
-                // Ouvrir la page carte avec l’enregistrement nouvellement créé
-                VehicleLoadingPage.SetRecord(VehicleLoadingRec);
-                VehicleLoadingPage.Run();
-            end;
-        }
     }
-    }
+    // group("Fetch Planning Lines")
+    // {
+    //     action("Get Sales Lines")
+    //     {
+    //         ApplicationArea = All;
+    //         Caption = 'Get Sales Lines';
+    //         Image = Import;
 
+    //         trigger OnAction()
+    //         var
+    //             PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+    //         begin
+    //             PlanningLineFetcher.FetchSalesLines(Rec."No.");
+    //             CurrPage.Update(); // Pour rafraîchir le subform
+    //         end;
+    //     }
 
+    //     action("Get Purchase Lines")
+    //     {
+    //         ApplicationArea = All;
+    //         Caption = 'Get Purchase Lines';
+    //         Image = Import;
 
+    //         trigger OnAction()
+    //         var
+    //             PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+    //         begin
+    //             PlanningLineFetcher.FetchPurchaseLines(Rec."No.");
+    //             CurrPage.Update(); // Pour rafraîchir le subform
+    //         end;
+    //     }
 
+    //     action("Get Transfer Lines")
+    //     {
+    //         ApplicationArea = All;
+    //         Caption = 'Get Transfer Lines';
+    //         Image = Import;
 
-
-
+    //         trigger OnAction()
+    //         var
+    //             PlanningLineFetcher: Codeunit "Planning Line Fetcher";
+    //         begin
+    //             PlanningLineFetcher.FetchTransferLines(Rec."No.");
+    //             CurrPage.Update(); // Pour rafraîchir le subform
+    //         end;
+    //     }
 }
 
+//     area(Navigation)
+// {
+//     action("Create Vehicle Loading")
+//     {
+//         Caption = 'Create Vehicle Loading';
+//         ApplicationArea = All;
+//         Image = Add;
+
+//         trigger OnAction()
+//         var
+//             VehicleLoadingRec: Record "Vehicle Loading";
+//             VehicleLoadingPage: Page "Vehicle Loading Card";
+//         begin
+//             VehicleLoadingRec.Init();
+//             VehicleLoadingRec."Loading Date" := Today;
+//             VehicleLoadingRec."Vehicle No." := Rec."Véhicule No.";
+//             VehicleLoadingRec."Driver Name" := Rec."Driver No.";
+//             VehicleLoadingRec.Insert(true); // true = run trigger
+
+//             // Ouvrir la page carte avec l’enregistrement nouvellement créé
+//             VehicleLoadingPage.SetRecord(VehicleLoadingRec);
+//             VehicleLoadingPage.Run();
+//         end;
+//     }
+// }
