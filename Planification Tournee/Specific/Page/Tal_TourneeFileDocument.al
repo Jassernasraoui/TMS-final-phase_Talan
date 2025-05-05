@@ -72,6 +72,7 @@ page 50119 "Planification Document"
                 }
             }
 
+
             part("Tour Planning Line"; "Planning Lines ")
             {
                 SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
