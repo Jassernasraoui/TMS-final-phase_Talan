@@ -1,4 +1,4 @@
-tableextension 50151 "Sales Line Extension" extends "Sales Line"
+tableextension 50151 "Sales Line" extends "Sales Line"
 {
     fields
     {

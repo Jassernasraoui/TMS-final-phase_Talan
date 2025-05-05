@@ -4,7 +4,7 @@ page 50131 "Vehicle Loading List"
     SourceTable = "Vehicle Loading";
     Caption = 'Vehicle Loading List';
     ApplicationArea = All;
-    CardPageId = "Vehicle Loading Card";
+    CardPageId = "Vehicle Loading";
 
     layout
     {

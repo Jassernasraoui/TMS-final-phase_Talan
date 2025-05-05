@@ -1,4 +1,4 @@
-pageextension 50123 Tal_SaleslinePageExt extends "Sales Lines"
+pageextension 50124 "Tal Purchase Lines" extends "Purchase Lines"
 {
     layout
     {

@@ -1,4 +1,4 @@
-tableextension 50119 "Sales Shipment Header Ext" extends "Sales Shipment Header"
+tableextension 50119 "Tal Sales Shipment Header" extends "Sales Shipment Header"
 {
     fields
     {

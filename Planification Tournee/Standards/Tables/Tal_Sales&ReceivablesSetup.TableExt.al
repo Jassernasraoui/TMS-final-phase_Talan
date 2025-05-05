@@ -1,4 +1,4 @@
-tableextension 50148 "Sales & Receivables Setup" extends "Sales & Receivables Setup"
+tableextension 50148 "Tal Sales & Receivables Setup" extends "Sales & Receivables Setup"
 {
     fields
     {

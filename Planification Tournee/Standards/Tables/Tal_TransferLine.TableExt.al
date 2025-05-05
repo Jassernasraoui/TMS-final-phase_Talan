@@ -1,4 +1,4 @@
-tableextension 50153 "Transfer Line Extension" extends "Transfer Line"
+tableextension 50153 "Tal Transfer Line" extends "Transfer Line"
 {
     fields
     {
