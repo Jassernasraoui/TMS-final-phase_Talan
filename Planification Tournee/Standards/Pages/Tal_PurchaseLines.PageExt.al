@@ -1,8 +1,8 @@
-pageextension 50125 Tal_TransferlinePageExt extends "transfer Lines"
+pageextension 50124 "Tal Purchase Lines" extends "Purchase Lines"
 {
     layout
     {
-        addfirst(Control1)
+        addlast(Control1)
         {
             field("Logistic Tour No."; rec."Logistic Tour No.")
             {
