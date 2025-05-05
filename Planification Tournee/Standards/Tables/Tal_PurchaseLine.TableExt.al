@@ -1,4 +1,4 @@
-tableextension 50152 "Purchase Line Extension" extends "Purchase Line"
+tableextension 50152 "Tal Purchase Line" extends "Purchase Line"
 {
     fields
     {

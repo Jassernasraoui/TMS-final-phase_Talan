@@ -1,4 +1,4 @@
-pageextension 50125 Tal_TransferlinePageExt extends "transfer Lines"
+pageextension 50125 "Tal transfer Lines" extends "transfer Lines"
 {
     layout
     {

@@ -1,4 +1,4 @@
-pageextension 50127 Tal_SalesOrderSubformExt extends "Sales Order Subform"
+pageextension 50127 "Tal Sales Order Subform" extends "Sales Order Subform"
 {
     layout
     {
