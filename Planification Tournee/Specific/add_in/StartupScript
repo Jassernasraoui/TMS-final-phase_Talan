@@ -1,0 +1,9 @@
+// function InitializeControl() {
+//     // Notifier BC que le contrôle est prêt
+//     Microsoft.Dynamics.NAV.InvokeExtensibilityMethod('ControlAddInReady', []);
+// }
+
+// // Appeler la fonction d'initialisation quand la page est chargée
+// window.addEventListener('load', function() {
+//     InitializeControl();
+// });

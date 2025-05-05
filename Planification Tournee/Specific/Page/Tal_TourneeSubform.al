@@ -280,6 +280,56 @@ page 50100 "Planning Lines "
                 }
             }
         }
+        group(Warehouse)
+            {
+                Caption = 'Warehouse';
+                Image = Warehouse;
+                action("Whse. Shi&pments")
+                {
+                    ApplicationArea = Warehouse;
+                    Caption = 'Whse. Shi&pments';
+                    Image = Shipment;
+                    RunObject = Page "Whse. Shipment Lines";
+                    RunPageLink = "Source Type" = const(5741),
+                                  "Source Subtype" = const("0"),
+                                  "Source No." = field("Item No.");
+                    RunPageView = sorting("Source Type", "Source Subtype", "Source No.", "Source Line No.");
+                    ToolTip = 'View outbound items that have been shipped with warehouse activities for the transfer order.';
+                }
+                action("&Whse. Receipts")
+                {
+                    ApplicationArea = Warehouse;
+                    Caption = '&Whse. Receipts';
+                    Image = Receipt;
+                    RunObject = Page "Whse. Receipt Lines";
+                    RunPageLink = "Source Type" = const(5741),
+                                  "Source Subtype" = const("1"),
+                                  "Source No." = field("Item No.");
+                    RunPageView = sorting("Source Type", "Source Subtype", "Source No.", "Source Line No.");
+                    ToolTip = 'View inbound items that have been received with warehouse activities for the transfer order.';
+                }
+                action("In&vt. Put-away/Pick Lines")
+                {
+                    ApplicationArea = Warehouse;
+                    Caption = 'In&vt. Put-away/Pick Lines';
+                    Image = PickLines;
+                    RunObject = Page "Warehouse Activity List";
+                    RunPageLink = "Source Document" = filter("Inbound Transfer" | "Outbound Transfer"),
+                                  "Source No." = field("Item No.");
+                    RunPageView = sorting("Source Document", "Source No.", "Location Code");
+                    ToolTip = 'View items that are inbound or outbound on inventory put-away or inventory pick documents for the transfer order.';
+                }
+                action("Whse. Put-away/Pick Lines")
+                {
+                    ApplicationArea = Warehouse;
+                    Caption = 'Warehouse Put-away/Pick Lines';
+                    Image = PutawayLines;
+                    RunObject = page "Warehouse Activity Lines";
+                    RunPageLink = "Source Document" = filter("Inbound Transfer" | "Outbound Transfer"), "Source No." = field("Item No.");
+                    RunPageView = sorting("Source Type", "Source Subtype", "Source No.");
+                    ToolTip = 'View items that are inbound or outbound on warehouse put-away or warehouse pick documents for the transfer order.';
+                }
+            }
     }
     }
     
