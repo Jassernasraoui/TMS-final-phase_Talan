@@ -4,7 +4,7 @@ page 50119 "Planification Document"
     SourceTable = "Planification Header";
     ApplicationArea = All;
     Caption = 'Tournee File ';
-    //ultipleNewLines = true;
+    //multipleNewLines = true;
     // SourceTableView = where("Document Type" = filter(Order));
     // RefreshOnActivate = true;
 
@@ -91,9 +91,28 @@ page 50119 "Planification Document"
     }
     actions
     {
-
-        area(Processing)
+        area(processing)
         {
+            action("Create Vehicle Loading Sheet")
+            {
+                ApplicationArea = All;
+                Caption = 'Create Vehicle Loading Sheet';
+                Image = Truck;
+                // Promoted = true;
+                trigger OnAction()
+                var
+                    TruckLoadingRec: Record "Truck Loading Header";
+                    LoadingCardPage: Page "Truck Loading Card";
+                begin
+                    TruckLoadingRec.Init();
+                    TruckLoadingRec."No." := Rec."Logistic Tour No."; // Link with the current tour
+                    TruckLoadingRec.Insert(true);
+
+                    LoadingCardPage.SetRecord(TruckLoadingRec);
+                    LoadingCardPage.RunModal();
+                end;
+            }
+
             // action(LoadPlanningLines)
             // {
             //     ApplicationArea = All;

@@ -142,14 +142,13 @@ page 50100 "Planning Lines "
             }
         }
     }
-    
     actions
     {
         area(processing)
         {
             group("&Line")
             {
-                Caption = '&Line';
+                Caption = 'Sales/Purchase Lines';
                 Image = Line;
                 group("F&unctions")
                 {
@@ -280,9 +279,9 @@ page 50100 "Planning Lines "
                 }
             }
         }
-        group(Warehouse)
+        group("Warehouse")
             {
-                Caption = 'Warehouse';
+                Caption = 'Transfer Order lines';
                 Image = Warehouse;
                 action("Whse. Shi&pments")
                 {
@@ -330,7 +329,10 @@ page 50100 "Planning Lines "
                     ToolTip = 'View items that are inbound or outbound on warehouse put-away or warehouse pick documents for the transfer order.';
                 }
             }
+            
+            
     }
+    
     }
     
     protected var
