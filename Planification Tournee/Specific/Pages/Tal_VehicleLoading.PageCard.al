@@ -2,7 +2,7 @@
 page 50130 "Vehicle Loading"
 {
     PageType = Card;
-    SourceTable = "Truck Loading Header";
+    SourceTable = "vehicle Loading Header";
     ApplicationArea = All;
 
     layout

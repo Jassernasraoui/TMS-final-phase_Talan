@@ -1,7 +1,7 @@
-page 50100 "Planning Lines "
+page 50100 "Planning Lines"
 {
     PageType = ListPart;
-    SourceTable = "Planning Line";
+    SourceTable = "Planning Lines";
     ApplicationArea = All;
     // SourceTableView = where("Document Type" = filter(Invoice));
 
@@ -462,7 +462,7 @@ page 50100 "Planning Lines "
     // Procédure pour transférer les lignes de ventes vers les lignes de planification
     procedure TransferSalesLinesToTourPlanning(var SalesLine: Record "Sales Line")
     var
-        PlanningLine: Record "Planning Line";
+        PlanningLine: Record "Planning Lines";
         LineNo: Integer;
     begin
         // Détermination du prochain numéro de ligne

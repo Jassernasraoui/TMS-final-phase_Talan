@@ -101,8 +101,8 @@ page 50119 "Planification Document"
                 // Promoted = true;
                 trigger OnAction()
                 var
-                    TruckLoadingRec: Record "Truck Loading Header";
-                    LoadingCardPage: Page "Truck Loading Card";
+                    TruckLoadingRec: Record "Vehicle Loading Header";
+                    LoadingCardPage: Page "Vehicle Loading";
                 begin
                     TruckLoadingRec.Init();
                     TruckLoadingRec."No." := Rec."Logistic Tour No."; // Link with the current tour

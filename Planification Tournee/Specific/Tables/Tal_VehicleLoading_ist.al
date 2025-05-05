@@ -1,4 +1,4 @@
-table 50132 "Truck Loading Header"
+table 50132 "Vehicle Loading Header"
 {
     DataClassification = ToBeClassified;
 

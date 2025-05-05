@@ -1,4 +1,4 @@
-table 50100 "Planning Line"
+table 50100 "Planning Lines"
 {
     DataClassification = ToBeClassified;
 
