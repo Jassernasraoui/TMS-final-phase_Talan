@@ -1,4 +1,4 @@
-page 50111 "Tour Plannification List"
+page 50112 "Tour Planification List"
 {
     PageType = List;
     SourceTable = "Planification Header";

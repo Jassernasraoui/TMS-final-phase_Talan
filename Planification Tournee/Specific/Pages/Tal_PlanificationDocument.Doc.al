@@ -63,7 +63,7 @@ page 50119 "Planification Document"
                 field("Véhicule No."; Rec."Véhicule No.")
                 {
                     ApplicationArea = All;
-                    LookupPageId = "Vehicule Resource list"; // Page standard de véhicules
+                    LookupPageId = "Tal Vehicule Resource list"; // Page standard de véhicules
                 }
 
                 field("Statut"; Rec."Statut")
@@ -98,19 +98,36 @@ page 50119 "Planification Document"
                 ApplicationArea = All;
                 Caption = 'Create Vehicle Loading Sheet';
                 Image = Truck;
-                // Promoted = true;
-                trigger OnAction()
-                var
-                    TruckLoadingRec: Record "Vehicle Loading Header";
-                    LoadingCardPage: Page "Vehicle Loading";
-                begin
-                    TruckLoadingRec.Init();
-                    TruckLoadingRec."No." := Rec."Logistic Tour No."; // Link with the current tour
-                    TruckLoadingRec.Insert(true);
+                RunObject = Page "Vehicle Loading Card";
 
-                    LoadingCardPage.SetRecord(TruckLoadingRec);
-                    LoadingCardPage.RunModal();
-                end;
+                //     trigger OnAction()
+                //     var
+                //         TruckLoadingRec: Record "Vehicle Loading Header";
+                //     begin
+                //         // Check if a sheet already exists for this tour
+                //         if TruckLoadingRec.Get(Rec."Logistic Tour No.") then begin
+                //             if Page.RunModal(Page::"Vehicle Loading Card", TruckLoadingRec) = Action::OK then
+                //                 Message('Existing Vehicle Loading Sheet opened.');
+                //             exit;
+                //         end;
+
+                //         // Initialize new record
+                //         Clear(TruckLoadingRec);
+                //         TruckLoadingRec.Init();
+                //         TruckLoadingRec."No." := Rec."Logistic Tour No."; // use same number
+                //         TruckLoadingRec."Tour No." := Rec."Logistic Tour No.";
+                //         TruckLoadingRec."Loading Date" := Rec."Date de Tournée";
+                //         TruckLoadingRec."Driver No." := Rec."Driver No.";
+                //         TruckLoadingRec."Truck No." := Rec."Véhicule No.";
+                //         TruckLoadingRec."Estimated Duration" := Rec."Estimated Duration";
+                //         TruckLoadingRec."Total Weight (kg)" := Rec."Estimated Total Weight";
+                //         TruckLoadingRec."Total Distance (km)" := Rec."Estimated Distance";
+                //         TruckLoadingRec.Insert(true);
+
+                //         // Open the card page for this record
+                //         if Page.RunModal(Page::"Vehicle Loading Card", TruckLoadingRec) = Action::OK then
+                //             Message('Vehicle Loading Sheet created.');
+                //     end;
             }
 
             // action(LoadPlanningLines)

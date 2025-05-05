@@ -54,7 +54,7 @@ tableextension 50115 " Ressources Table" extends Resource
         {
             DataClassification = ToBeClassified;
         }
-        field(50102; "vehicle Type"; enum "vehicle Type")
+        field(50102; "vehicle Type"; enum "Tal Vehicle Type")
         {
             // Caption = 'Specifies the Vehicule Type ';
             DataClassification = CustomerContent;

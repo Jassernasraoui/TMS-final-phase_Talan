@@ -1,4 +1,4 @@
-page 50126 "Vehicule resources card "
+page 50126 " Tal Vehicule resources card "
 {
     PageType = Card;
     ApplicationArea = All;

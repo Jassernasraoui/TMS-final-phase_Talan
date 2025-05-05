@@ -1,5 +1,5 @@
 
-page 50130 "Vehicle Loading"
+page 50130 "Vehicle Loading Card"
 {
     PageType = Card;
     SourceTable = "vehicle Loading Header";
@@ -72,11 +72,16 @@ page 50130 "Vehicle Loading"
                 field("Validated By"; rec."Validated By") { }
             }
 
-            part("StopsPart"; "Truck Stop List")
+            part("StopsPart"; "vehicle Stop List")
             {
                 SubPageLink = "Fiche No." = FIELD("No.");
                 ApplicationArea = All;
             }
         }
     }
+    procedure SetRecord(var LoadingRec: Record "Vehicle Loading Header")
+    begin
+        Rec := LoadingRec;
+    end;
+
 }

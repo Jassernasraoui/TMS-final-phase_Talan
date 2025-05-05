@@ -1,68 +1,98 @@
-table 50130 "Vehicle Loading"
+table 50132 "Vehicle Loading Header"
 {
     DataClassification = ToBeClassified;
 
     fields
     {
-        field(1; "Tour No."; Code[20])
+        field(1; "No."; Code[20])
         {
-            Caption = 'Logistic Tour No.';
-            DataClassification = CustomerContent;
-            TableRelation = "Planification Header"."Logistic Tour No.";
-            NotBlank = true;
+            DataClassification = ToBeClassified;
         }
-
         field(2; "Loading Date"; Date)
         {
-            Caption = 'Loading Date';
             DataClassification = ToBeClassified;
         }
-
-        field(3; "Vehicle No."; Code[20])
+        field(3; "Tour No."; Code[20])
         {
-            Caption = 'Vehicle Number';
-            DataClassification = CustomerContent;
-        }
-
-        field(4; "Driver Name"; Text[100])
-        {
-            Caption = 'Driver Name';
             DataClassification = ToBeClassified;
         }
-
-        field(5; "Loading Location"; Text[100])
+        field(4; "Truck No."; Code[20])
         {
-            Caption = 'Loading Location';
             DataClassification = ToBeClassified;
         }
-
-        field(6; "Destination"; Text[100])
+        field(5; "Driver No."; Code[20])
         {
-            Caption = 'Destination';
             DataClassification = ToBeClassified;
         }
-
-        field(7; "Cargo Description"; Text[100])
+        field(6; "Loading Location"; Text[100])
         {
-            Caption = 'Cargo Description';
             DataClassification = ToBeClassified;
         }
-
-        field(8; "Weight (kg)"; Decimal)
+        field(7; "Departure Time"; Time)
         {
-            Caption = 'Weight (kg)';
             DataClassification = ToBeClassified;
         }
-
-        field(9; "Hazardous Material"; Boolean)
+        field(8; "Arrival Time"; Time)
         {
-            Caption = 'Hazardous Material';
+            DataClassification = ToBeClassified;
+        }
+        field(9; "Total Weight (kg)"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(10; "Total Volume (m³)"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(11; "Number of Deliveries"; Integer)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(12; "Goods Type"; Text[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(13; "Status"; Option)
+        {
+            OptionMembers = Planned,Loading,InProgress,Completed,Canceled;
+            DataClassification = ToBeClassified;
+        }
+        field(14; "Validated By"; Code[50])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(15; "Validation Date"; DateTime)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(16; "Itinerary No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(17; "Total Distance (km)"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(18; "Estimated Duration"; Duration)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(19; "Itinerary Type"; Option)
+        {
+            OptionMembers = Optimized,Manual,Fastest,Shortest;
+            DataClassification = ToBeClassified;
+        }
+        field(20; "Planned Route"; Text[250])
+        {
             DataClassification = ToBeClassified;
         }
     }
 
     keys
     {
-        key(PK; "Tour No.") { Clustered = true; }
+        // key(PK; "No.")
+        // {
+        //     Clustered = true;
+        // }
     }
 }

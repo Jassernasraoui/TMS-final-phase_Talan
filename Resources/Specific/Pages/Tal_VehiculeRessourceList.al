@@ -1,4 +1,4 @@
-page 50110 "Vehicule Resource list"
+page 50110 "Tal Vehicule Resource list"
 {
     PageType = list;
     SourceTable = Resource;
@@ -137,7 +137,7 @@ page 50110 "Vehicule Resource list"
                     Clear(createnewvehicule);
                     createnewvehicule.Init();
                     createnewvehicule.Insert(true);
-                    Page.Run(Page::"Vehicule resources card ", createnewvehicule);
+                    Page.Run(Page::" Tal Vehicule resources card ", createnewvehicule);
                 end;
 
             }

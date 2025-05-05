@@ -1,4 +1,4 @@
-enum 50100 "vehicle Type"
+enum 50100 "Tal Vehicle Type"
 {
     Extensible = true;
     value(0; "Light Utility Vehicles")

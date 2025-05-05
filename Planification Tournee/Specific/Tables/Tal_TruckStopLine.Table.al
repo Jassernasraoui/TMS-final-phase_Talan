@@ -1,4 +1,4 @@
-table 50101 "Truck Stop Line"
+table 50101 "vehicle Stop Line"
 {
     DataClassification = ToBeClassified;
 

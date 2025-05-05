@@ -1,7 +1,7 @@
-page 50101 "Truck Stop List"
+page 50101 "Vehicle Stop List"
 {
     PageType = ListPart;
-    SourceTable = "Truck Stop Line";
+    SourceTable = "vehicle Stop Line";
     ApplicationArea = All;
 
     layout
