@@ -25,15 +25,37 @@ page 50126 "Vehicule resources card "
                             CurrPage.Update();
                     end;
                 }
+
                 field(Name; Rec.Name)
                 {
                     ApplicationArea = Jobs;
                     ToolTip = 'Specifies a description of the resource.';
                 }
+                field("Machine Model"; Rec."Machine Model")
+                {
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Specifies the model of the vehicle.';
+                }
+
                 field(" License plate No."; rec." License plate No.")
                 {
-                    Caption = ' Specifies the vehicles registration number';
-                    ApplicationArea = all;
+                    Tooltip = ' Specifies the vehicles registration number';
+                    ApplicationArea = Jobs;
+                }
+                field(" Vehicule Insurance Security No."; rec." Vehicule Security No.")
+                {
+                    ToolTip = ' Specifies the Vehicule Security  number';
+                    Caption = 'Vehicule Insurance Security No.';
+                }
+                field("Insurance Expiration Date "; rec."Insurance Expiration Date ")
+                {
+                    ToolTip = ' Specifies the expiration date of the vehicle insurance';
+                    ApplicationArea = Jobs;
+                }
+                field(vignette; rec.vignette)
+                {
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Specifies the vignette number of the vehicle.';
                 }
                 field("Name 2"; Rec."Name 2")
                 {
@@ -71,57 +93,95 @@ page 50126 "Vehicule resources card "
                     ApplicationArea = Jobs;
                     ToolTip = 'Specifies that the related record is blocked from being posted in transactions, for example a customer that is declared insolvent or an item that is placed in quarantine.';
                 }
+                group("Vehicule Status")
+                {
+                    field("Vehicle Status"; rec."Resource Status")
+                    {
+                        ApplicationArea = jobs;
+                        Caption = 'Vehicle Status';
+                    }
+                }
             }
-            group("Driver Identification")
+            group("Vehicle Type and size")
             {
+                field("Vehicule Type"; Rec."vehicle Type")
+                {
+                    ApplicationArea = Jobs;
+                }
+                field("vehicle Volume"; rec."Vehicule Volume")
+                {
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Vehicule Volume ( by m3 )';
 
+                }
+                field(IsTractor; Rec.IsTractor)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Indicates whether this vehicle is a tractor (powered unit).';
 
+                }
+
+                field("Tractor No."; Rec."Tractor No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Enter the tractor number if applicable.';
+                    Editable = rec.IsTractor;
+                }
+
+                field(IsTrailer; Rec.IsTrailer)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Indicates whether this vehicle is a trailer (non-powered unit).';
+                }
+
+                field("Trailer No."; Rec."Trailer No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Enter the trailer number if applicable.';
+                    Editable = rec.IsTrailer;
+                }
+
+                field(IsTanker; Rec.IsTanker)
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Indicates whether this vehicle is a tanker (for liquids/gases).';
+                }
+
+                field("Tanker No."; Rec."Tanker No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Enter the tanker number if applicable.';
+                    Editable = rec.IsTanker;
+                }
             }
+
             group("Capacity")
             {
                 field("Max Capacity Charge "; rec."Max Capacity Charge")
                 {
-                    Caption = ' Specifies the maximum load capacity of the vehicle in kilograms';
-                    ApplicationArea = all;
+                    ToolTip = ' Specifies the maximum load capacity of the vehicle in kilograms';
+                    ApplicationArea = Jobs;
                 }
                 field("Current kilometres"; rec."Current kilometres")
                 {
-                    Caption = 'Indicates the total distance traveled by the vehicle ';
-                    ApplicationArea = all;
+                    ToolTip = 'Indicates the total distance traveled by the vehicle ';
+                    ApplicationArea = Jobs;
                 }
-
-                field("Last Maintenance Date"; rec."Last Maintenance Date")
+                group("Vehicle Visits")
                 {
-                    Caption = 'Dernière Maintenance';
-                    ApplicationArea = all;
-                }
-                field("Next Maintenance Date"; rec."Next Maintenance Date")
-                {
-                    Caption = 'Prochaine Maintenance';
-                    ApplicationArea = all;
+                    field("Last Maintenance Date"; rec."Last Maintenance Date")
+                    {
+                        ToolTip = 'Specifies the Last Maintenance date of the vehicle statut';
+                        ApplicationArea = Jobs;
+                    }
+                    field("Next Maintenance Date"; rec."Next Maintenance Date")
+                    {
+                        ToolTip = 'Specifies the next Maintenance date for the vehicle';
+                        ApplicationArea = Jobs;
+                    }
                 }
             }
-            group("Size")
 
-            {
-                field("Vehicle Height"; rec."Vehicle Height")
-                {
-                    ApplicationArea = all;
-                    Caption = 'Hauteur du véhicule (en mètres)';
-                }
-
-                field("Vehicle Width"; rec."Vehicle Width")
-                {
-                    ApplicationArea = all;
-                    Caption = 'Largeur du véhicule (en mètres)';
-                }
-
-                field("Vehicle Length"; rec."Vehicle Length")
-                {
-                    ApplicationArea = all;
-                    Caption = 'Longueur du véhicule (en mètres)';
-                }
-            }
             group(Invoicing)
             {
                 Caption = 'Invoicing';
@@ -184,9 +244,122 @@ page 50126 "Vehicule resources card "
                     ToolTip = 'Specifies the intercompany g/l account number in your partner''s company that the amount for this resource is posted to.';
                 }
             }
-
-
-
         }
     }
+
+    actions
+    {
+        area(Navigation)
+        {
+            action("Maintenance Planning")
+            {
+                ApplicationArea = All;
+                Caption = 'Maintenance Planning';
+                Image = Planning;
+                ToolTip = 'Plan and schedule maintenance activities for the vehicle.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic for maintenance planning
+                    Message('Maintenance planning initiated.');
+                end;
+            }
+
+            action("Maintenance History")
+            {
+                ApplicationArea = All;
+                Caption = 'Maintenance History';
+                Image = History;
+                ToolTip = 'View the history of maintenance activities for the vehicle.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to display maintenance history
+                    Message('Displaying maintenance history.');
+                end;
+            }
+
+            action("Vehicle Maintenance KPI")
+            {
+                ApplicationArea = All;
+                Caption = 'Vehicle Maintenance KPI';
+                Image = Capacity;
+                ToolTip = 'View key performance indicators related to vehicle maintenance.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to display maintenance KPIs
+                    Message('Displaying vehicle maintenance KPIs.');
+                end;
+            }
+
+            action("Maintenance Dashboard")
+            {
+                ApplicationArea = All;
+                Caption = 'Maintenance Dashboard';
+                Image = AnalysisView;
+                ToolTip = 'Access the dashboard for vehicle maintenance overview.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to open maintenance dashboard
+                    Message('Opening maintenance dashboard.');
+                end;
+            }
+
+            action("Usage and Costs Report")
+            {
+                ApplicationArea = All;
+                Caption = 'Usage and Costs Report';
+                Image = Report;
+                ToolTip = 'Generate a report on vehicle usage and associated costs.';
+                Promoted = true;
+                PromotedCategory = Report;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to generate usage and costs report
+                    Message('Usage and costs report generated.');
+                end;
+            }
+
+            action("Other Reports")
+            {
+                ApplicationArea = All;
+                Caption = 'Other Reports';
+                Image = Report;
+                ToolTip = 'Access other reports related to the vehicle.';
+                Promoted = true;
+                PromotedCategory = Report;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                begin
+                    // Add logic to display other reports
+                    Message('Displaying other reports.');
+                end;
+            }
+        }
+    }
+
+    trigger OnOpenPage()
+    begin
+        if Rec.Type <> Rec.Type::Machine then begin
+            Rec.Type := Rec.Type::Machine;
+            Rec.Modify(); // Enregistre la modification dans la base de données
+        end;
+    end;
 }

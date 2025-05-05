@@ -1,0 +1,36 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<ControlAddIn xmlns="http://schemas.microsoft.com/dynamics/nav/controladdins" 
+              ControlAddInName="MapControl" 
+              VerticalStretch="true" 
+              HorizontalStretch="true" 
+              VerticalShrink="true" 
+              HorizontalShrink="true" 
+              RequestedHeight="400" 
+              RequestedWidth="600">
+    <Scripts>
+        <Script src="https://maps.googleapis.com/maps/api/js?key=VOTRE_CLE_API_GOOGLE_MAPS"></Script>
+        <Script src="Scripts/MapControl.js"></Script>
+    </Scripts>
+    <StyleSheets>
+        <StyleSheet src="Styles/MapControl.css"/>
+    </StyleSheets>
+    <StartupScript>
+        InitializeControl();
+    </StartupScript>
+    <Event Name="ControlAddInReady" />
+    <Event Name="MarkerClicked" ReturnType="String" />
+    <Method Name="InitializeMap" ReturnType="Boolean" />
+    <Method Name="AddMarker" ReturnType="Boolean">
+        <Parameter Name="Id" Type="String" />
+        <Parameter Name="Latitude" Type="Decimal" />
+        <Parameter Name="Longitude" Type="Decimal" />
+        <Parameter Name="Title" Type="String" />
+        <Parameter Name="Description" Type="String" />
+    </Method>
+    <Method Name="ClearMarkers" ReturnType="Boolean" />
+    <Method Name="SetCenter" ReturnType="Boolean">
+        <Parameter Name="Latitude" Type="Decimal" />
+        <Parameter Name="Longitude" Type="Decimal" />
+    </Method>
+</ControlAddIn>
+*/ -->

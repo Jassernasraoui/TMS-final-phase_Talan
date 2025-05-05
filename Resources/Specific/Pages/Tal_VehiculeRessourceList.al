@@ -1,12 +1,14 @@
 page 50110 "Vehicule Resource list"
 {
-    PageType = List;
+    PageType = list;
     SourceTable = Resource;
     ApplicationArea = Jobs;
-    Caption = 'Vehicule Resource list';
+    Caption = 'vehicle Resource list';
     UsageCategory = lists;
     InsertAllowed = false;
     DeleteAllowed = false;
+    Editable = false;
+
 
     layout
     {
@@ -32,10 +34,10 @@ page 50110 "Vehicule Resource list"
                     ToolTip = 'Specifies information in addition to the description.';
                     Visible = false;
                 }
-                field("vehicule type"; Rec."Vehicule Type")
+                field("vehicule type"; Rec."vehicle Type")
                 {
                     ApplicationArea = Jobs;
-                    ToolTip = 'Specifies type of vehicule .';
+                    ToolTip = 'Specifies type of vehicle .';
                 }
                 field("Base Unit of Measure"; Rec."Base Unit of Measure")
                 {

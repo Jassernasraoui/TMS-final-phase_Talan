@@ -1,17 +1,21 @@
-table 50147 "Expédition Header"
+table 50147 "Planification Header"
 {
     DataClassification = CustomerContent;
 
     fields
     {
+        field(1; "Document Type"; Enum "Sales Document Type")
+        {
+            Caption = 'Document Type';
+        }
         field(6; "Logistic Tour No."; Code[20])
         {
             DataClassification = CustomerContent;
 
             trigger OnValidate()
             var
-                TourNo: Record "Expédition Header";
-                SetupRec: Record "Sales & Receivables Setup"; // Replace with your actual setup table name
+                TourNo: Record "Planification Header";
+                SetupRec: Record "Sales & Receivables Setup";
                 NoSeries: Codeunit "No. Series";
             begin
                 if "Logistic Tour No." < xRec."Logistic Tour No." then
@@ -60,8 +64,70 @@ table 50147 "Expédition Header"
             Editable = false;
             TableRelation = "No. Series";
         }
-    }
+        field(9; "No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(10; "No. of Planning Lines"; Integer)
+        {
+            DataClassification = ToBeClassified;
 
+            Caption = 'Number of Planning Lines';
+            Editable = false;
+        }
+
+        field(11; "Total Quantity"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+
+            Caption = 'Total Quantity';
+            Editable = false;
+        }
+
+        field(12; "Estimated Total Weight"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+
+            Caption = 'Estimated Total Weight (kg)';
+            Editable = false;
+        }
+
+        field(13; "Estimated Distance"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+
+            Caption = 'Estimated Distance (km)';
+            Editable = false;
+        }
+
+        field(14; "Estimated Duration"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+
+            Caption = 'Estimated Duration (hrs)';
+            Editable = false;
+        }
+
+        field(15; "Load Utilization"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+
+            Caption = 'Load Utilization (%)';
+            DecimalPlaces = 0 : 2;
+            Editable = false;
+        }
+        field(16; "Created By"; code[50])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = User."User Name";
+
+        }
+        field(17; "Delivery Area"; Text[200])
+        {
+            DataClassification = ToBeClassified;
+        }
+
+    }
     keys
     {
         key(PK; "Logistic Tour No.") { Clustered = true; }
@@ -81,5 +147,4 @@ table 50147 "Expédition Header"
             "Logistic Tour No." := NoSeries.GetNextNo("No. Series", Today, true);
         end;
     end;
-
 }
