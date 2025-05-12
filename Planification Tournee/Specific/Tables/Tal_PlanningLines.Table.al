@@ -135,10 +135,112 @@ table 50100 "Planning Lines"
         {
             DataClassification = ToBeClassified;
         }
+
+        // Champs pour l'attribution des jours et créneaux horaires
+        field(33; "Assigned Day"; Date)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Assigned Day';
+        }
+
+        field(34; "Time Slot Start"; Time)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Time Slot Start';
+        }
+
+        field(35; "Time Slot End"; Time)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Time Slot End';
+        }
+
+        field(36; "Estimated Duration"; Duration)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Estimated Duration';
+        }
+
+        field(37; "Priority"; Option)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Priority';
+            OptionMembers = Low,Normal,High,Critical;
+            OptionCaption = 'Low,Normal,High,Critical';
+        }
+
+        // Champs pour le regroupement des missions
+        field(38; "Customer No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Customer No.';
+            TableRelation = Customer."No.";
+        }
+
+        field(39; "Vendor No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Vendor No.';
+            TableRelation = Vendor."No.";
+        }
+
+        field(40; "Location Code"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Location Code';
+            TableRelation = Location.Code;
+        }
+
+        field(41; "Geographic Coordinates"; Text[100])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Geographic Coordinates';
+        }
+
+        field(42; "Grouped With"; Integer)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Grouped With';
+            Description = 'Line No. of the main line in a group';
+        }
+
+        field(43; "Group Type"; Option)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Group Type';
+            OptionMembers = "None","By Proximity","By Customer","By Type";
+            OptionCaption = 'None,By Proximity,By Customer,By Type';
+        }
+
+        field(44; "Activity Type"; Option)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Activity Type';
+            OptionMembers = "Delivery","Pickup","Service","Installation","Maintenance","Other";
+            OptionCaption = 'Delivery,Pickup,Service,Installation,Maintenance,Other';
+        }
+
+        field(45; "Deadline"; DateTime)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Deadline';
+        }
+
+        field(46; "Selected"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Selected';
+            Description = 'Used for optimization suggestions';
+        }
     }
 
     keys
     {
         key(PK; "Logistic Tour No.", "Line No.") { Clustered = true; }
+        key(AssignedDay; "Logistic Tour No.", "Assigned Day") { }
+        key(Priority; "Logistic Tour No.", "Priority") { }
+        key(Customer; "Logistic Tour No.", "Customer No.") { }
+        key(Location; "Logistic Tour No.", "Location Code") { }
+        key(ActivityType; "Logistic Tour No.", "Activity Type") { }
     }
 }

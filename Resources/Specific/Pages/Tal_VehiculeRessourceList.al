@@ -3,12 +3,13 @@ page 50110 "Tal Vehicule Resource list"
     PageType = list;
     SourceTable = Resource;
     ApplicationArea = Jobs;
+    CardPageId = " Tal Vehicule resources card ";
     Caption = 'vehicle Resource list';
     UsageCategory = lists;
-    InsertAllowed = false;
+    MultipleNewLines = true;
+    AutoSplitKey = true;
+    InsertAllowed = true;
     DeleteAllowed = false;
-    Editable = false;
-
 
     layout
     {

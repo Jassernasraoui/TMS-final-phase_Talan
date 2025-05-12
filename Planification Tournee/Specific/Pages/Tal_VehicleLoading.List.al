@@ -6,6 +6,8 @@ page 50135 "Vehicle Loading List"
     UsageCategory = Lists;
     Caption = 'Vehicle Loading List';
     Editable = True;
+    CardPageId = "Vehicle Loading Card";
+    SourceTableView = sorting("Loading Date") order(descending);
 
     layout
     {
@@ -42,10 +44,110 @@ page 50135 "Vehicle Loading List"
                 Caption = 'Open';
                 ApplicationArea = All;
                 Image = EditLines;
+                Promoted = true;
+                PromotedCategory = Process;
+                ShortcutKey = 'Return';
+
                 trigger OnAction()
                 begin
                     PAGE.Run(PAGE::"Vehicle Loading Card", Rec);
                 end;
+            }
+
+            action("Create New")
+            {
+                Caption = 'Create New Loading Sheet';
+                ApplicationArea = All;
+                Image = New;
+                Promoted = true;
+                PromotedCategory = New;
+
+                trigger OnAction()
+                var
+                    VehicleLoadingHeader: Record "Vehicle Loading Header";
+                    VehicleLoadingCard: Page "Vehicle Loading Card";
+                begin
+                    VehicleLoadingHeader.Init();
+                    VehicleLoadingHeader."Loading Date" := Today;
+                    VehicleLoadingHeader."Status" := VehicleLoadingHeader."Status"::Planned;
+                    VehicleLoadingHeader.Insert(true);
+
+                    Commit();
+
+                    VehicleLoadingCard.SetRecord(VehicleLoadingHeader);
+                    VehicleLoadingCard.Run();
+                end;
+            }
+
+            action("Filter Planned")
+            {
+                Caption = 'Show Planned';
+                ApplicationArea = All;
+                Image = FilterLines;
+                Promoted = true;
+                PromotedCategory = Category4;
+
+                trigger OnAction()
+                begin
+                    Rec.SetRange(Status, Rec.Status::Planned);
+                    CurrPage.Update(false);
+                end;
+            }
+
+            action("Filter In Progress")
+            {
+                Caption = 'Show In Progress';
+                ApplicationArea = All;
+                Image = FilterLines;
+                Promoted = true;
+                PromotedCategory = Category4;
+
+                trigger OnAction()
+                begin
+                    Rec.SetRange(Status, Rec.Status::InProgress);
+                    CurrPage.Update(false);
+                end;
+            }
+
+            action("Filter Completed")
+            {
+                Caption = 'Show Completed';
+                ApplicationArea = All;
+                Image = FilterLines;
+                Promoted = true;
+                PromotedCategory = Category4;
+
+                trigger OnAction()
+                begin
+                    Rec.SetRange(Status, Rec.Status::Completed);
+                    CurrPage.Update(false);
+                end;
+            }
+
+            action("Clear Filters")
+            {
+                Caption = 'Show All';
+                ApplicationArea = All;
+                Image = ClearFilter;
+                Promoted = true;
+                PromotedCategory = Category4;
+
+                trigger OnAction()
+                begin
+                    Rec.Reset();
+                    CurrPage.Update(false);
+                end;
+            }
+        }
+
+        area(Navigation)
+        {
+            action("Tour Planning")
+            {
+                Caption = 'Tour Planning';
+                ApplicationArea = All;
+                Image = Planning;
+                RunObject = Page "Tour Planification List";
             }
         }
     }

@@ -54,7 +54,7 @@ table 50132 "Vehicle Loading Header"
         }
         field(13; "Status"; Option)
         {
-            OptionMembers = Planned,Loading,InProgress,Completed,Canceled;
+            OptionMembers = Planned,Loading,InProgress,Completed,Canceled,Validated;
             DataClassification = ToBeClassified;
         }
         field(14; "Validated By"; Code[50])
@@ -90,9 +90,49 @@ table 50132 "Vehicle Loading Header"
 
     keys
     {
-        // key(PK; "No.")
-        // {
-        //     Clustered = true;
-        // }
+        key(PK; "No.")
+        {
+            Clustered = true;
+        }
     }
+
+    trigger OnInsert()
+    begin
+        if "No." = '' then begin
+            // Make sure the no. series exists
+            InitVehicleLoadingNoSeries();
+            // Get the next number
+            "No." := NoSeriesMgt.GetNextNo('VLOAD', Today, true);
+        end;
+    end;
+
+    var
+        NoSeriesMgt: Codeunit NoSeriesManagement;
+
+    local procedure InitVehicleLoadingNoSeries()
+    var
+        NoSeries: Record "No. Series";
+        NoSeriesLine: Record "No. Series Line";
+    begin
+        // Check if VLOAD No. Series exists
+        if not NoSeries.Get('VLOAD') then begin
+            // Create No. Series for Vehicle Loading
+            NoSeries.Init();
+            NoSeries.Code := 'VLOAD';
+            NoSeries.Description := 'Vehicle Loading Sheets';
+            NoSeries."Default Nos." := true;
+            NoSeries."Manual Nos." := false;
+            if NoSeries.Insert() then;
+
+            // Create No. Series Line
+            NoSeriesLine.Init();
+            NoSeriesLine."Series Code" := 'VLOAD';
+            NoSeriesLine."Line No." := 10000;
+            NoSeriesLine."Starting No." := 'VL-0001';
+            NoSeriesLine."Ending No." := 'VL-9999';
+            NoSeriesLine."Increment-by No." := 1;
+            NoSeriesLine."Last No. Used" := '';
+            if NoSeriesLine.Insert() then;
+        end;
+    end;
 }

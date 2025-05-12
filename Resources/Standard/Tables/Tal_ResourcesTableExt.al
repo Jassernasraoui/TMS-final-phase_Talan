@@ -61,12 +61,12 @@ tableextension 50115 " Ressources Table" extends Resource
 
         }
 
-        field(50103; "Max Capacity Charge"; Code[100])
+        field(50103; "Max Capacity Charge"; Decimal)
         {
             // Caption = ' Specifies the Max Capacity Charge in KG';
             DataClassification = CustomerContent;
         }
-        field(50104; "Current kilometres"; code[100])
+        field(50104; "Current kilometres"; Decimal)
         {
             // Caption = 'Specifies the total distance traveled by the vehicle';
             DataClassification = ToBeClassified;
@@ -99,7 +99,7 @@ tableextension 50115 " Ressources Table" extends Resource
             DataClassification = CustomerContent;
             // Caption = 'Specifies the Vehicle Length in meters';
         }
-        field(50110; "Vehicule Volume"; Integer)
+        field(50110; "Vehicule Volume"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
