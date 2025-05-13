@@ -1,4 +1,4 @@
-pageextension 50101 " TAL_PersonResource Card" extends "Resource Card"
+pageextension 77001 " TAL_PersonResource Card" extends "Resource Card"
 {
     layout
     {

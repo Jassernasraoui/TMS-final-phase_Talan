@@ -1,4 +1,4 @@
-page 50121 "Source Document Selection"
+page 77008 "Source Document Selection"
 {
     PageType = List;
     ApplicationArea = All;
@@ -152,88 +152,184 @@ page 50121 "Source Document Selection"
                 field("Document Type"; Rec."Document Type")
                 {
                     ApplicationArea = All;
-                    Caption = 'Document Type';
+                    Caption = 'Type';
                     ToolTip = 'Specifies the type of document.';
+                    Editable = false;
+                }
+
+                field("Line No."; Rec."Line No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Line No.';
+                    ToolTip = 'Specifies the line number.';
+                    Editable = false;
+                }
+
+                field("Tour No."; Rec."Tour No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Logistic Tour No.';
+                    ToolTip = 'Specifies the tour number.';
                     Editable = false;
                 }
 
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = All;
-                    Caption = 'Document No.';
+                    Caption = 'Source ID';
                     ToolTip = 'Specifies the document number.';
-                    Editable = false;
-                }
-
-                field("Account Type"; Rec."Account Type")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Account Type';
-                    ToolTip = 'Specifies the type of account (Customer or Vendor).';
                     Editable = false;
                 }
 
                 field("Account No."; Rec."Account No.")
                 {
                     ApplicationArea = All;
-                    Caption = 'Account No.';
+                    Caption = 'Customer/Vendor No.';
                     ToolTip = 'Specifies the account number.';
+                    Editable = false;
+                }
+
+                field("Variant Code"; Rec."Variant Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Variant Code';
+                    ToolTip = 'Specifies the variant code.';
                     Editable = false;
                 }
 
                 field("Account Name"; Rec."Account Name")
                 {
                     ApplicationArea = All;
-                    Caption = 'Account Name';
+                    Caption = 'Customer/Vendor Name';
                     ToolTip = 'Specifies the account name.';
                     Editable = false;
                 }
 
-                field("Location Code"; Rec."Location Code")
+                field("Description 2"; Rec."Description 2")
                 {
                     ApplicationArea = All;
-                    Caption = 'Location Code';
-                    ToolTip = 'Specifies the location code.';
-                    Editable = false;
-                }
-
-                field("Document Date"; Rec."Document Date")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Document Date';
-                    ToolTip = 'Specifies the document date.';
-                    Editable = false;
-                }
-
-                field("Delivery Date"; Rec."Delivery Date")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Delivery Date';
-                    ToolTip = 'Specifies the requested delivery date.';
-                    Editable = false;
-                }
-
-                field(Priority; Rec.Priority)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Priority';
-                    ToolTip = 'Specifies the priority level of the document.';
+                    Caption = 'Description 2';
+                    ToolTip = 'Specifies an additional description.';
                     Editable = false;
                 }
 
                 field("Total Quantity"; Rec."Total Quantity")
                 {
                     ApplicationArea = All;
-                    Caption = 'Total Quantity';
+                    Caption = 'Quantity';
                     ToolTip = 'Specifies the total quantity in the document.';
                     Editable = false;
                 }
 
-                field("Total Weight"; Rec."Total Weight")
+                field("Quantity (Base)"; Rec."Quantity (Base)")
                 {
                     ApplicationArea = All;
-                    Caption = 'Total Weight';
-                    ToolTip = 'Specifies the total weight of items in the document.';
+                    Caption = 'Quantity (Base)';
+                    ToolTip = 'Specifies the quantity in base unit of measure.';
+                    Editable = false;
+                }
+
+                field("Qty. per Unit of Measure"; Rec."Qty. per Unit of Measure")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Qty. per Unit of Measure';
+                    ToolTip = 'Specifies the quantity per unit of measure.';
+                    Editable = false;
+                }
+
+                field("Unit of Measure Code"; Rec."Unit of Measure Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Unit of Measure Code';
+                    ToolTip = 'Specifies the unit of measure code.';
+                    Editable = false;
+                }
+
+                field("Qty. Rounding Precision"; Rec."Qty. Rounding Precision")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Qty. Rounding Precision';
+                    ToolTip = 'Specifies the quantity rounding precision.';
+                    Editable = false;
+                }
+
+                field("Qty. Rounding Precision (Base)"; Rec."Qty. Rounding Precision (Base)")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Qty. Rounding Precision (Base)';
+                    ToolTip = 'Specifies the quantity rounding precision in base unit.';
+                    Editable = false;
+                }
+
+                field("Unit Volume"; Rec."Unit Volume")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Unit Volume';
+                    ToolTip = 'Specifies the unit volume.';
+                    Editable = false;
+                }
+
+                field("Gross Weight"; Rec."Gross Weight")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Gross Weight';
+                    ToolTip = 'Specifies the gross weight.';
+                    Editable = false;
+                }
+
+                field("Net Weight"; Rec."Net Weight")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Net Weight';
+                    ToolTip = 'Specifies the net weight.';
+                    Editable = false;
+                }
+
+                field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Global Dimension 1 Code';
+                    ToolTip = 'Specifies the global dimension 1 code.';
+                    Editable = false;
+                }
+
+                field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Global Dimension 2 Code';
+                    ToolTip = 'Specifies the global dimension 2 code.';
+                    Editable = false;
+                }
+
+                field("Dimension Set ID"; Rec."Dimension Set ID")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Dimension Set ID';
+                    ToolTip = 'Specifies the dimension set ID.';
+                    Editable = false;
+                }
+
+                field("Delivery Date"; Rec."Delivery Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Planned Date';
+                    ToolTip = 'Specifies the requested delivery date.';
+                    Editable = false;
+                }
+
+                field("Expected Shipment Date"; Rec."Expected Shipment Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Expected Shipment Date';
+                    ToolTip = 'Specifies the expected shipment date.';
+                    Editable = false;
+                }
+
+                field("Expected Receipt Date"; Rec."Expected Receipt Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Expected Receipt Date';
+                    ToolTip = 'Specifies the expected receipt date.';
                     Editable = false;
                 }
             }
@@ -384,6 +480,7 @@ page 50121 "Source Document Selection"
     var
         SalesHeader: Record "Sales Header";
         SalesLine: Record "Sales Line";
+        Item: Record Item;
         LineNo: Integer;
     begin
         SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
@@ -407,15 +504,37 @@ page 50121 "Source Document Selection"
                 Rec."Tour No." := CurrentTourNo;
                 Rec.Priority := Rec.Priority::Normal;
 
+                // New fields
+                Rec."Global Dimension 1 Code" := SalesHeader."Shortcut Dimension 1 Code";
+                Rec."Global Dimension 2 Code" := SalesHeader."Shortcut Dimension 2 Code";
+                Rec."Dimension Set ID" := SalesHeader."Dimension Set ID";
+                Rec."Expected Shipment Date" := SalesHeader."Shipment Date";
+
                 // Calculate total quantity and weight
                 SalesLine.SetRange("Document Type", SalesHeader."Document Type");
                 SalesLine.SetRange("Document No.", SalesHeader."No.");
                 if SalesLine.FindSet() then
                     repeat
                         Rec."Total Quantity" += SalesLine.Quantity;
+                        Rec."Quantity (Base)" += SalesLine."Quantity (Base)";
+
                         if SalesLine.Type = SalesLine.Type::Item then begin
-                            // Weight calculation would need item information
-                            // This is simplified
+                            // Get additional info from the item
+                            if Item.Get(SalesLine."No.") then begin
+                                Rec."Unit Volume" := Item."Unit Volume";
+                                Rec."Gross Weight" := Item."Gross Weight";
+                                Rec."Net Weight" := Item."Net Weight";
+                            end;
+
+                            Rec."Variant Code" := SalesLine."Variant Code";
+                            Rec."Description 2" := SalesLine."Description 2";
+                            Rec."Unit of Measure Code" := SalesLine."Unit of Measure Code";
+                            Rec."Qty. per Unit of Measure" := SalesLine."Qty. per Unit of Measure";
+
+                            // These fields might not be directly available in sales line
+                            // Assign default values if needed
+                            Rec."Qty. Rounding Precision" := 0.00001;
+                            Rec."Qty. Rounding Precision (Base)" := 0.00001;
                         end;
                     until SalesLine.Next() = 0;
 
@@ -427,6 +546,7 @@ page 50121 "Source Document Selection"
     var
         PurchHeader: Record "Purchase Header";
         PurchLine: Record "Purchase Line";
+        Item: Record Item;
         LineNo: Integer;
     begin
         if Rec.FindLast() then
@@ -453,13 +573,38 @@ page 50121 "Source Document Selection"
                 Rec."Tour No." := CurrentTourNo;
                 Rec.Priority := Rec.Priority::Normal;
 
+                // New fields
+                Rec."Global Dimension 1 Code" := PurchHeader."Shortcut Dimension 1 Code";
+                Rec."Global Dimension 2 Code" := PurchHeader."Shortcut Dimension 2 Code";
+                Rec."Dimension Set ID" := PurchHeader."Dimension Set ID";
+                Rec."Expected Receipt Date" := PurchHeader."Expected Receipt Date";
+
                 // Calculate total quantity and weight
                 PurchLine.SetRange("Document Type", PurchHeader."Document Type");
                 PurchLine.SetRange("Document No.", PurchHeader."No.");
                 if PurchLine.FindSet() then
                     repeat
                         Rec."Total Quantity" += PurchLine.Quantity;
-                    // Weight calculation simplified
+                        Rec."Quantity (Base)" += PurchLine."Quantity (Base)";
+
+                        if PurchLine.Type = PurchLine.Type::Item then begin
+                            // Get additional info from the item
+                            if Item.Get(PurchLine."No.") then begin
+                                Rec."Unit Volume" := Item."Unit Volume";
+                                Rec."Gross Weight" := Item."Gross Weight";
+                                Rec."Net Weight" := Item."Net Weight";
+                            end;
+
+                            Rec."Variant Code" := PurchLine."Variant Code";
+                            Rec."Description 2" := PurchLine."Description 2";
+                            Rec."Unit of Measure Code" := PurchLine."Unit of Measure Code";
+                            Rec."Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
+
+                            // These fields might not be directly available in purchase line
+                            // Assign default values if needed
+                            Rec."Qty. Rounding Precision" := 0.00001;
+                            Rec."Qty. Rounding Precision (Base)" := 0.00001;
+                        end;
                     until PurchLine.Next() = 0;
 
                 Rec.Insert();
@@ -470,6 +615,7 @@ page 50121 "Source Document Selection"
     var
         TransferHeader: Record "Transfer Header";
         TransferLine: Record "Transfer Line";
+        Item: Record Item;
         LineNo: Integer;
     begin
         if Rec.FindLast() then
@@ -495,12 +641,34 @@ page 50121 "Source Document Selection"
                 Rec."Tour No." := CurrentTourNo;
                 Rec.Priority := Rec.Priority::Normal;
 
+                // New fields
+                Rec."Expected Shipment Date" := TransferHeader."Shipment Date";
+                Rec."Expected Receipt Date" := TransferHeader."Receipt Date";
+
                 // Calculate total quantity and weight
                 TransferLine.SetRange("Document No.", TransferHeader."No.");
                 if TransferLine.FindSet() then
                     repeat
                         Rec."Total Quantity" += TransferLine.Quantity;
-                    // Weight calculation simplified
+                        Rec."Quantity (Base)" += TransferLine."Quantity (Base)";
+
+                        // Get additional info from the item
+                        if Item.Get(TransferLine."Item No.") then begin
+                            Rec."Unit Volume" := Item."Unit Volume";
+                            Rec."Gross Weight" := Item."Gross Weight";
+                            Rec."Net Weight" := Item."Net Weight";
+
+                            // Add dimension information from the item
+                            Rec."Global Dimension 1 Code" := Item."Global Dimension 1 Code";
+                            Rec."Global Dimension 2 Code" := Item."Global Dimension 2 Code";
+                        end;
+
+                        Rec."Variant Code" := TransferLine."Variant Code";
+                        Rec."Description 2" := TransferLine."Description 2";
+                        Rec."Unit of Measure Code" := TransferLine."Unit of Measure Code";
+                        Rec."Qty. per Unit of Measure" := TransferLine."Qty. per Unit of Measure";
+                        Rec."Qty. Rounding Precision" := TransferLine."Qty. Rounding Precision";
+                        Rec."Qty. Rounding Precision (Base)" := TransferLine."Qty. Rounding Precision (Base)";
                     until TransferLine.Next() = 0;
 
                 Rec.Insert();

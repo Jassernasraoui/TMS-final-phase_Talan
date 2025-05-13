@@ -1,167 +1,139 @@
-table 50100 "Planning Lines"
+table 77101 "Planning Lines"
 {
     DataClassification = ToBeClassified;
 
     fields
     {
-        field(1; "Logistic Tour No."; Code[20])
+        field(77001; "Logistic Tour No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(2; "Line No."; Integer)
+        field(77002; "Line No."; Integer)
         {
             DataClassification = ToBeClassified;
         }
-        field(3; "Type"; Option)
+        field(77003; "Type"; Option)
         {
             OptionMembers = Sales,Purchase,Transfer;
             DataClassification = ToBeClassified;
         }
-        field(4; "Source ID"; Code[20])
+        field(77004; "Source ID"; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(5; "Item No."; Code[20])
+        field(77005; "Item No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(6; "Variant Code"; Code[10])
+        field(77006; "Variant Code"; Code[10])
         {
             DataClassification = ToBeClassified;
         }
-        field(7; Description; Text[100])
+        field(77007; Description; Text[100])
         {
             DataClassification = ToBeClassified;
         }
-        field(8; "Description 2"; Text[50])
+        field(77008; "Description 2"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(9; Quantity; Decimal)
+        field(77009; Quantity; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(10; "Quantity (Base)"; Decimal)
+        field(77010; "Quantity (Base)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(11; "Qty. per Unit of Measure"; Decimal)
+        field(77011; "Qty. per Unit of Measure"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(12; "Unit of Measure Code"; Code[10])
+        field(77012; "Unit of Measure Code"; Code[10])
         {
             DataClassification = ToBeClassified;
         }
-        field(13; "Qty. Rounding Precision"; Decimal)
+        field(77013; "Qty. Rounding Precision"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(14; "Qty. Rounding Precision (Base)"; Decimal)
+        field(77014; "Qty. Rounding Precision (Base)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(15; "Unit Volume"; Decimal)
+        field(77015; "Unit Volume"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(16; "Gross Weight"; Decimal)
+        field(77016; "Gross Weight"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(80; "Transfer-from Code"; Code[100]) { }
+        field(77017; "Transfer-from Code"; Code[100]) { }
         field(17; "Net Weight"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(18; Status; Option)
-        {
-            OptionMembers = Open,Released,Completed;
-            DataClassification = ToBeClassified;
-        }
-        field(19; "Project Code"; Code[20])
+
+        field(77018; "Dimension Set ID"; Integer)
         {
             DataClassification = ToBeClassified;
         }
-        field(20; "Department Code"; Code[20])
+        field(77019; " Delivery Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(21; "Gen. Prod. Posting Group"; Code[20])
+        field(77020; "Expected Shipment Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(22; "Inventory Posting Group"; Code[20])
+        field(77021; "Expected Receipt Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(23; "Item Category Code"; Code[20])
+        field(77022; "Created At"; DateTime)
         {
             DataClassification = ToBeClassified;
         }
-        field(24; "Dimension Set ID"; Integer)
+        field(77023; "Created By"; Code[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(25; "Planned Date"; Date)
+        field(77024; "Modified At"; DateTime)
         {
             DataClassification = ToBeClassified;
         }
-        field(26; "Expected Shipment Date"; Date)
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(27; "Expected Receipt Date"; Date)
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(28; "Created At"; DateTime)
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(29; "Created By"; Code[50])
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(30; "Modified At"; DateTime)
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(31; "Modified By"; Code[50])
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(32; "System ID"; Guid)
+        field(77025; "Modified By"; Code[50])
         {
             DataClassification = ToBeClassified;
         }
 
         // Champs pour l'attribution des jours et créneaux horaires
-        field(33; "Assigned Day"; Date)
+        field(77026; "Assigned Day"; Date)
         {
             DataClassification = ToBeClassified;
             Caption = 'Assigned Day';
         }
 
-        field(34; "Time Slot Start"; Time)
+        field(77027; "Time Slot Start"; Time)
         {
             DataClassification = ToBeClassified;
             Caption = 'Time Slot Start';
         }
 
-        field(35; "Time Slot End"; Time)
+        field(77028; "Time Slot End"; Time)
         {
             DataClassification = ToBeClassified;
             Caption = 'Time Slot End';
         }
 
-        field(36; "Estimated Duration"; Duration)
+        field(77029; "Estimated Duration"; Duration)
         {
             DataClassification = ToBeClassified;
             Caption = 'Estimated Duration';
         }
 
-        field(37; "Priority"; Option)
+        field(77030; "Priority"; Option)
         {
             DataClassification = ToBeClassified;
             Caption = 'Priority';
@@ -170,41 +142,41 @@ table 50100 "Planning Lines"
         }
 
         // Champs pour le regroupement des missions
-        field(38; "Customer No."; Code[20])
+        field(77031; "Customer No."; Code[20])
         {
             DataClassification = ToBeClassified;
             Caption = 'Customer No.';
             TableRelation = Customer."No.";
         }
 
-        field(39; "Vendor No."; Code[20])
+        field(77032; "Vendor No."; Code[20])
         {
             DataClassification = ToBeClassified;
             Caption = 'Vendor No.';
             TableRelation = Vendor."No.";
         }
 
-        field(40; "Location Code"; Code[20])
+        field(77033; "Location Code"; Code[20])
         {
             DataClassification = ToBeClassified;
             Caption = 'Location Code';
             TableRelation = Location.Code;
         }
 
-        field(41; "Geographic Coordinates"; Text[100])
+        field(77034; "Geographic Coordinates"; Text[100])
         {
             DataClassification = ToBeClassified;
             Caption = 'Geographic Coordinates';
         }
 
-        field(42; "Grouped With"; Integer)
+        field(77035; "Grouped With"; Integer)
         {
             DataClassification = ToBeClassified;
             Caption = 'Grouped With';
             Description = 'Line No. of the main line in a group';
         }
 
-        field(43; "Group Type"; Option)
+        field(77036; "Group Type"; Option)
         {
             DataClassification = ToBeClassified;
             Caption = 'Group Type';
@@ -212,7 +184,7 @@ table 50100 "Planning Lines"
             OptionCaption = 'None,By Proximity,By Customer,By Type';
         }
 
-        field(44; "Activity Type"; Option)
+        field(77037; "Activity Type"; Option)
         {
             DataClassification = ToBeClassified;
             Caption = 'Activity Type';
@@ -220,18 +192,48 @@ table 50100 "Planning Lines"
             OptionCaption = 'Delivery,Pickup,Service,Installation,Maintenance,Other';
         }
 
-        field(45; "Deadline"; DateTime)
+        field(77038; "Deadline"; DateTime)
         {
             DataClassification = ToBeClassified;
             Caption = 'Deadline';
         }
 
-        field(46; "Selected"; Boolean)
+        field(77039; "Selected"; Boolean)
         {
             DataClassification = ToBeClassified;
             Caption = 'Selected';
             Description = 'Used for optimization suggestions';
         }
+        field(77040; Status; Option)
+        {
+            OptionMembers = Open,Released,Completed;
+            DataClassification = ToBeClassified;
+        }
+        field(77041; "Global Dimension 1 Code"; Code[20])
+        {
+            CaptionClass = '1,2,1';
+            Caption = 'Global Dimension 1 Code';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1),
+                                                          Blocked = const(false));
+
+            // trigger OnValidate()
+            // begin
+            //     Rec.ValidateShortcutDimCode(1, "Shortcut Dimension 1 Code");
+            // end;
+        }
+        field(77042; "Global Dimension 2 Code"; Code[20])
+        {
+            CaptionClass = '1,2,2';
+            Caption = 'Global Dimension 2 Code';
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2),
+                                                          Blocked = const(false));
+
+            // trigger OnValidate()
+            // begin
+            //     Rec.ValidateShortcutDimCode(2, "Shortcut Dimension 2 Code");
+            // end;
+        }
+
     }
 
     keys

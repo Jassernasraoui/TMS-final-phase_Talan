@@ -1,4 +1,4 @@
-pageextension 50124 "Tal Purchase Lines" extends "Purchase Lines"
+pageextension 77008 "Tal Purchase Lines" extends "Purchase Lines"
 {
     layout
     {

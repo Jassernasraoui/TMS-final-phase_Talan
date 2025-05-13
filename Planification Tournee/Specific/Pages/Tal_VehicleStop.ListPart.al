@@ -1,4 +1,4 @@
-page 50101 "Vehicle Stop List"
+page 77001 "Vehicle Stop List"
 {
     PageType = ListPart;
     SourceTable = "vehicle Stop Line";

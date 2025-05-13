@@ -1,4 +1,4 @@
-// table 50140 "Tour Location"
+// table 77105 "Tour Location"
 // {
 //     DataClassification = CustomerContent;
 

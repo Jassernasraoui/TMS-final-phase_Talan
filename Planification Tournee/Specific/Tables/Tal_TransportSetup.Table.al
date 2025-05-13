@@ -1,4 +1,4 @@
-// table 50104 "Transport Setup"
+// table 77106 "Transport Setup"
 // {
 //     DataClassification = CustomerContent;
 //     Caption = 'Paramètres Transport';

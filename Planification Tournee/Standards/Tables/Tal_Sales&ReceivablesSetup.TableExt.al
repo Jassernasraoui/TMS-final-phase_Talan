@@ -1,8 +1,8 @@
-tableextension 50148 "Tal Sales & Receivables Setup" extends "Sales & Receivables Setup"
+tableextension 77005 "Tal Sales & Receivables Setup" extends "Sales & Receivables Setup"
 {
     fields
     {
-        field(100; "Logistic Tour Nos."; Code[20])
+        field(77001; "Logistic Tour Nos."; Code[20])
         {
             caption = 'Logistic Tour Nos';
             TableRelation = "No. Series";
