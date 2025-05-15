@@ -1,0 +1,111 @@
+@startuml Resources Class Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam padding 10
+skinparam classFontSize 14
+skinparam titleFontSize 20
+skinparam packageTitleFontSize 16
+skinparam legendFontSize 14
+
+title Resources Module - Class Diagram
+
+package "BC Standard" {
+  class Resource {
+    + No: Code[20]
+    + Name: Text[100]
+    + Name 2: Text[50]
+    + Search Name: Text[100]
+    + Type: Enum (Person/Machine)
+    + Base Unit of Measure: Code[10]
+    + Resource Group No.: Code[20]
+    + Unit Cost: Decimal
+    + Price/Profit Calculation: Option
+    + Gen. Prod. Posting Group: Code[20]
+    + VAT Prod. Posting Group: Code[20]
+    + Address: Text[100]
+    + ...
+  }
+}
+
+package "Resources Extension" {
+  enum "Driver License Type" {
+    + License A
+    + License B
+    + License C
+    + License D
+    + License BE
+    + License CE
+    + License DE
+    + License L
+  }
+
+  enum "Tal Vehicle Type" {
+    + Light Utility Vehicles
+    + Medium Weight Vehicles
+    + Heavy Vehicles
+    + Trucks
+    + Towed Cars
+    + Buses and Coaches
+    + Agricultural and Forestry Vehicles
+  }
+
+  enum "Resource Status" {
+    + Available
+    + Assigned
+    + InMaintenance
+    + Unavailable
+    + OnLeave
+  }
+
+  class "Person Resource" {
+    .. Personal Information ..
+    + Email: Text[100]
+    + Phone No.: Text[30]
+    + Identity Card No.: Integer
+    + Birth Date: Date
+    + Additional Certifications: Text[50]
+    .. License Information ..
+    + License No.: Code[25]
+    + License Type: Enum "Driver License Type"
+    + License Expiration Date: Date
+    .. Status Information ..
+    + Resource Status: Enum "Resource Status"
+  }
+
+  class "Vehicle Resource" {
+    .. Vehicle Information ..
+    + Machine Model: Text[50]
+    + License plate No.: Code[20]
+    + Vehicle Type: Enum "Tal Vehicle Type"
+    + Vehicle Security No.: Code[30]
+    + Insurance Expiration Date: Code[20]
+    + Vignette: Code[20]
+    .. Dimensions ..
+    + Vehicle Length: Decimal
+    + Vehicle Volume: Decimal
+    .. Tracking ..
+    + GPS Tracking Enabled: Boolean
+    .. Status ..
+    + Resource Status: Enum "Resource Status"
+    .. Configuration ..
+    + IsTractor: Boolean
+    + Tractor No.: Code[20]
+    + IsTrailer: Boolean
+    + Trailer No.: Code[20]
+  }
+}
+
+Resource <|-- "Person Resource"
+Resource <|-- "Vehicle Resource"
+"Person Resource" -- "Driver License Type"
+"Vehicle Resource" -- "Tal Vehicle Type"
+"Person Resource" -- "Resource Status"
+"Vehicle Resource" -- "Resource Status"
+
+legend
+  This diagram shows the resource data model in Business Central
+  with extensions for Person and Vehicle resources
+end legend
+
+@enduml 

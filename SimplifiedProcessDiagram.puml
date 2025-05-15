@@ -1,0 +1,156 @@
+@startuml Simplified Logistics Process
+skinparam {
+  ActivityBackgroundColor white
+  ActivityBorderColor black
+  ActivityDiamondBackgroundColor white
+  ActivityDiamondBorderColor black
+  NoteBackgroundColor #FFFFAA
+  NoteBorderColor #999999
+  ArrowColor black
+  PageExternalColor white
+  PageMargin 10
+  DefaultFontSize 12
+  DefaultTextAlignment center
+  DefaultFontName Arial
+  TitleFontSize 15
+}
+
+title Processus d'Affectation et de Planification Logistique
+
+(*) -right-> "Création des ressources"
+note right 
+  <b>Ressources</b>
+  - Personnes (chauffeurs)
+  - Véhicules
+  - Attribution statut (Disponible)
+end note
+
+"Création des ressources" -right-> "Création de la tournée"
+note right
+  <b>Tournée</b>
+  - No. de tournée
+  - Date/Période
+  - Statut: Planifiée
+  - Lieu départ/arrivée
+end note
+
+"Création de la tournée" -right-> "Affectation ressources"
+note right
+  <b>Ressources affectées</b>
+  - Chauffeur (Personne)
+  - Véhicule
+  - Vérification compatibilité
+  - Mise à jour statut: Assigné
+end note
+
+"Affectation ressources" -right-> "Planification lignes"
+note right
+  <b>Lignes</b>
+  - Commandes clients
+  - Articles/Quantités
+  - Adresses de livraison
+  - Poids et dimensions
+end note
+
+"Planification lignes" -right-> "Attribution créneaux"
+note right
+  <b>Planification temporelle</b>
+  - Jour de livraison
+  - Créneaux horaires
+  - Équilibrage charge
+  - Optimisation trajet
+end note
+
+"Attribution créneaux" -down-> "Validation tournée"
+
+"Validation tournée" -down-> "Création fiche de chargement"
+note right
+  <b>Préparation logistique</b>
+  - Création document chargement
+  - Référence tournée
+  - Reprise infos véhicule/chauffeur
+  - Génération liste arrêts
+end note
+
+"Création fiche de chargement" -down-> "Calcul totaux"
+note right
+  <b>Données chargement</b>
+  - Poids total
+  - Volume total
+  - Nombre livraisons
+  - Vérification capacité
+end note
+
+"Calcul totaux" -down-> "Libération document chargement"
+note right
+  <b>Libération</b>
+  - Statut: En chargement
+  - Verrouillage modifs
+  - Doc prêt pour préparation
+end note
+
+"Libération document chargement" -left-> "Validation préparation"
+note left
+  <b>Validation</b>
+  - Vérification complète
+  - Validation superviseur
+  - Statut: Validé
+  - Prêt pour chargement
+end note
+
+"Validation préparation" -left-> "Création document chargement véhicule"
+note left
+  <b>Chargement</b>
+  - Référence préparation
+  - Reprise des informations
+  - Statut: En cours
+end note
+
+"Création document chargement véhicule" -left-> "Génération lignes chargement"
+note left
+  <b>Lignes chargement</b>
+  - Basées sur arrêts
+  - Quantités planifiées
+  - Statut: En attente
+end note
+
+"Génération lignes chargement" -left-> "Enregistrement quantités réelles"
+note left
+  <b>Saisie réelle</b>
+  - Quantités chargées
+  - Calcul écarts
+  - Mise à jour statuts
+  - Commentaires si besoin
+end note
+
+"Enregistrement quantités réelles" -up-> "Finalisation chargement"
+note left
+  <b>Finalisation</b>
+  - Vérification complétude
+  - Poids/volume final
+  - Signatures
+  - Statut: Complété
+end note
+
+"Finalisation chargement" -up-> "Départ en mission"
+note left
+  <b>Exécution</b>
+  - Mise à jour statut tournée
+  - Début livraisons
+  - Suivi si disponible
+end note
+
+"Départ en mission" -up-> "Clôture tournée"
+note left
+  <b>Fin mission</b>
+  - Enregistrement retours
+  - Documentation anomalies
+  - Clôture de la tournée
+  - Libération ressources
+end note
+
+"Clôture tournée" -up-> (*)
+
+footer Processus complet de gestion logistique - De la ressource à l'exécution
+
+@enduml 

@@ -1,0 +1,164 @@
+@startuml Tour Planning Class Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam padding 10
+skinparam classFontSize 14
+skinparam titleFontSize 20
+skinparam packageTitleFontSize 16
+skinparam legendFontSize 14
+
+title Tour Planning Module - Class Diagram
+
+package "Tour Planning" {
+  class "Planification Header" {
+    + Logistic Tour No.: Code[20]
+    + No.: Code[20]
+    + No. Series: Code[20]
+    + Document Type: Enum "Sales Document Type"
+    .. Dates & Status ..
+    + Date de Tournée: Date
+    + Start Date: Date
+    + End Date: Date
+    + Document Date: Date
+    + Statut: Option (Plannified/On Mission/Stopped)
+    .. Resources ..
+    + Driver No.: Code[20]
+    + Véhicule No.: Code[20]
+    .. Locations ..
+    + Start Location: Code[20]
+    + End Location: Code[20]
+    + Location Code: Code[20]
+    + Delivery Area: Text[200]
+    .. Comments & Info ..
+    + Commentaire: Text[100]
+    + Created By: Code[50]
+    + Shipping Agent Code: Text[100]
+    + Warehouse Employees: Text[100]
+    .. Statistics ..
+    + No. of Planning Lines: Integer
+    + Total Quantity: Decimal
+    + Estimated Total Weight: Decimal
+    + Estimated Distance: Decimal
+    + Estimated Duration: Decimal
+    + Load Utilization: Decimal
+  }
+
+  class "Planning Lines" {
+    + Logistic Tour No.: Code[20]
+    + Line No.: Integer
+    + Document Type: Option
+    + Document No.: Code[20]
+    + Document Line No.: Integer
+    + Item No.: Code[20]
+    + Description: Text[100]
+    + Customer No.: Code[20]
+    + Quantity: Decimal
+    + Ship-to Code: Code[10]
+    + Geographic Coordinates: Text[100]
+    + Gross Weight: Decimal
+    + Net Weight: Decimal
+    + Created At: DateTime
+    + Created By: Code[50]
+    + Assigned Day: Date
+    + Time Slot Start: Time
+    + Time Slot End: Time
+    + Estimated Duration: Duration
+    + Priority: Option
+  }
+
+  class "Vehicle Loading Header" {
+    + No.: Code[20]
+    + Loading Date: Date
+    + Tour No.: Code[20]
+    + Truck No.: Code[20]
+    + Driver No.: Code[20]
+    + Loading Location: Text[100]
+    + Departure Time: Time
+    + Arrival Time: Time
+    + Total Weight (kg): Decimal
+    + Total Volume (m³): Decimal
+    + Number of Deliveries: Integer
+    + Goods Type: Text[50]
+    + Status: Option (Planned/Loading/InProgress/Completed/Canceled/Validated)
+    + Validated By: Code[50]
+    + Validation Date: DateTime
+    + Itinerary No.: Code[20]
+    + Total Distance (km): Decimal
+    + Estimated Duration: Duration
+    + Itinerary Type: Option
+    + Planned Route: Text[250]
+  }
+
+  class "Vehicle Stop Line" {
+    + Fiche No.: Code[20]
+    + Stop No.: Integer
+    + Customer No.: Code[20]
+    + Delivery Address: Text[100]
+    + Estimated Arrival Time: Time
+    + Estimated Departure Time: Time
+    + Quantity to Deliver: Decimal
+    + Remarks: Text[250]
+  }
+
+  class "Vehicle Charging Header" {
+    + No.: Code[20]
+    + Loading Sheet No.: Code[20]
+    + Charging Date: Date
+    + Tour No.: Code[20]
+    + Truck No.: Code[20]
+    + Driver No.: Code[20]
+    + Loading Location: Text[100]
+    + Start Time: Time
+    + End Time: Time
+    + Actual Weight (kg): Decimal
+    + Actual Volume (m³): Decimal
+    + Status: Option (InProgress/Completed/Cancelled)
+    + Released: Boolean
+    + Completion Date: Date
+    + Completed By: Code[50]
+    + Remarks: Text[250]
+  }
+
+  class "Vehicle Charging Line" {
+    + Charging No.: Code[20]
+    + Line No.: Integer
+    + Stop No.: Integer
+    + Customer No.: Code[20]
+    + Delivery Address: Text[100]
+    + Planned Quantity: Decimal
+    + Actual Quantity: Decimal
+    + Quantity Difference: Decimal
+    + Remarks: Text[250]
+    + Loading Status: Option (Pending/Loaded/PartiallyLoaded/NotLoaded)
+    + Loaded By: Code[50]
+    + Loading Time: Time
+  }
+}
+
+package "Resources" {
+  class "Person Resource" {
+    + No.: Code[20]
+  }
+
+  class "Vehicle Resource" {
+    + No.: Code[20]
+  }
+}
+
+"Planification Header" "1" *-- "many" "Planning Lines" : has
+"Planification Header" "1" -- "0..1" "Vehicle Loading Header" : has
+"Vehicle Loading Header" "1" *-- "many" "Vehicle Stop Line" : has stops
+"Vehicle Loading Header" "1" -- "0..1" "Vehicle Charging Header" : validated for
+"Vehicle Charging Header" "1" *-- "many" "Vehicle Charging Line" : has
+"Planification Header" "1" -- "1" "Person Resource" : assigns driver
+"Planification Header" "1" -- "1" "Vehicle Resource" : assigns vehicle
+"Vehicle Loading Header" -- "Person Resource" : assigns driver
+"Vehicle Loading Header" -- "Vehicle Resource" : assigns truck
+
+legend
+  This diagram shows the class structure of the Tour Planning module
+  with relationships between planning, loading, and charging documents
+end legend
+
+@enduml 

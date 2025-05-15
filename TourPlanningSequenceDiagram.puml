@@ -1,0 +1,118 @@
+@startuml Tour Planning Sequence Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam sequenceTitleFontSize 20
+skinparam sequenceDividerFontSize 16
+skinparam sequenceGroupFontSize 16
+skinparam sequenceBoxFontSize 14
+skinparam sequenceArrowFontSize 14
+skinparam sequenceActorFontSize 16
+skinparam sequenceParticipantFontSize 16
+
+title Tour Planning Workflow - Sequence Diagram
+
+actor "Logistics Manager" as Manager
+participant "Tour Planification\nDocument" as TourPlan
+participant "Planning Lines" as PlanLines
+participant "Vehicle Loading" as Loading
+participant "Vehicle Stop List" as StopList
+participant "Vehicle Charging" as Charging
+participant "Vehicle Charging Lines" as ChargingLines
+
+== Tour Planning Phase ==
+Manager -> TourPlan : Create New Tour
+activate TourPlan
+TourPlan -> TourPlan : Generate Tour No.
+Manager -> TourPlan : Enter Tour Details
+Manager -> TourPlan : Assign Driver & Vehicle
+Manager -> TourPlan : Set Delivery Dates
+TourPlan -> TourPlan : Save Tour
+activate PlanLines
+Manager -> PlanLines : Add Planning Lines
+Manager -> PlanLines : Define Delivery Items
+Manager -> PlanLines : Set Customer Information
+Manager -> PlanLines : Assign Time Slots
+PlanLines -> PlanLines : Calculate Total Weight & Volume
+deactivate PlanLines
+TourPlan -> TourPlan : Update Tour Statistics
+deactivate TourPlan
+
+== Vehicle Loading Preparation ==
+Manager -> TourPlan : Select Tour
+activate TourPlan
+Manager -> TourPlan : Create Loading Sheet
+TourPlan -> Loading : Generate Loading Document
+activate Loading
+Loading -> Loading : Generate Loading No.
+Loading -> TourPlan : Get Tour Details
+TourPlan --> Loading : Tour Information
+Loading -> PlanLines : Get Planning Lines
+activate PlanLines
+PlanLines --> Loading : Planning Line Details
+deactivate PlanLines
+Loading -> StopList : Generate Stop Lines
+activate StopList
+StopList -> StopList : Create Delivery Stops
+StopList --> Loading : Stop Lines Created
+deactivate StopList
+Loading -> Loading : Calculate Totals
+Manager -> Loading : Release Loading Document
+Loading -> Loading : Set Status = Loading
+Loading --> Manager : Loading Preparation Created
+deactivate Loading
+deactivate TourPlan
+
+== Vehicle Loading Validation ==
+Manager -> Loading : Validate Loading Sheet
+activate Loading
+Loading -> Loading : Set Status = Validated
+Loading -> Loading : Record Validation Details
+Loading --> Manager : Loading Validated
+deactivate Loading
+
+== Vehicle Charging Phase ==
+Manager -> Loading : Create Charging Sheet
+activate Loading
+Loading -> Charging : Generate Charging Document
+activate Charging
+Charging -> Charging : Generate Charging No.
+Charging -> Loading : Get Loading Details
+Loading --> Charging : Loading Information
+Charging -> ChargingLines : Generate Charging Lines
+activate ChargingLines
+ChargingLines -> StopList : Get Stop Information
+activate StopList
+StopList --> ChargingLines : Stop Details
+deactivate StopList
+ChargingLines -> ChargingLines : Create Lines for Each Stop
+ChargingLines --> Charging : Charging Lines Created
+deactivate ChargingLines
+Charging -> Charging : Set Status = InProgress
+Charging --> Manager : Charging Sheet Created
+deactivate Charging
+deactivate Loading
+
+== Vehicle Charging Execution ==
+Manager -> Charging : Start Charging Process
+activate Charging
+Charging -> Charging : Record Start Time
+Manager -> ChargingLines : Update Actual Quantities
+activate ChargingLines
+ChargingLines -> ChargingLines : Calculate Quantity Differences
+ChargingLines -> ChargingLines : Update Loading Status
+ChargingLines --> Charging : Lines Updated
+deactivate ChargingLines
+Manager -> Charging : Complete Charging
+Charging -> Charging : Set Status = Completed
+Charging -> Charging : Record End Time
+Charging -> Charging : Record Completion Data
+Charging --> Manager : Charging Completed
+deactivate Charging
+
+legend
+  This diagram shows the sequence of operations in the tour planning process
+  from initial planning through vehicle loading and charging
+end legend
+
+@enduml 

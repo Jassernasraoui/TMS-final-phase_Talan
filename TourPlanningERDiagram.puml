@@ -1,0 +1,149 @@
+@startuml Tour Planning ER Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam entityFontSize 14
+skinparam arrowFontSize 12
+skinparam titleFontSize 20
+skinparam legendFontSize 14
+
+title Tour Planning Module - Entity Relationship Diagram
+
+entity "Planification Header" as PlanHeader {
+  * Logistic Tour No. : Code[20] <<PK>>
+  --
+  No. : Code[20]
+  No. Series : Code[20]
+  Document Type : Enum
+  Date de Tournée : Date
+  Start Date : Date
+  End Date : Date
+  Driver No. : Code[20] <<FK>>
+  Véhicule No. : Code[20] <<FK>>
+  Statut : Option
+  Start Location : Code[20] <<FK>>
+  End Location : Code[20] <<FK>>
+  Delivery Area : Text[200]
+  Created By : Code[50]
+}
+
+entity "Planning Lines" as PlanLine {
+  * Logistic Tour No. : Code[20] <<PK,FK>>
+  * Line No. : Integer <<PK>>
+  --
+  Document Type : Option
+  Document No. : Code[20]
+  Document Line No. : Integer
+  Item No. : Code[20] <<FK>>
+  Customer No. : Code[20] <<FK>>
+  Quantity : Decimal
+  Geographic Coordinates : Text[100]
+  Gross Weight : Decimal
+  Assigned Day : Date
+  Time Slot Start : Time
+  Time Slot End : Time
+}
+
+entity "Vehicle Loading Header" as LoadHeader {
+  * No. : Code[20] <<PK>>
+  --
+  Loading Date : Date
+  Tour No. : Code[20] <<FK>>
+  Truck No. : Code[20] <<FK>>
+  Driver No. : Code[20] <<FK>>
+  Loading Location : Text[100]
+  Status : Option
+  Validated By : Code[50]
+  Validation Date : DateTime
+}
+
+entity "Vehicle Stop Line" as StopLine {
+  * Fiche No. : Code[20] <<PK,FK>>
+  * Stop No. : Integer <<PK>>
+  --
+  Customer No. : Code[20] <<FK>>
+  Delivery Address : Text[100]
+  Estimated Arrival Time : Time
+  Estimated Departure Time : Time
+  Quantity to Deliver : Decimal
+  Remarks : Text[250]
+}
+
+entity "Vehicle Charging Header" as ChargeHeader {
+  * No. : Code[20] <<PK>>
+  --
+  Loading Sheet No. : Code[20] <<FK>>
+  Charging Date : Date
+  Tour No. : Code[20] <<FK>>
+  Truck No. : Code[20] <<FK>>
+  Driver No. : Code[20] <<FK>>
+  Status : Option
+  Start Time : Time
+  End Time : Time
+  Completion Date : Date
+}
+
+entity "Vehicle Charging Line" as ChargeLine {
+  * Charging No. : Code[20] <<PK,FK>>
+  * Line No. : Integer <<PK>>
+  --
+  Stop No. : Integer
+  Customer No. : Code[20] <<FK>>
+  Delivery Address : Text[100]
+  Planned Quantity : Decimal
+  Actual Quantity : Decimal
+  Quantity Difference : Decimal
+  Loading Status : Option
+  Loaded By : Code[50]
+}
+
+entity "Resource" as Resource {
+  * No. : Code[20] <<PK>>
+  --
+  Name : Text[100]
+  Type : Enum
+}
+
+entity "Customer" as Customer {
+  * No. : Code[20] <<PK>>
+  --
+  Name : Text[100]
+  Address : Text[100]
+}
+
+entity "Item" as Item {
+  * No. : Code[20] <<PK>>
+  --
+  Description : Text[100]
+  Gross Weight : Decimal
+}
+
+entity "Location" as Location {
+  * Code : Code[20] <<PK>>
+  --
+  Name : Text[100]
+  Address : Text[100]
+}
+
+PlanHeader ||--o{ PlanLine : "contains"
+PlanHeader ||--o{ LoadHeader : "has loading"
+LoadHeader ||--o{ StopLine : "has stops"
+LoadHeader ||--|| ChargeHeader : "has charging"
+ChargeHeader ||--o{ ChargeLine : "contains"
+PlanHeader }o--|| Resource : "has driver"
+PlanHeader }o--|| Resource : "has vehicle"
+LoadHeader }o--|| Resource : "has driver"
+LoadHeader }o--|| Resource : "has truck"
+PlanLine }o--|| Customer : "for"
+PlanLine }o--|| Item : "delivers"
+StopLine }o--|| Customer : "delivers to"
+ChargeLine }o--|| Customer : "delivers to"
+PlanHeader }o--|| Location : "starts at"
+PlanHeader }o--|| Location : "ends at"
+
+legend
+  This diagram shows the entity relationship model for the Tour Planning module
+  focusing on the relationships between planning, loading, and charging entities
+end legend
+
+@enduml 

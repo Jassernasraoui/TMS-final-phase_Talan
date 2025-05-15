@@ -1,0 +1,83 @@
+@startuml Tour Planning State Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam stateFontSize 14
+skinparam titleFontSize 20
+skinparam legendFontSize 14
+skinparam arrowFontSize 12
+
+title Tour Planning Module - State Diagram
+
+state "Draft" as TourDraft
+state "Plannified" as TourPlannified
+state "On Mission" as TourOnMission
+state "Stopped" as TourStopped
+
+state "Loading Document States" as LoadingStates {
+  state "Planned" as LoadPlanned
+  state "Loading" as LoadLoading
+  state "InProgress" as LoadInProgress
+  state "Validated" as LoadValidated
+  state "Completed" as LoadCompleted
+  state "Canceled" as LoadCanceled
+  
+  LoadPlanned --> LoadLoading : Release
+  LoadLoading --> LoadPlanned : Reopen
+  LoadLoading --> LoadValidated : Validate
+  LoadLoading --> LoadInProgress : Start Transport
+  LoadInProgress --> LoadCompleted : Complete Transport
+  LoadLoading --> LoadCanceled : Cancel
+  LoadInProgress --> LoadCanceled : Cancel
+}
+
+state "Charging Document States" as ChargingStates {
+  state "InProgress" as ChargeInProgress
+  state "Completed" as ChargeCompleted
+  state "Cancelled" as ChargeCancelled
+  
+  ChargeInProgress --> ChargeCompleted : Complete Charging
+  ChargeInProgress --> ChargeCancelled : Cancel Charging
+}
+
+[*] --> TourDraft : Create Tour
+
+TourDraft --> TourPlannified : Schedule
+TourPlannified --> TourOnMission : Start Mission
+TourOnMission --> TourStopped : Complete Mission
+
+TourPlannified --> LoadPlanned : Create Loading Document
+LoadValidated --> ChargeInProgress : Create Charging Document
+ChargeCompleted --> TourStopped : All Deliveries Complete
+
+note right of TourDraft
+  Initial state with basic
+  tour information and resources
+end note
+
+note right of TourPlannified
+  Tour is scheduled with
+  delivery lines and time slots
+end note
+
+note right of TourOnMission
+  Driver is actively
+  performing deliveries
+end note
+
+note right of LoadValidated
+  Loading preparation validated,
+  ready for vehicle charging
+end note
+
+note right of ChargeCompleted
+  Vehicle completely loaded
+  with actual quantities recorded
+end note
+
+legend
+  This diagram shows the state transitions in the Tour Planning process
+  including the states of Tour, Loading, and Charging documents
+end legend
+
+@enduml 

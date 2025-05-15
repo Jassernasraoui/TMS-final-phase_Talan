@@ -1,0 +1,80 @@
+@startuml Person Resource Sequence Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam sequenceTitleFontSize 20
+skinparam sequenceDividerFontSize 16
+skinparam sequenceGroupFontSize 16
+skinparam sequenceBoxFontSize 14
+skinparam sequenceArrowFontSize 14
+skinparam sequenceActorFontSize 16
+skinparam sequenceParticipantFontSize 16
+
+title Person Resource Management - Sequence Diagram
+
+actor "Logistics Manager" as Manager
+participant "Person Resource List" as ResourceList
+participant "Person Resource Card" as ResourceCard
+participant "Resource Table" as ResourceTable
+participant "Tour Planification" as TourPlan
+
+== Person Resource Creation ==
+Manager -> ResourceList : Access Person List
+activate ResourceList
+ResourceList -> ResourceList : Filter Type = Person
+Manager -> ResourceList : Create New Person
+ResourceList -> ResourceCard : Open New Card
+activate ResourceCard
+ResourceCard -> ResourceCard : Set Type = Person
+Manager -> ResourceCard : Enter Person Details
+ResourceCard -> ResourceCard : Validate Required Fields
+ResourceCard -> ResourceTable : Save Person Resource
+activate ResourceTable
+ResourceTable --> ResourceCard : Confirmation
+deactivate ResourceTable
+ResourceCard --> Manager : Person Resource Created
+deactivate ResourceCard
+deactivate ResourceList
+
+== Person Resource Assignment ==
+Manager -> TourPlan : Open Tour Planification
+activate TourPlan
+TourPlan -> ResourceTable : Fetch Available Persons
+activate ResourceTable
+ResourceTable --> TourPlan : Person Resources List
+deactivate ResourceTable
+Manager -> TourPlan : Select Person for Tour
+TourPlan -> TourPlan : Assign Person to Tour
+TourPlan -> ResourceTable : Update Resource Status
+activate ResourceTable
+ResourceTable -> ResourceTable : Set Status = Assigned
+deactivate ResourceTable
+TourPlan --> Manager : Person Assigned to Tour
+deactivate TourPlan
+
+== Person Resource Status Update ==
+Manager -> ResourceList : Access Person List
+activate ResourceList
+ResourceList -> ResourceTable : Fetch Person Resources
+activate ResourceTable
+ResourceTable --> ResourceList : Person Resources
+deactivate ResourceTable
+Manager -> ResourceList : Select Person
+ResourceList -> ResourceCard : Open Card
+activate ResourceCard
+Manager -> ResourceCard : Update Resource Status
+ResourceCard -> ResourceTable : Save Status Change
+activate ResourceTable
+ResourceTable -> ResourceTable : Update Status Field
+ResourceTable --> ResourceCard : Confirmation
+deactivate ResourceTable
+ResourceCard --> Manager : Status Updated
+deactivate ResourceCard
+deactivate ResourceList
+
+legend
+  This diagram shows the sequence of interactions for managing Person resources
+  within the Business Central resources extension
+end legend
+
+@enduml 

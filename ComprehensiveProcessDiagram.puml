@@ -1,0 +1,205 @@
+@startuml Comprehensive Logistics Process
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam padding 8
+skinparam defaultFontSize 12
+skinparam titleFontSize 18
+skinparam ArrowFontSize 11
+skinparam ActivityBorderColor #555555
+skinparam ActivityBackgroundColor #f0f0f0
+skinparam NoteBorderColor #aaaaaa
+skinparam NoteBackgroundColor #ffffcc
+skinparam ActivityDiamondBorderColor #555555
+skinparam ActivityDiamondBackgroundColor #f0f0f0
+
+title Processus d'Affectation et de Plannification Logistique
+
+' Resource Management Phase
+partition "Gestion des Ressources" {
+  (*) --> "Création des ressources"
+  
+  note right
+    <b>Données des ressources</b>
+    - No., Nom, Type (Personne/Machine)
+    - Données spécifiques au type
+    - Statut (Disponible, Assigné, etc.)
+  end note
+  
+  "Création des ressources" --> "Définition des Ressources de type Personne"
+  note right
+    <b>Ressource Personne</b>
+    - Informations personnelles
+    - Num. Permis de conduire
+    - Type de permis
+    - Compétences et certifications
+    - Email, Téléphone, etc.
+  end note
+  
+  "Création des ressources" --> "Définition des Ressources de type Véhicule"
+  note right
+    <b>Ressource Véhicule</b>
+    - Modèle, Immatriculation
+    - Type de véhicule
+    - Dimensions (longueur, volume)
+    - Assurance, Contrôle technique
+    - Configuration (tracteur/remorque)
+  end note
+}
+
+' Tour Planning Phase
+partition "Planification des Tournées" {
+  "Définition des Ressources de type Personne" --> "Création de la tournée"
+  "Définition des Ressources de type Véhicule" --> "Création de la tournée"
+  
+  note right
+    <b>Données de la tournée</b>
+    - No. de tournée
+    - Date de tournée
+    - Période (date début/fin)
+    - Localisation départ/arrivée
+    - Description
+  end note
+  
+  "Création de la tournée" --> "Affectation du chauffeur et véhicule"
+  note right
+    <b>Affectation des ressources</b>
+    - Sélection du chauffeur disponible
+    - Sélection du véhicule adapté
+    - Vérification de compatibilité
+      (type permis, capacité véhicule)
+  end note
+  
+  "Affectation du chauffeur et véhicule" --> "Ajout des lignes de planification"
+  note right
+    <b>Lignes de planification</b>
+    - Commandes clients à livrer
+    - Quantités et articles
+    - Coordonnées géographiques
+    - Poids et dimensions
+  end note
+  
+  "Ajout des lignes de planification" --> "Planification des créneaux horaires"
+  note right
+    <b>Planification temporelle</b>
+    - Affectation jour de livraison
+    - Définition des créneaux horaires
+    - Équilibrage de la charge
+    - Calcul des distances et durées
+  end note
+  
+  "Planification des créneaux horaires" --> "Validation du plan de tournée"
+  
+  "Validation du plan de tournée" -->[Tournée planifiée] "Préparation du chargement"
+}
+
+' Loading Preparation Phase
+partition "Préparation et Chargement" {
+  "Préparation du chargement" --> "Création fiche de chargement"
+  note right
+    <b>Fiche de chargement</b>
+    - No. de chargement
+    - Date de chargement
+    - No. de tournée associé
+    - Chauffeur et véhicule
+    - Lieu de chargement
+  end note
+  
+  "Création fiche de chargement" --> "Génération des arrêts"
+  note right
+    <b>Arrêts de livraison</b>
+    - No. d'arrêt
+    - Client et adresse
+    - Heure estimée d'arrivée/départ
+    - Quantité à livrer
+  end note
+  
+  "Génération des arrêts" --> "Calcul des totaux de chargement"
+  note right
+    <b>Totaux de chargement</b>
+    - Poids total (kg)
+    - Volume total (m³)
+    - Nombre de livraisons
+    - Taux d'utilisation du véhicule
+  end note
+  
+  "Calcul des totaux de chargement" --> "Libération document de chargement"
+  
+  "Libération document de chargement" --> "Validation de la préparation"
+  note right
+    <b>Validation</b>
+    - Vérification des informations
+    - Confirmation des quantités
+    - Validation par superviseur
+    - Changement statut : Validé
+  end note
+}
+
+' Charging Phase
+partition "Chargement du Véhicule" {
+  "Validation de la préparation" -->[Préparation validée] "Création fiche de chargement véhicule"
+  note right
+    <b>Fiche de chargement véhicule</b>
+    - No. de chargement véhicule
+    - Référence fiche de préparation
+    - Date de chargement
+    - Reprend infos de préparation
+  end note
+  
+  "Création fiche de chargement véhicule" --> "Génération des lignes de chargement"
+  note right
+    <b>Lignes de chargement</b>
+    - Créées à partir des arrêts
+    - Quantité planifiée
+    - Quantité réelle (à remplir)
+    - Statut de chargement
+  end note
+  
+  "Génération des lignes de chargement" --> "Démarrage processus de chargement"
+  
+  "Démarrage processus de chargement" --> "Enregistrement des quantités réelles"
+  note right
+    <b>Saisie des quantités</b>
+    - Saisie quantité réellement chargée
+    - Calcul des écarts
+    - Mise à jour statut de chargement
+    - Ajout commentaires si nécessaire
+  end note
+  
+  "Enregistrement des quantités réelles" --> "Finalisation du chargement"
+  note right
+    <b>Finalisation</b>
+    - Vérification complétude
+    - Calcul poids/volume réels
+    - Enregistrement heure de fin
+    - Signature responsable
+  end note
+  
+  "Finalisation du chargement" --> "Départ en tournée"
+}
+
+' Mission Execution Phase
+partition "Exécution de la Mission" {
+  "Départ en tournée" --> "Mise à jour statut tournée: En Mission"
+  
+  "Mise à jour statut tournée: En Mission" --> "Livraisons clients"
+  
+  "Livraisons clients" --> "Enregistrement des retours"
+  note right
+    <b>Retours d'information</b>
+    - Confirmation livraisons
+    - Enregistrement anomalies
+    - Heures réelles
+    - Commentaires chauffeur
+  end note
+  
+  "Enregistrement des retours" --> "Clôture de la tournée"
+  
+  "Clôture de la tournée" --> "Mise à jour statut ressources: Disponible"
+  
+  "Mise à jour statut ressources: Disponible" --> (*)
+}
+
+footer Diagramme du processus complet de gestion logistique - De la ressource à l'exécution
+
+@enduml 

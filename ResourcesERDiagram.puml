@@ -1,0 +1,127 @@
+@startuml Resources Entity Relationship Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam entityFontSize 14
+skinparam arrowFontSize 12
+skinparam titleFontSize 20
+skinparam legendFontSize 14
+
+title Resources Module - Entity Relationship Diagram
+
+entity "Resource (BC Standard)" as Resource {
+  * No : Code[20] <<PK>>
+  --
+  Name : Text[100]
+  Name 2 : Text[50]
+  Search Name : Text[100]
+  * Type : Enum {Person, Machine}
+  Base Unit of Measure : Code[10]
+  Resource Group No. : Code[20] <<FK>>
+  Unit Cost : Decimal
+  Address : Text[100]
+}
+
+entity "Resource Group" as ResGroup {
+  * No : Code[20] <<PK>>
+  --
+  Name : Text[100]
+  Default Unit Cost : Decimal
+}
+
+entity "Person Resource Extension" as PersonExt {
+  * Resource No : Code[20] <<PK,FK>>
+  --
+  Email : Text[100]
+  Phone No. : Text[30]
+  Identity Card No. : Integer
+  Birth Date : Date
+  License No. : Code[25]
+  License Type : Enum
+  License Expiration Date : Date
+  Additional Certifications : Text[50]
+  Resource Status : Enum
+}
+
+entity "Vehicle Resource Extension" as VehicleExt {
+  * Resource No : Code[20] <<PK,FK>>
+  --
+  Machine Model : Text[50]
+  License plate No. : Code[20]
+  Vehicle Security No. : Code[30]
+  Insurance Expiration Date : Code[20]
+  Vignette : Code[20]
+  Vehicle Type : Enum
+  Vehicle Length : Decimal
+  Vehicle Volume : Decimal
+  GPS Tracking Enabled : Boolean
+  Resource Status : Enum
+  IsTractor : Boolean
+  Tractor No. : Code[20]
+  IsTrailer : Boolean
+  Trailer No. : Code[20]
+}
+
+entity "Tour Planning" as TourPlan {
+  * Logistic Tour No. : Code[20] <<PK>>
+  --
+  Driver No. : Code[20] <<FK>>
+  Véhicule No. : Code[20] <<FK>>
+  Date de Tournée : Date
+  Statut : Option
+  Commentaire : Text[250]
+}
+
+entity "Vehicle Loading Header" as LoadingHeader {
+  * No. : Code[20] <<PK>>
+  --
+  Loading Date : Date
+  Tour No. : Code[20] <<FK>>
+  Truck No. : Code[20] <<FK>>
+  Driver No. : Code[20] <<FK>>
+  Loading Location : Text[100]
+  Departure Time : Time
+  Arrival Time : Time
+  Total Weight (kg) : Decimal
+  Total Volume (m³) : Decimal
+  Number of Deliveries : Integer
+  Status : Option
+}
+
+entity "Driver License Type" as LicenseType {
+  * Code : Integer <<PK>>
+  --
+  Description : Text[100]
+}
+
+entity "Vehicle Type" as VehicleType {
+  * Code : Integer <<PK>>
+  --
+  Description : Text[100]
+}
+
+entity "Resource Status" as ResourceStatus {
+  * Code : Integer <<PK>>
+  --
+  Description : Text[100]
+}
+
+Resource ||--o{ ResGroup : "belongs to"
+Resource ||--|| PersonExt : "extends" 
+Resource ||--|| VehicleExt : "extends"
+PersonExt }o--|| LicenseType : "has"
+VehicleExt }o--|| VehicleType : "has"
+PersonExt }o--|| ResourceStatus : "has"
+VehicleExt }o--|| ResourceStatus : "has"
+TourPlan }o--|| PersonExt : "has driver"
+TourPlan }o--|| VehicleExt : "has vehicle"
+LoadingHeader }o--|| TourPlan : "based on"
+LoadingHeader }o--|| PersonExt : "has driver"
+LoadingHeader }o--|| VehicleExt : "has vehicle"
+
+legend
+  This diagram shows the entity relationship model for the Resources module
+  focusing on Person and Vehicle extensions and their relationships
+end legend
+
+@enduml 

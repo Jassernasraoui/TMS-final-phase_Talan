@@ -1,0 +1,147 @@
+@startuml
+!pragma useVerticalIf on
+!define ACTIVITY activity
+skinparam {
+  ActivityBackgroundColor white
+  ActivityBorderColor black
+  ActivityDiamondBackgroundColor white
+  ActivityDiamondBorderColor black
+  NoteBackgroundColor #FFFFCC
+  NoteBorderColor #CCCCCC
+  ArrowColor black
+  defaultFontName Arial
+  defaultFontSize 11
+  DiamondFontSize 10
+}
+
+title Processus d'Affectation des Resources et Planification Logistique - Validations et Conditions
+
+' Resource Creation Phase
+start
+:Création des ressources;
+note right: <b>Données de base</b>\n- Type: Personne/Véhicule\n- No., Nom, Description\n- Informations générales\n- Statut initial: Disponible
+
+' Person and Vehicle Configuration
+:Vérification type de ressource;
+if (Type = Personne) then (oui)
+  :Configuration ressource Personne;
+  note right: <b>Validation Personne</b>\n- Infos personnelles complètes\n- Permis de conduire valide (non expiré)\n- Type de permis renseigné\n- Coordonnées valides (tel/email)\n- Certifications vérifiées
+else (non)
+  :Configuration ressource Véhicule;
+  note right: <b>Validation Véhicule</b>\n- Type véhicule défini\n- Immatriculation unique\n- Assurance et contrôle technique valides\n- Dimensions (poids/volume) renseignées\n- Configuration tracteur/remorque définie
+endif
+
+' Tour Planning Phase
+:Création de la tournée;
+note right: <b>Validation Tournée</b>\n- No. tournée unique\n- Date ≥ aujourd'hui\n- Période valide (début/fin)\n- Lieux départ/arrivée définis\n- Statut initial = "Planifiée"
+
+:Vérification tournée;
+if (Tournée valide) then (oui)
+  :Affectation des ressources;
+  note right: <b>Validation Affectation</b>\n- Chauffeur avec statut "Disponible"\n- Véhicule avec statut "Disponible"\n- Permis chauffeur compatible avec véhicule\n- Pas d'autre affectation ce jour pour chauffeur\n- Chauffeur et véhicule → statut "Assigné"
+else (non)
+  :Correction données tournée;
+  goto Vérification tournée
+endif
+
+:Vérification compatibilité ressources;
+if (Compatible) then (oui)
+  :Génération lignes de planification;
+  note right: <b>Validation Lignes</b>\n- Au moins une ligne de planification\n- Client, article, quantité renseignés\n- Coordonnées géographiques valides\n- Poids total ≤ capacité véhicule\n- Volume total ≤ capacité véhicule
+else (non)
+  :Réaffectation des ressources;
+  goto Vérification compatibilité ressources
+endif
+
+:Vérification capacité;
+if (Capacité OK) then (oui)
+  :Attribution créneaux horaires;
+  note right: <b>Validation Créneaux</b>\n- Toutes les lignes ont un créneau\n- Créneaux ne se chevauchent pas\n- Planning réalisable (temps trajet inclus)\n- Charge équilibrée sur période\n- Priorités clients respectées
+else (non)
+  :Ajustement quantités/véhicule;
+  goto Vérification capacité
+endif
+
+:Vérification planning;
+if (Planning réalisable) then (oui)
+  ' Vehicle Loading Preparation
+  :Création document préparation chargement;
+  note right: <b>Validation Document</b>\n- No. document unique\n- Référence tournée au statut "Planifiée"\n- Date chargement valide\n- Lieu chargement spécifié\n- Référence chauffeur et véhicule
+else (non)
+  :Réajustement créneaux;
+  goto Vérification planning
+endif
+
+:Génération arrêts livraison;
+note right: <b>Validation Arrêts</b>\n- Chaque arrêt avec adresse complète\n- Heures arrivée/départ cohérentes\n- Ordre des arrêts optimisé\n- Quantités à livrer définies\n- Routes accessibles pour le véhicule
+
+:Calcul totaux de chargement;
+note right: <b>Validation Totaux</b>\n- Poids total ≤ capacité véhicule\n- Volume total ≤ capacité véhicule\n- Nombre d'arrêts réalisable\n- Taux d'utilisation véhicule optimal\n- Marge de sécurité respectée (95% max)
+
+:Vérification des totaux;
+if (Totaux OK) then (oui)
+  :Libération document préparation;
+  note right: <b>Validation Libération</b>\n- Toutes informations obligatoires remplies\n- Statut passe à "En chargement"\n- Modifications verrouillées\n- Document prêt pour validation\n- Notification envoyée aux responsables
+else (non)
+  :Recalcul/ajustement;
+  goto Vérification des totaux
+endif
+
+:Validation préparation chargement;
+note right: <b>Validation Superviseur</b>\n- Vérification complète par superviseur\n- Statut passe à "Validé"\n- Signature électronique superviseur\n- Date/heure validation enregistrée\n- Notifications envoyées aux équipes
+
+' Vehicle Charging
+:Vérification statut préparation;
+if (Validé) then (oui)
+  :Création document chargement véhicule;
+  note right: <b>Validation Document Chargement</b>\n- Référence document préparation validé\n- Date chargement correspondant aux ressources\n- Statut initial "En cours"\n- Ressources physiquement disponibles\n- Autorisation de chargement obtenue
+else (non)
+  :Retour pour corrections;
+  goto Calcul totaux de chargement
+endif
+
+:Génération lignes chargement;
+note right: <b>Validation Lignes Chargement</b>\n- Une ligne par arrêt validé\n- Quantités planifiées = validées\n- Statut initial ligne "En attente"\n- Préparation de l'interface de saisie\n- Instructions de chargement générées
+
+:Début processus chargement;
+note right: <b>Validation Démarrage</b>\n- Heure début enregistrée\n- Chauffeur et manutentionnaires présents\n- Marchandises disponibles\n- Équipement de chargement prêt\n- Véhicule positionné à quai
+
+:Saisie quantités réelles;
+note right: <b>Validation Quantités</b>\n- Toutes les lignes avec quantité réelle\n- Écarts quantité calculés automatiquement\n- Écarts >10% avec justification obligatoire\n- Statut ligne = Chargé/Partiellement/Non chargé\n- Opérateur identifié pour chaque ligne
+
+:Vérification des écarts;
+if (Écarts justifiés/acceptables) then (oui)
+  :Finalisation chargement;
+  note right: <b>Validation Finalisation</b>\n- Toutes lignes avec statut final\n- Totaux finaux (poids/volume) calculés\n- Signatures responsable et chauffeur\n- Statut document passe à "Complété"\n- Documents de transport générés
+else (non)
+  :Compléter justifications;
+  goto Vérification des écarts
+endif
+
+' Tour Execution
+:Vérification finalisation;
+if (Complet) then (oui)
+  :Départ en mission;
+  note right: <b>Validation Départ</b>\n- Statut tournée "En mission"\n- Heure départ enregistrée\n- Documents d'expédition remis\n- GPS/suivi activé si disponible\n- Ressources bloquées pendant mission
+else (non)
+  :Compléter éléments manquants;
+  goto Vérification finalisation
+endif
+
+:Livraisons aux clients;
+note right: <b>Validation Livraisons</b>\n- Confirmation pour chaque livraison\n- Documentation anomalies terrain\n- Heures réelles de livraison\n- Signatures clients obtenues\n- Incidents de trajet documentés
+
+:Vérification livraisons;
+if (Livraisons terminées) then (oui)
+  :Clôture de la tournée;
+  note right: <b>Validation Clôture</b>\n- Statut tournée "Terminée"\n- Ressources libérées (statut "Disponible")\n- Documents de retour complétés\n- Performances enregistrées\n- Anomalies documentées pour analyse
+else (non)
+  :Traitement exceptions;
+  goto Vérification livraisons
+endif
+
+stop
+
+footer Processus complet avec validations et conditions - De la création des ressources à l'exécution
+
+@enduml 

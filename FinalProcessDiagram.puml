@@ -1,0 +1,206 @@
+@startuml Final Logistics Process
+skinparam {
+  ActivityBackgroundColor white
+  ActivityBorderColor black
+  ActivityDiamondBackgroundColor white
+  ActivityDiamondBorderColor black
+  NoteBackgroundColor #FFFFCC
+  NoteBorderColor #CCCCCC
+  ArrowColor black
+  defaultFontName Arial
+  defaultFontSize 11
+}
+
+title Processus d'Affectation des Resources et Planification Logistique
+
+' Resource Creation Phase
+(*) --> "Création des ressources"
+note right #FFFFCC
+  <b>Données de base</b>
+  - Type: Personne/Véhicule
+  - No., Nom, Description
+  - Informations générales
+  - Statut initial: Disponible
+end note
+
+' Person and Vehicle Configuration
+"Création des ressources" --> "Configuration ressource Personne"
+note right #FFFFCC
+  <b>Personne (chauffeur)</b>
+  - Informations personnelles
+  - No. permis de conduire
+  - Type de permis (A, B, C...)
+  - Date d'expiration permis
+  - Téléphone, email
+  - Certifications additionnelles
+end note
+
+"Création des ressources" --> "Configuration ressource Véhicule"
+note right #FFFFCC
+  <b>Véhicule</b>
+  - Type de véhicule
+  - Immatriculation
+  - Dimensions (longueur, volume)
+  - Assurance, vignette
+  - Contrôle technique
+  - Configuration (tracteur/remorque)
+end note
+
+' Tour Planning Phase
+"Configuration ressource Personne" -down-> "Création de la tournée"
+"Configuration ressource Véhicule" -down-> "Création de la tournée"
+note right #FFFFCC
+  <b>Données tournée</b>
+  - No. de tournée
+  - Date/Période
+  - Lieu départ/arrivée
+  - Zone de livraison
+  - Description
+end note
+
+"Création de la tournée" -down-> "Affectation des ressources"
+note right #FFFFCC
+  <b>Association ressources</b>
+  - Choix du chauffeur
+  - Choix du véhicule
+  - Vérification compatibilité
+    (type permis / type véhicule)
+  - Mise à jour statut: Assigné
+end note
+
+"Affectation des ressources" -down-> "Génération lignes de planification"
+note right #FFFFCC
+  <b>Lignes de planification</b>
+  - Document source
+  - Client/Article
+  - Quantité à livrer
+  - Coordonnées géographiques
+  - Poids/volume
+end note
+
+"Génération lignes de planification" -down-> "Attribution créneaux horaires"
+note right #FFFFCC
+  <b>Planification temporelle</b>
+  - Affectation jour livraison
+  - Définition créneau horaire
+  - Priorité client
+  - Durée estimée par client
+  - Équilibrage de la charge
+end note
+
+' Vehicle Loading Preparation
+"Attribution créneaux horaires" -down-> "Création document préparation chargement"
+note right #FFFFCC
+  <b>Document chargement</b>
+  - No. document
+  - Référence tournée
+  - Date chargement
+  - Lieu chargement
+  - Chauffeur/véhicule repris
+end note
+
+"Création document préparation chargement" -down-> "Génération arrêts livraison"
+note right #FFFFCC
+  <b>Arrêts de livraison</b>
+  - No. d'arrêt
+  - Client/adresse
+  - Heure estimée arrivée
+  - Heure estimée départ
+  - Quantité à livrer
+end note
+
+"Génération arrêts livraison" -down-> "Calcul totaux de chargement"
+note right #FFFFCC
+  <b>Calcul des totaux</b>
+  - Poids total
+  - Volume total
+  - Nombre de livraisons
+  - Vérification capacité véhicule
+end note
+
+"Calcul totaux de chargement" -down-> "Libération document préparation"
+note right #FFFFCC
+  <b>Libération</b>
+  - Statut: En chargement
+  - Verrouillage modifications
+  - Prêt pour validation
+end note
+
+"Libération document préparation" -down-> "Validation préparation chargement"
+note right #FFFFCC
+  <b>Validation</b>
+  - Vérification complète
+  - Validation superviseur
+  - Statut: Validé
+  - Prêt pour chargement effectif
+end note
+
+' Vehicle Charging
+"Validation préparation chargement" -down-> "Création document chargement véhicule"
+note right #FFFFCC
+  <b>Document chargement</b>
+  - Référence document préparation
+  - Date chargement effectif
+  - Reprise des informations
+  - Statut: En cours
+end note
+
+"Création document chargement véhicule" -down-> "Génération lignes chargement"
+note right #FFFFCC
+  <b>Lignes chargement</b>
+  - Basées sur arrêts validés
+  - Quantité planifiée
+  - Quantité réelle (à saisir)
+  - Statut initial: En attente
+end note
+
+"Génération lignes chargement" -down-> "Début processus chargement"
+note right #FFFFCC
+  <b>Démarrage</b>
+  - Enregistrement heure début
+  - Préparation physique
+end note
+
+"Début processus chargement" -down-> "Saisie quantités réelles"
+note right #FFFFCC
+  <b>Saisie effective</b>
+  - Quantité réellement chargée
+  - Calcul écarts auto
+  - Documentation écarts
+  - Mise à jour statut par ligne
+end note
+
+"Saisie quantités réelles" -down-> "Finalisation chargement"
+note right #FFFFCC
+  <b>Finalisation</b>
+  - Vérification complétude
+  - Totaux finaux (poids/volume)
+  - Signature responsable
+  - Statut: Complété
+end note
+
+' Tour Execution
+"Finalisation chargement" -down-> "Départ en mission"
+note right #FFFFCC
+  <b>Exécution</b>
+  - Mise à jour statut tournée
+  - Statut: En mission
+  - Début livraisons clients
+end note
+
+"Départ en mission" -down-> "Livraisons aux clients"
+
+"Livraisons aux clients" -down-> "Clôture de la tournée"
+note right #FFFFCC
+  <b>Clôture</b>
+  - Enregistrement retours
+  - Documentation anomalies
+  - Mise à jour statut: Terminée
+  - Libération des ressources
+end note
+
+"Clôture de la tournée" -down-> (*)
+
+footer Processus complet - De la création des ressources à l'exécution de la tournée
+
+@enduml 

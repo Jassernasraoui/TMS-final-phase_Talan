@@ -1,0 +1,95 @@
+@startuml Resources Component Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam componentFontSize 14
+skinparam interfaceFontSize 12
+skinparam titleFontSize 20
+skinparam legendFontSize 14
+
+title Resources Module - Component Diagram
+
+package "Business Central Core" {
+  [Resource Management] as ResCore
+  [General Ledger] as GL
+  [Base No. Series] as NoSeries
+}
+
+package "Resources Extension" {
+  [Person Resource Management] as PRM
+  [Vehicle Resource Management] as VRM
+  [Resource Status Management] as RSM
+  
+  component [Enumerations] {
+    [Driver License Types]
+    [Vehicle Types]
+    [Resource Status Types]
+  }
+}
+
+package "Tour Planning" {
+  [Tour Planification] as TP
+  [Vehicle Loading] as VL
+  [Vehicle Charging] as VC
+}
+
+package "User Interface" {
+  [Person Resource Card] as PRC
+  [Person Resource List] as PRL
+  [Vehicle Resource Card] as VRC
+  [Vehicle Resource List] as VRL
+}
+
+' Interfaces
+interface "Resource Data" as IResData
+interface "Person Management" as IPerson
+interface "Vehicle Management" as IVehicle
+interface "Status Updates" as IStatus
+interface "Tour Assignment" as ITourAssign
+interface "Loading Management" as ILoading
+
+' External interfaces
+interface "User Authentication" as IAuth
+interface "Reporting" as IReport
+
+' Core Connections
+ResCore -- IResData
+NoSeries -- ResCore
+
+' Extensions
+PRM -- IPerson
+VRM -- IVehicle
+RSM -- IStatus
+
+' UI Connections
+IPerson -- PRC
+IPerson -- PRL
+IVehicle -- VRC
+IVehicle -- VRL
+
+' Relationships between components
+PRM ..> IResData : uses
+VRM ..> IResData : uses
+IResData <.. GL : financial impact
+
+' Tour-related connections
+TP -- ITourAssign
+VL -- ILoading
+ITourAssign <.. PRM : provides resources
+ITourAssign <.. VRM : provides vehicles
+ILoading <.. VRM : vehicle capacity info
+
+IStatus <.. ITourAssign : updates status
+TP ..> VC : preparation data
+
+' Additional connections
+IAuth -- ResCore : security
+IReport ..> PRM : personnel reports
+IReport ..> VRM : fleet reports
+
+legend
+  This diagram shows the component architecture of the Resources module
+  and its integration with tour planning and core Business Central functionality
+end legend
+
+@enduml 

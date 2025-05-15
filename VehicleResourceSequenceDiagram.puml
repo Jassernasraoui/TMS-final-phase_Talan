@@ -1,0 +1,100 @@
+@startuml Vehicle Resource Sequence Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam sequenceTitleFontSize 20
+skinparam sequenceDividerFontSize 16
+skinparam sequenceGroupFontSize 16
+skinparam sequenceBoxFontSize 14
+skinparam sequenceArrowFontSize 14
+skinparam sequenceActorFontSize 16
+skinparam sequenceParticipantFontSize 16
+
+title Vehicle Resource Management - Sequence Diagram
+
+actor "Logistics Manager" as Manager
+participant "Vehicle Resource List" as VehicleList
+participant "Vehicle Resource Card" as VehicleCard
+participant "Resource Table" as ResourceTable
+participant "Tour Planification" as TourPlan
+participant "Vehicle Loading" as Loading
+
+== Vehicle Resource Creation ==
+Manager -> VehicleList : Access Vehicle List
+activate VehicleList
+VehicleList -> VehicleList : Filter Type = Machine
+Manager -> VehicleList : Create New Vehicle
+VehicleList -> VehicleCard : Open New Card
+activate VehicleCard
+VehicleCard -> VehicleCard : Set Type = Machine
+Manager -> VehicleCard : Enter Vehicle Details
+Manager -> VehicleCard : Set Vehicle Type
+Manager -> VehicleCard : Set Dimensions
+VehicleCard -> VehicleCard : Validate Required Fields
+VehicleCard -> ResourceTable : Save Vehicle Resource
+activate ResourceTable
+ResourceTable --> VehicleCard : Confirmation
+deactivate ResourceTable
+VehicleCard --> Manager : Vehicle Resource Created
+deactivate VehicleCard
+deactivate VehicleList
+
+== Vehicle Resource Assignment ==
+Manager -> TourPlan : Open Tour Planification
+activate TourPlan
+TourPlan -> ResourceTable : Fetch Available Vehicles
+activate ResourceTable
+ResourceTable --> TourPlan : Vehicle Resources List
+deactivate ResourceTable
+Manager -> TourPlan : Select Vehicle for Tour
+TourPlan -> TourPlan : Assign Vehicle to Tour
+TourPlan -> ResourceTable : Update Resource Status
+activate ResourceTable
+ResourceTable -> ResourceTable : Set Status = Assigned
+deactivate ResourceTable
+TourPlan --> Manager : Vehicle Assigned to Tour
+deactivate TourPlan
+
+== Vehicle Loading Preparation ==
+Manager -> TourPlan : Select Tour
+activate TourPlan
+Manager -> TourPlan : Create Loading Preparation
+TourPlan -> Loading : Create Vehicle Loading Sheet
+activate Loading
+Loading -> ResourceTable : Get Vehicle Details
+activate ResourceTable
+ResourceTable --> Loading : Vehicle Information
+deactivate ResourceTable
+Manager -> Loading : Review Vehicle Capacity
+Manager -> Loading : Complete Loading Preparation
+Loading -> Loading : Validate Loading
+Loading --> Manager : Loading Preparation Complete
+deactivate Loading
+deactivate TourPlan
+
+== Vehicle Resource Status Update ==
+Manager -> VehicleList : Access Vehicle List
+activate VehicleList
+VehicleList -> ResourceTable : Fetch Vehicle Resources
+activate ResourceTable
+ResourceTable --> VehicleList : Vehicle Resources
+deactivate ResourceTable
+Manager -> VehicleList : Select Vehicle
+VehicleList -> VehicleCard : Open Card
+activate VehicleCard
+Manager -> VehicleCard : Update Resource Status
+VehicleCard -> ResourceTable : Save Status Change
+activate ResourceTable
+ResourceTable -> ResourceTable : Update Status Field
+ResourceTable --> VehicleCard : Confirmation
+deactivate ResourceTable
+VehicleCard --> Manager : Status Updated
+deactivate VehicleCard
+deactivate VehicleList
+
+legend
+  This diagram shows the sequence of interactions for managing Vehicle resources
+  within the Business Central resources extension
+end legend
+
+@enduml 

@@ -1,0 +1,77 @@
+@startuml Resources Use Case Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam usecaseFontSize 14
+skinparam actorFontSize 16
+skinparam packageFontSize 16
+skinparam titleFontSize 20
+skinparam legendFontSize 14
+
+title Resources Module - Use Case Diagram
+
+left to right direction
+
+actor "Logistics Manager" as Manager
+actor "Driver" as Driver
+actor "Fleet Manager" as FleetManager
+actor "Tour Planner" as Planner
+
+rectangle "Resources Management" {
+  package "Person Resource Management" {
+    usecase "Create Person Resource" as CreatePerson
+    usecase "Update Person Details" as UpdatePerson
+    usecase "View Person List" as ViewPersons
+    usecase "Update Person Status" as UpdatePersonStatus
+    usecase "Assign Person to Tour" as AssignPerson
+    usecase "Track Person Licenses" as TrackLicenses
+    usecase "View Person Availability" as ViewPersonAvailability
+  }
+
+  package "Vehicle Resource Management" {
+    usecase "Create Vehicle Resource" as CreateVehicle
+    usecase "Update Vehicle Details" as UpdateVehicle
+    usecase "View Vehicle List" as ViewVehicles
+    usecase "Update Vehicle Status" as UpdateVehicleStatus
+    usecase "Assign Vehicle to Tour" as AssignVehicle
+    usecase "Track Vehicle Maintenance" as TrackMaintenance
+    usecase "View Vehicle Availability" as ViewVehicleAvailability
+    usecase "Configure Vehicle Specs" as ConfigureSpecs
+  }
+}
+
+' Person Resource relationships
+Manager --> CreatePerson
+Manager --> UpdatePerson
+Manager --> ViewPersons
+Manager --> UpdatePersonStatus
+Planner --> ViewPersons
+Planner --> ViewPersonAvailability
+Planner --> AssignPerson
+FleetManager --> TrackLicenses
+
+' Vehicle Resource relationships
+FleetManager --> CreateVehicle
+FleetManager --> UpdateVehicle
+FleetManager --> ViewVehicles
+FleetManager --> UpdateVehicleStatus
+FleetManager --> TrackMaintenance
+FleetManager --> ConfigureSpecs
+Planner --> ViewVehicles
+Planner --> ViewVehicleAvailability
+Planner --> AssignVehicle
+
+' Relationships between use cases
+CreatePerson ..> UpdatePerson : <<include>>
+CreateVehicle ..> UpdateVehicle : <<include>>
+AssignPerson ..> ViewPersonAvailability : <<include>>
+AssignVehicle ..> ViewVehicleAvailability : <<include>>
+TrackLicenses ..> UpdatePerson : <<extend>>
+TrackMaintenance ..> UpdateVehicleStatus : <<extend>>
+
+legend
+  This diagram shows the use cases for the Resource Management module
+  focusing on both Person and Vehicle resources
+end legend
+
+@enduml 

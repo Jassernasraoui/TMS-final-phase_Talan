@@ -1,0 +1,90 @@
+@startuml Tour Planning Use Case Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam usecaseFontSize 14
+skinparam actorFontSize 16
+skinparam packageFontSize 16
+skinparam titleFontSize 20
+skinparam legendFontSize 14
+
+title Tour Planning Module - Use Case Diagram
+
+left to right direction
+
+actor "Logistics Manager" as LogManager
+actor "Tour Planner" as Planner
+actor "Warehouse Operator" as Warehouse
+actor "Driver" as Driver
+actor "Dispatcher" as Dispatcher
+
+rectangle "Tour Planning System" {
+  package "Tour Planning" {
+    usecase "Create Tour Plan" as CreateTour
+    usecase "Add Planning Lines" as AddLines
+    usecase "Assign Resources" as AssignResources
+    usecase "Schedule Deliveries" as ScheduleDeliveries
+    usecase "Balance Workload" as BalanceWorkload
+    usecase "Manage Tour Statuses" as ManageStatus
+    usecase "View Tour List" as ViewTours
+  }
+
+  package "Vehicle Loading" {
+    usecase "Create Loading Sheet" as CreateLoading
+    usecase "Define Delivery Stops" as DefineStops
+    usecase "Release Loading Document" as ReleaseLoading
+    usecase "Calculate Loading Totals" as CalcLoadingTotals
+    usecase "Validate Loading Sheet" as ValidateLoading
+  }
+
+  package "Vehicle Charging" {
+    usecase "Create Charging Sheet" as CreateCharging
+    usecase "Generate Charging Lines" as GenChargingLines
+    usecase "Record Actual Quantities" as RecordQuantities
+    usecase "Complete Charging Process" as CompleteCharging
+    usecase "View Loading Discrepancies" as ViewDiscrepancies
+  }
+}
+
+' Tour Planning relationships
+Planner --> CreateTour
+Planner --> AddLines
+Planner --> AssignResources
+Planner --> ScheduleDeliveries
+Planner --> BalanceWorkload
+LogManager --> ManageStatus
+LogManager --> ViewTours
+Dispatcher --> ViewTours
+
+' Vehicle Loading relationships
+Warehouse --> CreateLoading
+Warehouse --> DefineStops
+Warehouse --> ReleaseLoading
+Warehouse --> CalcLoadingTotals
+LogManager --> ValidateLoading
+
+' Vehicle Charging relationships
+Warehouse --> CreateCharging
+Warehouse --> GenChargingLines
+Warehouse --> RecordQuantities
+Warehouse --> CompleteCharging
+LogManager --> ViewDiscrepancies
+Driver --> ViewDiscrepancies
+
+' Use case relationships
+CreateTour ..> AssignResources : <<include>>
+CreateTour ..> AddLines : <<include>>
+AddLines ..> ScheduleDeliveries : <<include>>
+CreateLoading ..> DefineStops : <<include>>
+DefineStops ..> CalcLoadingTotals : <<include>>
+ValidateLoading ..> CreateCharging : <<extend>>
+CreateCharging ..> GenChargingLines : <<include>>
+CompleteCharging ..> RecordQuantities : <<include>>
+RecordQuantities ..> ViewDiscrepancies : <<extend>>
+
+legend
+  This diagram shows the use cases for the Tour Planning module
+  focusing on planning, loading, and charging processes
+end legend
+
+@enduml 

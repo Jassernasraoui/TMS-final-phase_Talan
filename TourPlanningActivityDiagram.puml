@@ -1,0 +1,104 @@
+@startuml Tour Planning Activity Diagram
+!theme plain
+skinparam pageFormat A4
+skinparam pageOrientation portrait
+skinparam activityFontSize 14
+skinparam arrowFontSize 12
+skinparam titleFontSize 20
+skinparam legendFontSize 14
+skinparam partitionFontSize 16
+
+title Tour Planning Module - Activity Diagram
+
+|#LightBlue|Tour Planner|
+|#LightGreen|Logistics Manager|
+|#LightYellow|Warehouse Operator|
+
+|Tour Planner|
+start
+:Access Tour Planning;
+:Create New Tour Plan;
+:Enter Basic Tour Information;
+:Set Tour Date Range;
+:Select Start/End Locations;
+
+|Logistics Manager|
+:Assign Driver to Tour;
+:Assign Vehicle to Tour;
+:Check Resource Availability;
+if (Resources Available?) then (yes)
+else (no)
+  :Request Resource Reallocation;
+  :Find Alternative Resources;
+endif
+
+|Tour Planner|
+:Add Planning Lines;
+repeat
+  :Select Customer Order;
+  :Add Delivery Item Information;
+  :Define Delivery Quantities;
+  :Set Geographic Coordinates;
+repeat while (More Items?) is (yes)
+
+:Assign Delivery Time Slots;
+:Balance Workload Across Days;
+:Calculate Total Weight & Volume;
+:Save Tour Plan;
+
+|Logistics Manager|
+:Review Tour Plan;
+:Approve Tour Plan;
+:Set Status to Plannified;
+
+|Warehouse Operator|
+:Create Vehicle Loading Sheet;
+:Generate Delivery Stops;
+:Calculate Loading Totals;
+:Verify Loading Information;
+if (Information Complete?) then (yes)
+  :Release Loading Document;
+else (no)
+  :Complete Missing Information;
+  :Request Additional Details;
+  :Update Loading Sheet;
+endif
+
+|Logistics Manager|
+:Review Loading Sheet;
+:Validate Loading Sheet;
+
+|Warehouse Operator|
+:Create Vehicle Charging Sheet;
+:Generate Charging Lines from Loading;
+:Start Charging Process;
+:Record Charging Start Time;
+repeat
+  :Select Stop Line;
+  :Record Actual Loaded Quantity;
+  :Calculate Quantity Difference;
+  :Update Loading Status;
+repeat while (More Stops?) is (yes)
+
+:Finalize Charging;
+if (Charging Complete?) then (yes)
+  :Record Charging End Time;
+  :Complete Charging Process;
+else (no)
+  :Document Incomplete Stops;
+  :Add Remarks for Discrepancies;
+endif
+
+|Logistics Manager|
+:Review Charging Results;
+:Handle Discrepancies if Present;
+:Update Tour Status;
+:Generate Shipping Documentation;
+stop
+
+legend
+  This diagram shows the activity flow for the Tour Planning module
+  from tour creation through loading preparation and vehicle charging
+end legend
+
+@enduml 
