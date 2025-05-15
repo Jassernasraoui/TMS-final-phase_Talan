@@ -10,6 +10,7 @@ page 77005 "Tour Planification List"
     AutoSplitKey = true;
     InsertAllowed = false;
     DeleteAllowed = false;
+    DelayedInsert = true;
 
     layout
     {

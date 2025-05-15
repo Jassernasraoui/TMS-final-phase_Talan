@@ -15,7 +15,7 @@ table 77100 "Planification Header"
             trigger OnValidate()
             var
                 TourNo: Record "Planification Header";
-                SetupRec: Record "Sales & Receivables Setup";
+                SetupRec: Record "Trip Setup";
                 NoSeries: Codeunit "No. Series";
             begin
                 if "Logistic Tour No." < xRec."Logistic Tour No." then
@@ -247,7 +247,7 @@ table 77100 "Planification Header"
     trigger OnInsert()
     var
         NoSeries: Codeunit "No. Series";
-        SetupRec: Record "Sales & Receivables Setup";
+        SetupRec: Record "Trip Setup";
     begin
         if "Logistic Tour No." = '' then begin
             SetupRec.Get();
