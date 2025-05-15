@@ -1,13 +1,13 @@
 tableextension 77005 "Tal Sales & Receivables Setup" extends "Sales & Receivables Setup"
 {
     fields
-    {
-        field(77001; "Logistic Tour Nos."; Code[20])
-        {
-            caption = 'Logistic Tour Nos';
-            TableRelation = "No. Series";
-        }
-        // Add changes to table fields here
+    {// STI
+        // field(77001; "Logistic Tour Nos."; Code[20])
+        // {
+        //     caption = 'Logistic Tour Nos';
+        //     TableRelation = "No. Series";
+        // }
+        //>> STI 
     }
 
     keys
