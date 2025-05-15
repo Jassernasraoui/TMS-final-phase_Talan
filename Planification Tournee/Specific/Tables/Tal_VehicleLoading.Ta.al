@@ -1,4 +1,4 @@
-// table 50130 "Vehicle Loading"
+// table 77108 "Vehicle Loading"
 // {
 //     DataClassification = ToBeClassified;
 

@@ -1,88 +1,88 @@
-table 50132 "Vehicle Loading Header"
+table 77400 "Vehicle Loading Header"
 {
     DataClassification = ToBeClassified;
 
     fields
     {
-        field(1; "No."; Code[20])
+        field(77001; "No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(2; "Loading Date"; Date)
+        field(77002; "Loading Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(3; "Tour No."; Code[20])
+        field(77003; "Tour No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(4; "Truck No."; Code[20])
+        field(77004; "Truck No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(5; "Driver No."; Code[20])
+        field(77005; "Driver No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(6; "Loading Location"; Text[100])
+        field(77006; "Loading Location"; Text[100])
         {
             DataClassification = ToBeClassified;
         }
-        field(7; "Departure Time"; Time)
+        field(77007; "Departure Time"; Time)
         {
             DataClassification = ToBeClassified;
         }
-        field(8; "Arrival Time"; Time)
+        field(77008; "Arrival Time"; Time)
         {
             DataClassification = ToBeClassified;
         }
-        field(9; "Total Weight (kg)"; Decimal)
+        field(77009; "Total Weight (kg)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(10; "Total Volume (m³)"; Decimal)
+        field(770010; "Total Volume (m³)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(11; "Number of Deliveries"; Integer)
+        field(770011; "Number of Deliveries"; Integer)
         {
             DataClassification = ToBeClassified;
         }
-        field(12; "Goods Type"; Text[50])
+        field(770012; "Goods Type"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(13; "Status"; Option)
+        field(770013; "Status"; Option)
         {
-            OptionMembers = Planned,Loading,InProgress,Completed,Canceled;
+            OptionMembers = Planned,Loading,InProgress,Completed,Canceled,Validated;
             DataClassification = ToBeClassified;
         }
-        field(14; "Validated By"; Code[50])
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(15; "Validation Date"; DateTime)
+        field(770014; "Validated By"; Code[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(16; "Itinerary No."; Code[20])
+        field(77015; "Validation Date"; DateTime)
         {
             DataClassification = ToBeClassified;
         }
-        field(17; "Total Distance (km)"; Decimal)
+        field(77016; "Itinerary No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(18; "Estimated Duration"; Duration)
+        field(77017; "Total Distance (km)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(19; "Itinerary Type"; Option)
+        field(77018; "Estimated Duration"; Duration)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(77019; "Itinerary Type"; Option)
         {
             OptionMembers = Optimized,Manual,Fastest,Shortest;
             DataClassification = ToBeClassified;
         }
-        field(20; "Planned Route"; Text[250])
+        field(77020; "Planned Route"; Text[250])
         {
             DataClassification = ToBeClassified;
         }
@@ -90,9 +90,49 @@ table 50132 "Vehicle Loading Header"
 
     keys
     {
-        // key(PK; "No.")
-        // {
-        //     Clustered = true;
-        // }
+        key(PK; "No.")
+        {
+            Clustered = true;
+        }
     }
+
+    trigger OnInsert()
+    begin
+        if "No." = '' then begin
+            // Make sure the no. series exists
+            InitVehicleLoadingNoSeries();
+            // Get the next number
+            "No." := NoSeriesMgt.GetNextNo('VLOAD', Today, true);
+        end;
+    end;
+
+    var
+        NoSeriesMgt: Codeunit NoSeriesManagement;
+
+    local procedure InitVehicleLoadingNoSeries()
+    var
+        NoSeries: Record "No. Series";
+        NoSeriesLine: Record "No. Series Line";
+    begin
+        // Check if VLOAD No. Series exists
+        if not NoSeries.Get('VLOAD') then begin
+            // Create No. Series for Vehicle Loading
+            NoSeries.Init();
+            NoSeries.Code := 'VLOAD';
+            NoSeries.Description := 'Vehicle Loading Sheets';
+            NoSeries."Default Nos." := true;
+            NoSeries."Manual Nos." := false;
+            if NoSeries.Insert() then;
+
+            // Create No. Series Line
+            NoSeriesLine.Init();
+            NoSeriesLine."Series Code" := 'VLOAD';
+            NoSeriesLine."Line No." := 10000;
+            NoSeriesLine."Starting No." := 'VL-0001';
+            NoSeriesLine."Ending No." := 'VL-9999';
+            NoSeriesLine."Increment-by No." := 1;
+            NoSeriesLine."Last No. Used" := '';
+            if NoSeriesLine.Insert() then;
+        end;
+    end;
 }

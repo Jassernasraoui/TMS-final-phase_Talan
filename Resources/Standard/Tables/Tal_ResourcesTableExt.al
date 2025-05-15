@@ -1,121 +1,121 @@
-tableextension 50115 " Ressources Table" extends Resource
+tableextension 77000 " Ressources Table" extends Resource
 {
     fields
     {
-        field(50003; "Email"; Text[100])
+        field(77001; "Email"; Text[100])
         {
             DataClassification = CustomerContent;
         }
-        field(50004; "Phone No."; Text[30])
+        field(77002; "Phone No."; Text[30])
         {
             DataClassification = CustomerContent;
         }
-        field(50011; "GPS Tracking Enabled "; Boolean)
+        field(77003; "GPS Tracking Enabled "; Boolean)
         {
             DataClassification = CustomerContent;
         }
 
-        field(50005; "License No."; Code[25])
+        field(77004; "License No."; Code[25])
         {
             DataClassification = ToBeClassified;
         }
-        field(50006; "License Type"; Enum "Driver License Type")
+        field(77005; "License Type"; Enum "Driver License Type")
         {
             DataClassification = ToBeClassified;
         }
 
-        field(50007; "License Expiration Date"; Date)
+        field(77006; "License Expiration Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(50008; "Additional Certifications"; Text[50])
+        field(77007; "Additional Certifications"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(50009; "Identity Card No."; Integer)
+        field(77008; "Identity Card No."; Integer)
         {
             DataClassification = ToBeClassified;
         }
-        field(50010; "Birth Date"; Date)
+        field(77009; "Birth Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(50100; " License plate No."; Code[20])
+        field(77010; " License plate No."; Code[20])
         {
             // Caption = 'License plate No.';
             DataClassification = CustomerContent;
         }
-        field(50101; "Machine Model"; Text[50])
+        field(77011; "Machine Model"; Text[50])
         {
             // Caption = 'Specifies the Machine Model';
             DataClassification = CustomerContent;
         }
-        field(50111; " Vehicule Security No."; code[30])
+        field(77012; " Vehicule Security No."; code[30])
         {
             DataClassification = ToBeClassified;
         }
-        field(50102; "vehicle Type"; enum "Tal Vehicle Type")
+        field(77013; "vehicle Type"; enum "Tal Vehicle Type")
         {
             // Caption = 'Specifies the Vehicule Type ';
             DataClassification = CustomerContent;
 
         }
 
-        field(50103; "Max Capacity Charge"; Code[100])
+        field(77014; "Max Capacity Charge"; Decimal)
         {
             // Caption = ' Specifies the Max Capacity Charge in KG';
             DataClassification = CustomerContent;
         }
-        field(50104; "Current kilometres"; code[100])
+        field(77015; "Current kilometres"; Decimal)
         {
             // Caption = 'Specifies the total distance traveled by the vehicle';
             DataClassification = ToBeClassified;
         }
 
-        field(50105; "Last Maintenance Date"; Date)
+        field(77016; "Last Maintenance Date"; Date)
         {
             // Caption = 'Specifies the date of the last maintenance performed on the vehicle';
             DataClassification = CustomerContent;
         }
-        field(50106; "Next Maintenance Date"; Date)
+        field(77017; "Next Maintenance Date"; Date)
         {
             // Caption = 'Specifies the planned date for the next vehicle maintenance.';
             DataClassification = CustomerContent;
         }
-        field(50107; "vehicle Height"; Decimal)
+        field(77018; "vehicle Height"; Decimal)
         {
             DataClassification = CustomerContent;
             // Caption = 'Specifies the Vehicle Height in Meters';
         }
 
-        field(50108; "vehicle Width"; Decimal)
+        field(77019; "vehicle Width"; Decimal)
         {
             DataClassification = CustomerContent;
             // Caption = 'Specifies the Vehicle Width in meters';
         }
 
-        field(50109; "vehicle Length"; Decimal)
+        field(77020; "vehicle Length"; Decimal)
         {
             DataClassification = CustomerContent;
             // Caption = 'Specifies the Vehicle Length in meters';
         }
-        field(50110; "Vehicule Volume"; Integer)
+        field(77021; "Vehicule Volume"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(50112; "Resource Status"; Enum "Resource Status")
+        field(77022; "Resource Status"; Enum "Resource Status")
         {
             DataClassification = ToBeClassified;
         }
-        field(50113; "Insurance Expiration Date "; Code[20])
+        field(77023; "Insurance Expiration Date "; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(50114; vignette; Code[20])
+        field(77024; vignette; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(50120; IsTractor; Boolean)
+        field(77025; IsTractor; Boolean)
         {
             Caption = 'Tractor';
 
@@ -133,12 +133,12 @@ tableextension 50115 " Ressources Table" extends Resource
         }
 
 
-        field(50121; "Tractor No."; Code[20])
+        field(77026; "Tractor No."; Code[20])
         {
             Caption = 'Tractor Number';
         }
 
-        field(50122; IsTrailer; Boolean)
+        field(77027; IsTrailer; Boolean)
         {
             Caption = 'Trailer';
 
@@ -156,12 +156,12 @@ tableextension 50115 " Ressources Table" extends Resource
         }
 
 
-        field(50123; "Trailer No."; Code[20])
+        field(77028; "Trailer No."; Code[20])
         {
             Caption = 'Trailer Number';
         }
 
-        field(50124; IsTanker; Boolean)
+        field(77029; IsTanker; Boolean)
         {
             Caption = 'Tanker';
 
@@ -179,7 +179,7 @@ tableextension 50115 " Ressources Table" extends Resource
         }
 
 
-        field(50125; "Tanker No."; Code[20])
+        field(77030; "Tanker No."; Code[20])
         {
             Caption = 'Tanker Number';
         }

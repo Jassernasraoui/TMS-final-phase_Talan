@@ -1,4 +1,4 @@
-pageextension 50100 "Person " extends "Resource List"
+pageextension 77000 "Person " extends "Resource List"
 
 {
     Caption = 'Person Resources List';

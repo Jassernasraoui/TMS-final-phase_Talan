@@ -1,4 +1,4 @@
-page 50112 "Tour Planification List"
+page 77005 "Tour Planification List"
 {
     PageType = List;
     SourceTable = "Planification Header";
@@ -8,7 +8,7 @@ page 50112 "Tour Planification List"
     UsageCategory = lists;
     MultipleNewLines = true;
     AutoSplitKey = true;
-    InsertAllowed = true;
+    InsertAllowed = false;
     DeleteAllowed = false;
 
     layout
