@@ -118,7 +118,7 @@ page 77007 "Planification Document"
                 {
                     ApplicationArea = All;
                     Caption = 'Vehicle';
-                    LookupPageId = "Resource list";
+                    LookupPageId = "Tal Vehicule Resource list";
                     ToolTip = 'Specifies the vehicle assigned to this tour.';
                 }
 
@@ -525,11 +525,13 @@ page 77007 "Planification Document"
 
         area(Navigation)
         {
-            action("Create Vehicle Loading Sheet")
+            action("Create Vehicle Loading Preparation")
             {
                 ApplicationArea = All;
-                Caption = 'Create Vehicle Loading Sheet';
+                Caption = 'Create Vehicle Loading Preparation';
                 Image = SuggestWorkMachCost;
+                Promoted = true;
+                PromotedCategory = Process;
 
                 trigger OnAction()
                 var
@@ -539,18 +541,45 @@ page 77007 "Planification Document"
                     VehicleStopLine: Record "vehicle Stop Line";
                     StopNo: Integer;
                     NoSeriesMgt: Codeunit NoSeriesManagement;
+                    ErrorMsg: Text;
                 begin
-                    if Rec."Logistic Tour No." = '' then
-                        Error('Please save the tour document first.');
+                    // Validate required fields before creating the preparation
+                    ErrorMsg := '';
 
-                    if not Confirm('Do you want to create a vehicle loading sheet for this tour?') then
+                    if Rec."Logistic Tour No." = '' then
+                        ErrorMsg += 'Tour No. must be specified.\';
+
+                    if Rec."Start Date" = 0D then
+                        ErrorMsg += 'Start Date must be specified.\';
+
+                    if Rec."Véhicule No." = '' then
+                        ErrorMsg += 'Vehicle No. must be specified.\';
+
+                    if Rec."Driver No." = '' then
+                        ErrorMsg += 'Driver No. must be specified.\';
+
+                    if Rec."Delivery Area" = '' then
+                        ErrorMsg += 'Delivery Area must be specified.\';
+
+                    // Check if there are any planning lines
+                    PlanningLine.Reset();
+                    PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+                    if PlanningLine.IsEmpty() then
+                        ErrorMsg += 'At least one planning line must be created.\';
+
+                    if ErrorMsg <> '' then begin
+                        Error(ErrorMsg);
+                        exit;
+                    end;
+
+                    if not Confirm('Do you want to create a vehicle loading preparation for this tour?') then
                         exit;
 
                     // Check if a vehicle loading sheet already exists for this tour
                     VehicleLoadingHeader.Reset();
                     VehicleLoadingHeader.SetRange("Tour No.", Rec."Logistic Tour No.");
                     if VehicleLoadingHeader.FindFirst() then begin
-                        if Confirm('A vehicle loading sheet already exists for this tour. Do you want to view it?') then begin
+                        if Confirm('A vehicle loading preparation already exists for this tour. Do you want to view it?') then begin
                             VehicleLoadingCard.SetRecord(VehicleLoadingHeader);
                             VehicleLoadingCard.Run();
                         end;
@@ -606,11 +635,11 @@ page 77007 "Planification Document"
                         VehicleLoadingHeader.Modify(true);
 
                         // Open the new vehicle loading card
-                        Message('Vehicle loading sheet %1 has been created.', VehicleLoadingHeader."No.");
+                        Message('Vehicle loading preparation %1 has been created.', VehicleLoadingHeader."No.");
                         VehicleLoadingCard.SetRecord(VehicleLoadingHeader);
                         VehicleLoadingCard.Run();
                     end else
-                        Error('Failed to create vehicle loading sheet.');
+                        Error('Failed to create vehicle loading preparation.');
                 end;
             }
 
@@ -621,6 +650,17 @@ page 77007 "Planification Document"
                 Image = Setup;
                 RunObject = Page "Transfer Routes";
                 ToolTip = 'View the list of transfer routes that are set up to transfer items from one location to another.';
+            }
+
+            action("Vehicle Loading Management")
+            {
+                ApplicationArea = All;
+                Caption = 'Vehicle Loading Management';
+                Image = ProductionPlan;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = Page "Vehicle Loading Management";
+                ToolTip = 'View and manage both loading preparation and vehicle charging operations.';
             }
         }
     }

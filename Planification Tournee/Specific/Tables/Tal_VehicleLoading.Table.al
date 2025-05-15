@@ -11,22 +11,27 @@ table 77400 "Vehicle Loading Header"
         field(77002; "Loading Date"; Date)
         {
             DataClassification = ToBeClassified;
+            NotBlank = true;
         }
         field(77003; "Tour No."; Code[20])
         {
             DataClassification = ToBeClassified;
+            NotBlank = true;
         }
         field(77004; "Truck No."; Code[20])
         {
             DataClassification = ToBeClassified;
+            NotBlank = true;
         }
         field(77005; "Driver No."; Code[20])
         {
             DataClassification = ToBeClassified;
+            NotBlank = true;
         }
         field(77006; "Loading Location"; Text[100])
         {
             DataClassification = ToBeClassified;
+            NotBlank = true;
         }
         field(77007; "Departure Time"; Time)
         {
@@ -56,6 +61,12 @@ table 77400 "Vehicle Loading Header"
         {
             OptionMembers = Planned,Loading,InProgress,Completed,Canceled,Validated;
             DataClassification = ToBeClassified;
+
+            trigger OnValidate()
+            begin
+                if Status = Status::Validated then
+                    CheckRequiredFields();
+            end;
         }
         field(770014; "Validated By"; Code[50])
         {
@@ -134,5 +145,40 @@ table 77400 "Vehicle Loading Header"
             NoSeriesLine."Last No. Used" := '';
             if NoSeriesLine.Insert() then;
         end;
+    end;
+
+    procedure CheckRequiredFields()
+    var
+        ErrorMsg: Text;
+        StopLine: Record "vehicle Stop Line";
+        HasLines: Boolean;
+    begin
+        ErrorMsg := '';
+
+        if "Loading Date" = 0D then
+            ErrorMsg += 'Loading Date must be specified.\';
+
+        if "Tour No." = '' then
+            ErrorMsg += 'Tour No. must be specified.\';
+
+        if "Truck No." = '' then
+            ErrorMsg += 'Truck No. must be specified.\';
+
+        if "Driver No." = '' then
+            ErrorMsg += 'Driver No. must be specified.\';
+
+        if "Loading Location" = '' then
+            ErrorMsg += 'Loading Location must be specified.\';
+
+        // Check if there are any stop lines
+        StopLine.Reset();
+        StopLine.SetRange("Fiche No.", "No.");
+        HasLines := not StopLine.IsEmpty();
+
+        if not HasLines then
+            ErrorMsg += 'At least one stop line must be created.\';
+
+        if ErrorMsg <> '' then
+            Error(ErrorMsg);
     end;
 }

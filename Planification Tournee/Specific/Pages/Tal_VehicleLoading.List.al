@@ -4,7 +4,7 @@ page 77010 "Vehicle Loading List"
     SourceTable = "Vehicle Loading Header";
     ApplicationArea = All;
     UsageCategory = Lists;
-    Caption = 'Vehicle Loading List';
+    Caption = 'Vehicle Loading Preparation List';
     Editable = True;
     CardPageId = "Vehicle Loading Card";
     SourceTableView = sorting("Loading Date") order(descending);
@@ -56,7 +56,7 @@ page 77010 "Vehicle Loading List"
 
             action("Create New")
             {
-                Caption = 'Create New Loading Sheet';
+                Caption = 'Create New Loading Preparation';
                 ApplicationArea = All;
                 Image = New;
                 Promoted = true;
@@ -94,6 +94,21 @@ page 77010 "Vehicle Loading List"
                 end;
             }
 
+            action("Filter Validated")
+            {
+                Caption = 'Show Validated';
+                ApplicationArea = All;
+                Image = FilterLines;
+                Promoted = true;
+                PromotedCategory = Category4;
+
+                trigger OnAction()
+                begin
+                    Rec.SetRange(Status, Rec.Status::Validated);
+                    CurrPage.Update(false);
+                end;
+            }
+
             action("Filter In Progress")
             {
                 Caption = 'Show In Progress';
@@ -124,7 +139,7 @@ page 77010 "Vehicle Loading List"
                 end;
             }
 
-            action("Clear Filters")
+            action("Clear Filter")
             {
                 Caption = 'Show All';
                 ApplicationArea = All;
@@ -134,8 +149,70 @@ page 77010 "Vehicle Loading List"
 
                 trigger OnAction()
                 begin
-                    Rec.Reset();
+                    Rec.SetRange(Status);
                     CurrPage.Update(false);
+                end;
+            }
+
+            action("Create Vehicle Charging Sheet")
+            {
+                Caption = 'Create Vehicle Charging Sheet';
+                ApplicationArea = All;
+                Image = NewDocument;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    VehicleChargingHeader: Record "Vehicle Charging Header";
+                    VehicleChargingCard: Page "Vehicle Charging Card";
+                begin
+                    if Rec."Status" <> Rec."Status"::Validated then begin
+                        Error('The loading preparation must be validated before creating a charging sheet.');
+                        exit;
+                    end;
+
+                    // Check if a charging sheet already exists for this loading sheet
+                    VehicleChargingHeader.Reset();
+                    VehicleChargingHeader.SetRange("Loading Sheet No.", Rec."No.");
+                    if VehicleChargingHeader.FindFirst() then begin
+                        if Confirm('A vehicle charging sheet already exists for this loading preparation. Do you want to view it?') then begin
+                            VehicleChargingCard.SetRecord(VehicleChargingHeader);
+                            VehicleChargingCard.Run();
+                        end;
+                        exit;
+                    end;
+
+                    // Create new vehicle charging header
+                    VehicleChargingHeader.Init();
+                    VehicleChargingHeader."Loading Sheet No." := Rec."No.";
+                    VehicleChargingHeader."Charging Date" := Rec."Loading Date";
+                    VehicleChargingHeader."Status" := VehicleChargingHeader."Status"::InProgress;
+                    VehicleChargingHeader.Insert(true);
+                    VehicleChargingHeader.GetLoadingInfo();
+
+                    // Open the new vehicle charging card
+                    Message('Vehicle charging sheet %1 has been created.', VehicleChargingHeader."No.");
+
+                    Commit();
+
+                    VehicleChargingCard.SetRecord(VehicleChargingHeader);
+                    VehicleChargingCard.Run();
+                end;
+            }
+
+            action("Open Vehicle Charging List")
+            {
+                Caption = 'Vehicle Charging List';
+                ApplicationArea = All;
+                Image = TransferToLines;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = Page "Vehicle Charging List";
+
+                trigger OnAction()
+                begin
+                    // This action just opens the Vehicle Charging List page
                 end;
             }
         }

@@ -100,6 +100,7 @@ table 77100 "Planification Header"
             DataClassification = CustomerContent;
             Caption = 'Véhicule';
             TableRelation = Resource."No." where("Type" = const(Machine));
+            
         }
 
         field(77005; "Statut"; Option)
