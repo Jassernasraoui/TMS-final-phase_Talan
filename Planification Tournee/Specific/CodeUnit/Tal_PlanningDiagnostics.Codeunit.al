@@ -1,4 +1,4 @@
-codeunit 50126 "Planning Diagnostics"
+codeunit 77201 "Planning Diagnostics"
 {
     // This codeunit is used for diagnostics and debugging of the tour planning system
 
@@ -35,6 +35,10 @@ codeunit 50126 "Planning Diagnostics"
         DocBuffer."Delivery Date" := SalesHeader."Shipment Date";
         DocBuffer.Priority := DocBuffer.Priority::Normal;
         DocBuffer.Selected := true;
+
+        // Explicitly set the Tour No. in the buffer
+        DocBuffer."Tour No." := TourHeader."Logistic Tour No.";
+
         DocBuffer.Insert();
 
         // Try to add document

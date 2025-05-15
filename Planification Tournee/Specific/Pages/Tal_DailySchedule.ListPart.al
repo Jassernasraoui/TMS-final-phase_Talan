@@ -1,4 +1,4 @@
-page 50150 "Daily Schedule ListPart"
+page 77011 "Daily Schedule ListPart"
 {
     PageType = ListPart;
     SourceTable = "Planning Lines";
@@ -78,6 +78,7 @@ page 50150 "Daily Schedule ListPart"
                 {
                     ApplicationArea = All;
                     StyleExpr = StatusStyleExpr;
+                    Visible = false;
                 }
 
                 field("Priority"; Rec."Priority")

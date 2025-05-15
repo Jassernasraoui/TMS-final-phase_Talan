@@ -1,4 +1,4 @@
-codeunit 50123 "Planning Lines Management"
+codeunit 77200 "Planning Lines Management"
 {
     // Codeunit pour gérer les fonctionnalités de la planification des tournées
 
@@ -88,7 +88,7 @@ codeunit 50123 "Planning Lines Management"
                     PlanningLine."Expected Shipment Date" := SalesLine."Shipment Date";
                     PlanningLine."Customer No." := SalesHeader."Sell-to Customer No.";
                     PlanningLine."Location Code" := SalesHeader."Location Code";
-                    PlanningLine."Planned Date" := SalesHeader."Shipment Date";
+                    PlanningLine." Delivery Date" := SalesHeader."Shipment Date";
 
                     // Valeurs par défaut pour les nouveaux champs
                     if (SalesLine."Shipment Date" >= TourHeader."Start Date") and
@@ -184,7 +184,7 @@ codeunit 50123 "Planning Lines Management"
                     PlanningLine."Expected Receipt Date" := PurchLine."Expected Receipt Date";
                     PlanningLine."Vendor No." := PurchHeader."Buy-from Vendor No.";
                     PlanningLine."Location Code" := PurchHeader."Location Code";
-                    PlanningLine."Planned Date" := PurchHeader."Expected Receipt Date";
+                    PlanningLine." Delivery Date" := PurchHeader."Expected Receipt Date";
 
                     // Valeurs par défaut pour les nouveaux champs
                     if (PurchLine."Expected Receipt Date" >= TourHeader."Start Date") and
@@ -271,7 +271,7 @@ codeunit 50123 "Planning Lines Management"
                 PlanningLine."Transfer-from Code" := TransferHeader."Transfer-from Code";
                 PlanningLine."Location Code" := TransferHeader."Transfer-to Code";
                 PlanningLine."Expected Receipt Date" := TransferHeader."Receipt Date";
-                PlanningLine."Planned Date" := TransferHeader."Receipt Date";
+                PlanningLine." Delivery Date" := TransferHeader."Receipt Date";
 
                 // Valeurs par défaut pour les nouveaux champs
                 if (TransferHeader."Receipt Date" >= TourHeader."Start Date") and
@@ -431,10 +431,10 @@ codeunit 50123 "Planning Lines Management"
                 Clear(DayAssignment);
 
                 // 1. Check if planned date is valid
-                if (PlanningLine."Planned Date" >= StartDate) and (PlanningLine."Planned Date" <= EndDate) then begin
+                if (PlanningLine." Delivery Date" >= StartDate) and (PlanningLine." Delivery Date" <= EndDate) then begin
                     // Verify it's a working day
-                    if IsWorkingDay(PlanningLine."Planned Date", NonWorkingDays) then begin
-                        OptimalDay := PlanningLine."Planned Date";
+                    if IsWorkingDay(PlanningLine." Delivery Date", NonWorkingDays) then begin
+                        OptimalDay := PlanningLine." Delivery Date";
                         DayAssignment := 'Date planifiée du document';
                     end;
                 end;

@@ -1,4 +1,4 @@
-page 50100 "Planning Lines"
+page 77100 "Planning Lines"
 {
     PageType = ListPart;
     SourceTable = "Planning Lines";
@@ -79,39 +79,25 @@ page 50100 "Planning Lines"
                 {
                     ApplicationArea = All;
                 }
-                field(Status; rec.Status)
+                field ("Global Dimension 1 Code" ; rec."Global Dimension 1 Code")
                 {
                     ApplicationArea = All;
+                    Caption = 'Global Dimension 1 Code';
                 }
-                field("Project Code"; rec."Project Code")
+               field ("Global Dimension 2 Code" ; rec."Global Dimension 2 Code")
                 {
                     ApplicationArea = All;
-                }
-                field("Department Code"; rec."Department Code")
-                {
-                    ApplicationArea = All;
-                }
-                field("Gen. Prod. Posting Group"; rec."Gen. Prod. Posting Group")
-                {
-                    ApplicationArea = All;
-                }
-                field("Inventory Posting Group"; rec."Inventory Posting Group")
-                {
-                    ApplicationArea = All;
-                }
-                field("Item Category Code"; rec."Item Category Code")
-                {
-                    ApplicationArea = All;
+                    Caption = 'Global Dimension 2 Code';
                 }
                 field("Dimension Set ID"; rec."Dimension Set ID")
                 {
                     ApplicationArea = All;
                 }
-                field("Planned Date"; rec."Planned Date")
+                field("Planned Date"; rec." Delivery Date")
                 {
                     ApplicationArea = All;
                 }
-                field("Expected Shipment Date"; rec."Expected Shipment Date")
+                field(" Shipment Date"; rec."Expected Shipment Date")
                 {
                     ApplicationArea = All;
                 }
@@ -135,10 +121,7 @@ page 50100 "Planning Lines"
                 {
                     ApplicationArea = All;
                 }
-                field("System ID"; rec."System ID")
-                {
-                    ApplicationArea = All;
-                }
+                
             }
         }
     }
@@ -492,7 +475,7 @@ page 50100 "Planning Lines"
             PlanningLine."Variant Code" := SalesLine."Variant Code";
             
             // Vous pouvez ajouter d'autres champs selon votre structure de données
-            PlanningLine."Planned Date" := WorkDate();
+            PlanningLine." Delivery Date" := WorkDate();
             
             PlanningLine.Insert(true);
             LineNo += 10000;

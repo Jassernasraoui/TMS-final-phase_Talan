@@ -1,4 +1,4 @@
-pageextension 50180 "Tal Sales & Receivables Setup" extends "Sales & Receivables Setup"
+pageextension 77006 "Tal Sales & Receivables Setup" extends "Sales & Receivables Setup"
 {
     layout
     {

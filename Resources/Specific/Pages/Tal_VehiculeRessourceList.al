@@ -1,4 +1,4 @@
-page 50110 "Tal Vehicule Resource list"
+page 77003 "Tal Vehicule Resource list"
 {
     PageType = list;
     SourceTable = Resource;

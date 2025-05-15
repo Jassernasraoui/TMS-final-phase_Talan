@@ -1,4 +1,4 @@
-page 50160 "Planning Optimization"
+page 77012 "Planning Optimization"
 {
     PageType = StandardDialog;
     ApplicationArea = All;

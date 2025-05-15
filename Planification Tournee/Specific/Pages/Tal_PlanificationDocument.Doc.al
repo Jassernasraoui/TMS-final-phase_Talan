@@ -1,4 +1,4 @@
-page 50119 "Planification Document"
+page 77007 "Planification Document"
 {
     PageType = document;
     SourceTable = "Planification Header";
@@ -1049,9 +1049,9 @@ page 50119 "Planification Document"
         if PlanningLine.FindSet() then
             repeat
                 // Assign to start date if planned date is not in range
-                if (PlanningLine."Planned Date" >= Rec."Start Date") and
-                   (PlanningLine."Planned Date" <= Rec."End Date") then
-                    PlanningLine."Assigned Day" := PlanningLine."Planned Date"
+                if (PlanningLine." Delivery Date" >= Rec."Start Date") and
+                   (PlanningLine." Delivery Date" <= Rec."End Date") then
+                    PlanningLine."Assigned Day" := PlanningLine." Delivery Date"
                 else
                     PlanningLine."Assigned Day" := Rec."Start Date";
 

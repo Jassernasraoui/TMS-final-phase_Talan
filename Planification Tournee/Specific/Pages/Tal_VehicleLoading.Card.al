@@ -1,4 +1,4 @@
-page 50130 "Vehicle Loading Card"
+page 77009 "Vehicle Loading Card"
 {
     PageType = Card;
     SourceTable = "vehicle Loading Header";

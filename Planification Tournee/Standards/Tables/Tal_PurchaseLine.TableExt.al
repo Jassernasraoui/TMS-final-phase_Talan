@@ -1,8 +1,8 @@
-tableextension 50152 "Tal Purchase Line" extends "Purchase Line"
+tableextension 77006 "Tal Purchase Line" extends "Purchase Line"
 {
     fields
     {
-        field(50100; "Logistic Tour No."; Code[20])
+        field(77001; "Logistic Tour No."; Code[20])
         {
             Caption = 'Logistic Tour No.';
             DataClassification = CustomerContent;

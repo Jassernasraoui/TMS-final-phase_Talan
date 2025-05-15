@@ -1,14 +1,14 @@
-table 50147 "Planification Header"
+table 77100 "Planification Header"
 {
     DataClassification = CustomerContent;
 
     fields
     {
-        field(1; "Document Type"; Enum "Sales Document Type")
+        field(7701; "Document Type"; Enum "Sales Document Type")
         {
             Caption = 'Document Type';
         }
-        field(6; "Logistic Tour No."; Code[20])
+        field(7706; "Logistic Tour No."; Code[20])
         {
             DataClassification = CustomerContent;
 
@@ -27,13 +27,13 @@ table 50147 "Planification Header"
             end;
         }
 
-        field(2; "Date de Tournée"; Date)
+        field(7702; "Date de Tournée"; Date)
         {
             DataClassification = ToBeClassified;
             Caption = 'Tour Date';
         }
 
-        field(22; "Start Date"; Date)
+        field(77022; "Start Date"; Date)
         {
             DataClassification = ToBeClassified;
             Caption = 'Start Date';
@@ -49,7 +49,7 @@ table 50147 "Planification Header"
             end;
         }
 
-        field(23; "End Date"; Date)
+        field(77023; "End Date"; Date)
         {
             DataClassification = ToBeClassified;
             Caption = 'End Date';
@@ -62,47 +62,47 @@ table 50147 "Planification Header"
             end;
         }
 
-        field(24; "Working Hours Start"; Time)
+        field(77024; "Working Hours Start"; Time)
         {
             DataClassification = ToBeClassified;
             Caption = 'Working Hours Start';
         }
 
-        field(25; "Working Hours End"; Time)
+        field(77025; "Working Hours End"; Time)
         {
             DataClassification = ToBeClassified;
             Caption = 'Working Hours End';
         }
 
-        field(26; "Max Visits Per Day"; Integer)
+        field(77026; "Max Visits Per Day"; Integer)
         {
             DataClassification = ToBeClassified;
             Caption = 'Max Visits Per Day';
             MinValue = 0;
         }
 
-        field(27; "Non-Working Days"; Text[250])
+        field(77027; "Non-Working Days"; Text[250])
         {
             DataClassification = ToBeClassified;
             Caption = 'Non-Working Days';
             Description = 'Stored as comma-separated dates';
         }
 
-        field(3; "Driver No."; Code[20])
+        field(77003; "Driver No."; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'Chauffeur';
             TableRelation = Resource."No." where("Type" = const(Person));
         }
 
-        field(4; "Véhicule No."; Code[20])
+        field(77004; "Véhicule No."; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'Véhicule';
             TableRelation = Resource."No." where("Type" = const(Machine));
         }
 
-        field(5; "Statut"; Option)
+        field(77005; "Statut"; Option)
         {
             DataClassification = ToBeClassified;
             OptionMembers = Plannified,"On Mission",Stopped;
@@ -122,22 +122,22 @@ table 50147 "Planification Header"
             end;
         }
 
-        field(7; "Commentaire"; Text[100])
+        field(77007; "Commentaire"; Text[100])
         {
             DataClassification = CustomerContent;
         }
 
-        field(8; "No. Series"; Code[20])
+        field(77008; "No. Series"; Code[20])
         {
             Caption = 'No. Series';
             Editable = false;
             TableRelation = "No. Series";
         }
-        field(9; "No."; Code[20])
+        field(77009; "No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(10; "No. of Planning Lines"; Integer)
+        field(77010; "No. of Planning Lines"; Integer)
         {
             FieldClass = FlowField;
             CalcFormula = count("Planning Lines" where("Logistic Tour No." = field("Logistic Tour No.")));
@@ -145,7 +145,7 @@ table 50147 "Planification Header"
             Editable = false;
         }
 
-        field(11; "Total Quantity"; Decimal)
+        field(77011; "Total Quantity"; Decimal)
         {
             FieldClass = FlowField;
             CalcFormula = sum("Planning Lines".Quantity where("Logistic Tour No." = field("Logistic Tour No.")));
@@ -153,7 +153,7 @@ table 50147 "Planification Header"
             Editable = false;
         }
 
-        field(12; "Estimated Total Weight"; Decimal)
+        field(77012; "Estimated Total Weight"; Decimal)
         {
             DataClassification = ToBeClassified;
 
@@ -161,7 +161,7 @@ table 50147 "Planification Header"
             Editable = false;
         }
 
-        field(13; "Estimated Distance"; Decimal)
+        field(77013; "Estimated Distance"; Decimal)
         {
             DataClassification = ToBeClassified;
 
@@ -169,7 +169,7 @@ table 50147 "Planification Header"
             Editable = false;
         }
 
-        field(14; "Estimated Duration"; Decimal)
+        field(77014; "Estimated Duration"; Decimal)
         {
             DataClassification = ToBeClassified;
 
@@ -177,7 +177,7 @@ table 50147 "Planification Header"
             Editable = false;
         }
 
-        field(15; "Load Utilization"; Decimal)
+        field(77015; "Load Utilization"; Decimal)
         {
             DataClassification = ToBeClassified;
 
@@ -185,56 +185,56 @@ table 50147 "Planification Header"
             DecimalPlaces = 0 : 2;
             Editable = false;
         }
-        field(16; "Created By"; code[50])
+        field(77016; "Created By"; code[50])
         {
             DataClassification = ToBeClassified;
             TableRelation = User."User Name";
 
         }
-        field(17; "Delivery Area"; Text[200])
+        field(77017; "Delivery Area"; Text[200])
         {
             DataClassification = ToBeClassified;
         }
-        field(18; "Document Date"; Date)
+        field(77018; "Document Date"; Date)
         {
             DataClassification = ToBeClassified;
 
         }
-        field(19; "Location Code"; Code[20])
+        field(77019; "Location Code"; Code[20])
         {
             DataClassification = ToBeClassified;
             TableRelation = "location"."code";
         }
-        field(20; "Shipping Agent Code"; Text[100])
+        field(77020; "Shipping Agent Code"; Text[100])
         {
             DataClassification = ToBeClassified;
             TableRelation = "Shipping Agent"."Code";
         }
-        field(21; "Warehouse Employees"; Text[100])
+        field(77021; "Warehouse Employees"; Text[100])
         {
             DataClassification = ToBeClassified;
             TableRelation = "Warehouse Employee"."User ID";
         }
 
-        field(28; "Start Location"; Code[20])
+        field(77028; "Start Location"; Code[20])
         {
             DataClassification = ToBeClassified;
             Caption = 'Start Location';
             TableRelation = Location.Code;
         }
 
-        field(29; "End Location"; Code[20])
+        field(77029; "End Location"; Code[20])
         {
             DataClassification = ToBeClassified;
             Caption = 'End Location';
             TableRelation = Location.Code;
         }
-       field(30; "Conveyor Attendant"; Code[20])
-{
-    DataClassification = ToBeClassified;
-    Caption = 'Conveyor Attendant';
-    TableRelation = Resource."No." WHERE("Type" = CONST(Person), "Resource Group No." = CONST('Conveyor Attendant'));
-}
+        field(77030; "Conveyor Attendant"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Conveyor Attendant';
+            TableRelation = Resource."No." WHERE("Type" = CONST(Person), "Resource Group No." = CONST('Conveyor Attendant'));
+        }
 
 
     }
