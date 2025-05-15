@@ -1,4 +1,4 @@
-page 77013 "TMS Role Center"
+page 77014 "TMS Role Center"
 {
     PageType = RoleCenter;
     Caption = 'TMS Role Center';
@@ -9,15 +9,16 @@ page 77013 "TMS Role Center"
         {
             group(Group1)
             {
-                // part(Part1; RoleCenterHeadline)
-                // {
-                //     ApplicationArea = All;
-                // }
+                part(Part1; RoleCenterHeadline)
+                {
+                    ApplicationArea = All;
+                }
 
-                // part(Part2; SalesInvoiceCuePage)
-                // {
-                //     Caption = 'Invoices';
-                // }
+                part(Part2; TripScedulingCuePage)
+                {
+                    Caption = 'Trip Scheduling';
+                    ApplicationArea = All;
+                }
             }
         }
     }
@@ -27,94 +28,63 @@ page 77013 "TMS Role Center"
     {
         area(Sections)
         {
-            group(PostedInvoices)
+            group(Setup)
             {
-                Caption = 'Posted Invoices';
-                Image = RegisteredDocs;
-                action(PostedServiceInvoices)
+                Caption = 'Setup';
+                Image = Setup;
+                action(TripSetup)
                 {
-                    Caption = 'Posted Service Invoices';
-                    RunObject = Page "Posted Service Invoices";
+                    Caption = 'Trip Setup';
+                    RunObject = Page "Trip Setup";
                     ApplicationArea = All;
                 }
+            }
+            group(MasterData)
+            {
+                Caption = 'Master Data';
+                Image = Setup;
 
-                action(PostedSalesInvoices)
+                action(Resources)
                 {
-                    Caption = 'Posted Sales Invoices';
-                    RunObject = Page "Posted Sales Invoices";
+                    Caption = 'Resources';
+                    RunObject = Page "Resource List";
                     ApplicationArea = All;
                 }
-
-                group(SalesDocuments)
+                action(VehiculeResource)
                 {
-                    Caption = 'Sales Documents';
-                    action("Sales Document Entity")
-                    {
-                        ApplicationArea = All;
-                        RunObject = page "Sales Document Entity";
-                    }
-                    action("Sales Document Line Entity")
-                    {
-                        ApplicationArea = All;
-                        RunObject = page "Sales Document Line Entity";
-                    }
+                    Caption = 'Vehicule Resource list';
+                    RunObject = Page "Tal Vehicule Resource list";
+                    ApplicationArea = All;
                 }
             }
-        }
 
-        area(Embedding)
-        {
-
-            action(Sales)
+            group(TripDocument)
             {
-                Caption = 'Sales lists';
-                RunObject = Page "Sales list";
-                ApplicationArea = All;
+                Caption = 'Trip Document';
+                Image = Setup;
+                action(TourPlanificationList)
+                {
+                    Caption = 'Trip Scheduling List';
+                    RunObject = Page "Tour Planification List";
+                    ApplicationArea = All;
+                }
+                action(VehicleLoadingList)
+                {
+                    Caption = 'Vehicle Loading List';
+                    RunObject = Page "Vehicle Loading List";
+                    ApplicationArea = All;
+                }
             }
 
-            action(Services)
-            {
-                Caption = 'Service lists';
-                RunObject = Page "Service list";
-                ApplicationArea = All;
-
-            }
-
-
-        }
-
-        area(Processing)
-        {
-            action(SeeSalesInvoices)
-            {
-                Caption = 'See Sales Invoices';
-                RunObject = Page "Posted Sales Invoices";
-            }
-
-        }
-
-        area(Creation)
-        {
-            action(AddSalesInvoice)
-            {
-                Caption = 'Add Sales Invoice';
-                Image = NewInvoice;
-                RunObject = Page "Sales Invoice";
-                RunPageMode = Create;
-            }
-        }
-
-        area(Reporting)
-        {
-            // action(SalesInvoicesReport)
-            // {
-            //     Caption = 'Sales Invoices Report';
-            //     Image = "Report";
-            //     RunObject = Report "Sales - Invoice";
-            // }
         }
     }
 }
+
+
+
+
+
+
 
 // Creates a profile that uses the Role Center
 profile MyProfile
