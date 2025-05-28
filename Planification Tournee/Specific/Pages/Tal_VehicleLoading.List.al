@@ -1,4 +1,4 @@
-page 77010 "Vehicle Loading List"
+page 77011 "Vehicle Loading List"
 {
     PageType = List;
     SourceTable = "Vehicle Loading Header";
@@ -224,7 +224,7 @@ page 77010 "Vehicle Loading List"
                 Caption = 'Tour Planning';
                 ApplicationArea = All;
                 Image = Planning;
-                RunObject = Page "Tour Planification List";
+                RunObject = Page "Tour Planning List";
             }
         }
     }

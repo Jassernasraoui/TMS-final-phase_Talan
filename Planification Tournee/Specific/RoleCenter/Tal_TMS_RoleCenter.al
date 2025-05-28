@@ -1,4 +1,4 @@
-page 77014 "TMS Role Center"
+page 77120 "TMS Role Center"
 {
     PageType = RoleCenter;
     Caption = 'TMS Role Center';
@@ -17,6 +17,11 @@ page 77014 "TMS Role Center"
                 part(Part2; TripScedulingCuePage)
                 {
                     Caption = 'Trip Scheduling';
+                    ApplicationArea = All;
+                }
+                part(ProcessWorkflow; "TMS Process Workflow")
+                {
+                    Caption = 'Process Workflow';
                     ApplicationArea = All;
                 }
             }
@@ -65,7 +70,7 @@ page 77014 "TMS Role Center"
                 action(TourPlanificationList)
                 {
                     Caption = 'Trip Scheduling List';
-                    RunObject = Page "Tour Planification List";
+                    RunObject = Page "Tour Planning List";
                     ApplicationArea = All;
                 }
                 action(VehicleLoadingList)
@@ -73,6 +78,14 @@ page 77014 "TMS Role Center"
                     Caption = 'Vehicle Loading List';
                     RunObject = Page "Vehicle Loading List";
                     ApplicationArea = All;
+                }
+                action(TourExecution)
+                {
+                    Caption = 'Tour Execution';
+                    RunObject = Page "Tour Execution Page";
+                    ApplicationArea = All;
+                    Image = ExecuteBatch;
+                    ToolTip = 'Execute tours with or without loading';
                 }
             }
 

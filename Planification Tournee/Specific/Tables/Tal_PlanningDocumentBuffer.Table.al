@@ -4,6 +4,7 @@ table 77102 "Planning Document Buffer"
 
     fields
     {
+
         field(77001; "Line No."; Integer)
         {
             DataClassification = ToBeClassified;
@@ -89,10 +90,10 @@ table 77102 "Planning Document Buffer"
             Caption = 'Variant Code';
         }
 
-        field(77016; "Description 2"; Text[100])
+        field(77016; "Description"; Text[100])
         {
             DataClassification = ToBeClassified;
-            Caption = 'Description 2';
+            Caption = 'Description ';
         }
 
         field(77017; "Quantity (Base)"; Decimal)
@@ -181,6 +182,34 @@ table 77102 "Planning Document Buffer"
         {
             DataClassification = ToBeClassified;
             Caption = 'Expected Receipt Date';
+        }
+
+        field(77030; "Is Document Line"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Is Document Line';
+            Description = 'True if this is a document line, false if it is a document header';
+        }
+
+        field(77031; "Source Line No."; Integer)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Source Line No.';
+            Description = 'Line number from the source document';
+        }
+
+        field(77032; "Parent Line No."; Integer)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Parent Line No.';
+            Description = 'Line number of the parent document header';
+        }
+
+        field(77033; "Item No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Item No.';
+            Description = 'Item number for document lines';
         }
     }
 

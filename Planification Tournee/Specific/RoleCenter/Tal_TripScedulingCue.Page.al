@@ -15,17 +15,42 @@ page 77016 TripScedulingCuePage
                 field(PlannifiedTripCue; Rec.TripScedulingPlannified)
                 {
                     Caption = 'Plannified';
-                    DrillDownPageId = "Tour Planification List";
+                    DrillDownPageId = "Tour Planning List";
                 }
                 field(OnMissionTripCue; Rec.TripScedulingOnMission)
                 {
                     Caption = 'On Mission';
-                    DrillDownPageId = "Tour Planification List";
+                    DrillDownPageId = "Tour Planning List";
                 }
                 field(StoppedTripCue; Rec.TripScedulingStopped)
                 {
                     Caption = 'Stopped';
-                    DrillDownPageId = "Tour Planification List";
+                    DrillDownPageId = "Tour Planning List";
+                }
+            }
+            cuegroup(TripExecutionCueContainer)
+            {
+                Caption = 'Trip Execution';
+                // CuegroupLayout=Wide;
+                field(InProgressTripCue; Rec.TripExecutionInProgress)
+                {
+                    Caption = 'In Progress';
+                    DrillDownPageId = "Tour Execution Tracking List";
+                }
+                field(CompletedTripCue; Rec.TripExecutionCompleted)
+                {
+                    Caption = 'Completed';
+                    DrillDownPageId = "Tour Execution Tracking List";
+                }
+                field(DelayedTripCue; Rec.TripExecutionDelayed)
+                {
+                    Caption = 'Delayed';
+                    DrillDownPageId = "Tour Execution Tracking List";
+                }
+                field(CancelledTripCue; Rec.TripExecutionCancelled)
+                {
+                    Caption = 'Cancelled';
+                    DrillDownPageId = "Tour Execution Tracking List";
                 }
             }
         }

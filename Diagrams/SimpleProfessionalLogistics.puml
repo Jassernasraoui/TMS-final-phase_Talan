@@ -1,0 +1,113 @@
+@startuml Professional_Logistics_Process_Simple
+
+skinparam {
+  BackgroundColor white
+  TitleBackgroundColor white
+  TitleFontColor #2C3E50
+  TitleFontSize 16
+  TitleFontStyle bold
+  
+  ArrowColor #34495E
+  
+  ActivityBackgroundColor #5DADE2
+  ActivityBorderColor #2874A6
+  ActivityFontColor white
+  ActivityFontStyle bold
+  
+  ActivityDiamondBackgroundColor #F5CBA7
+  ActivityDiamondBorderColor #E67E22
+  
+  NoteBackgroundColor #FCF3CF
+  NoteBorderColor #F4D03F
+}
+
+title <b>PROCESSUS DE GESTION LOGISTIQUE</b>
+
+|Gestion des Ressources|
+start
+:Création des ressources;
+note right: Personnes / Véhicules
+
+:Configuration des ressources;
+note right: Permis, documents, capacités
+
+:Validation des ressources;
+note right: Statut: Disponible
+
+|Planification|
+:Création de la tournée;
+note right: Dates, lieux, identifiants
+
+if (Données valides?) then (Oui)
+else (Non)
+  :Correction des données;
+  backward:Validation;
+endif
+
+:Assignation des ressources;
+note right: Chauffeur et véhicule
+
+if (Compatibilité OK?) then (Oui)
+else (Non)
+  :Réaffectation;
+  backward:Vérification;
+endif
+
+:Création lignes livraison;
+note right: Clients, articles, quantités
+
+:Attribution créneaux horaires;
+note right: Planning temporel
+
+:Validation du planning;
+note right: Statut: Planifiée
+
+|Préparation|
+:Document préparation;
+note right: Référence tournée
+
+:Optimisation des arrêts;
+note right: Séquence livraisons
+
+:Calcul des charges;
+note right: Poids, volumes
+
+:Validation préparation;
+note right: Statut: Validé
+
+|Chargement|
+:Document chargement;
+note right: Référence préparation
+
+:Saisie quantités réelles;
+note right: Écarts documentés
+
+:Finalisation chargement;
+note right: Signatures, documentation
+note right: Statut: Complété
+
+|Exécution|
+:Départ en mission;
+note right: Statut: En Mission
+
+:Livraisons clients;
+note right: Signatures client
+
+:Gestion exceptions;
+note right: Anomalies terrain
+
+:Clôture tournée;
+note right: Statut: Terminée
+
+|Analyse|
+:Libération ressources;
+note right: Statut: Disponible
+
+:Analyse performances;
+note right: KPIs, indicateurs
+
+stop
+
+footer <b>FLUX DE STATUTS:</b> Disponible → Assigné → En Mission → Disponible | Brouillon → Planifiée → En Mission → Terminée
+
+@enduml 

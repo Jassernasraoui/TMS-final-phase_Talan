@@ -1,0 +1,67 @@
+@startuml Professional_Logistics_Process
+
+skinparam {
+  ActivityBackgroundColor lightblue
+  ActivityBorderColor navy
+  ActivityFontSize 14
+  ActivityFontColor black
+  ArrowColor gray
+}
+
+title SYSTÈME DE GESTION LOGISTIQUE - PROCESSUS SÉQUENTIEL
+
+|Gestion des Ressources|
+start
+:Création des ressources (Personnes/Véhicules);
+:Configuration et validation des informations;
+:Vérification des permis/documents obligatoires;
+:Statut initial "Disponible";
+
+|Planification des Tournées|
+:Création nouvelle tournée avec numéro unique;
+:Saisie dates (début/fin) et lieux (départ/arrivée);
+:Assignation chauffeur;
+:Assignation véhicule;
+:Vérification disponibilité et compatibilité;
+:Changement statut ressources à "Assigné";
+:Génération lignes de planification;
+:Saisie articles et quantités;
+:Vérification capacité de transport;
+:Attribution créneaux horaires;
+:Vérification réalisabilité du planning;
+:Statut tournée "Planifiée";
+
+|Préparation et Chargement|
+:Création document préparation chargement;
+:Génération des arrêts de livraison;
+:Optimisation ordre des arrêts;
+:Calcul totaux chargement (poids/volume);
+:Libération document préparation (statut "En chargement");
+:Validation par superviseur (statut "Validé");
+:Création document chargement véhicule;
+:Génération lignes chargement;
+:Début processus chargement (heure enregistrée);
+:Saisie quantités réelles chargées;
+:Calcul écarts et justification si >10%;
+:Finalisation chargement;
+:Signature responsable et chauffeur;
+:Statut document "Complété";
+:Génération documents de transport;
+
+|Exécution des Tournées|
+:Départ en mission;
+:Statut tournée "En mission";
+:Enregistrement heure départ;
+:Livraisons aux clients;
+:Confirmation pour chaque livraison;
+:Documentation anomalies terrain;
+:Traitement exceptions (livraisons partielles/non effectuées);
+:Clôture de la tournée;
+:Statut tournée "Terminée";
+:Libération des ressources (statut "Disponible");
+:Documentation performances et anomalies;
+stop
+
+footer SUIVI DES ÉTATS: Tournée: Draft → Plannified → On Mission → Stopped | Chargement: Planned → Loading → Validated → Completed
+
+@enduml 

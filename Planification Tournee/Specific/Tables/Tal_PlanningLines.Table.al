@@ -4,6 +4,12 @@ table 77101 "Planning Lines"
 
     fields
     {
+        field (77000; "Show Calender"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Show All';
+            Description = 'Show all schedule items regardless of the selected day.';
+        }
         field(77001; "Logistic Tour No."; Code[20])
         {
             DataClassification = ToBeClassified;
@@ -232,6 +238,10 @@ table 77101 "Planning Lines"
             // begin
             //     Rec.ValidateShortcutDimCode(2, "Shortcut Dimension 2 Code");
             // end;
+        }
+        field(77043; "Account No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
         }
 
     }

@@ -140,6 +140,8 @@ page 77008 "Source Document Selection"
             repeater(DocumentList)
             {
                 Caption = 'Documents';
+                IndentationColumn = Indentation;
+                ShowAsTree = true;
 
                 field(Selected; Rec.Selected)
                 {
@@ -147,6 +149,18 @@ page 77008 "Source Document Selection"
                     Caption = 'Selected';
                     ToolTip = 'Specifies whether the document is selected for inclusion in the tour.';
                     Editable = true;
+
+                    trigger OnValidate()
+                    begin
+                        // If this is a header record, update all its child lines
+                        if not Rec."Is Document Line" then begin
+                            // Save the current record
+                            Rec.Modify();
+
+                            // Find and update all child records
+                            UpdateChildLines(Rec."Line No.", Rec.Selected);
+                        end;
+                    end;
                 }
 
                 field("Document Type"; Rec."Document Type")
@@ -155,30 +169,36 @@ page 77008 "Source Document Selection"
                     Caption = 'Type';
                     ToolTip = 'Specifies the type of document.';
                     Editable = false;
-                }
-
-                field("Line No."; Rec."Line No.")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Line No.';
-                    ToolTip = 'Specifies the line number.';
-                    Editable = false;
-                }
-
-                field("Tour No."; Rec."Tour No.")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Logistic Tour No.';
-                    ToolTip = 'Specifies the tour number.';
-                    Editable = false;
+                    Style = Strong;
+                    StyleExpr = not Rec."Is Document Line";
                 }
 
                 field("Document No."; Rec."Document No.")
                 {
                     ApplicationArea = All;
-                    Caption = 'Source ID';
+                    Caption = 'Source Document ID';
                     ToolTip = 'Specifies the document number.';
                     Editable = false;
+                    Style = Strong;
+                    StyleExpr = not Rec."Is Document Line";
+                }
+                field("Source Line No."; Rec."Source Line No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Line No.';
+                    ToolTip = 'Specifies the line number from the source document.';
+                    Editable = false;
+                    Visible = true;
+                }
+                field("Item No."; Rec."Item No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'No.';
+                    ToolTip = 'Specifies the item number according to the specified number series.';
+                    Editable = false;
+                    Visible = true;
+                    Style = Strong;
+                    StyleExpr = Rec."Is Document Line";
                 }
 
                 field("Account No."; Rec."Account No.")
@@ -187,14 +207,8 @@ page 77008 "Source Document Selection"
                     Caption = 'Customer/Vendor No.';
                     ToolTip = 'Specifies the account number.';
                     Editable = false;
-                }
-
-                field("Variant Code"; Rec."Variant Code")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Variant Code';
-                    ToolTip = 'Specifies the variant code.';
-                    Editable = false;
+                    Style = Strong;
+                    StyleExpr = not Rec."Is Document Line";
                 }
 
                 field("Account Name"; Rec."Account Name")
@@ -203,14 +217,18 @@ page 77008 "Source Document Selection"
                     Caption = 'Customer/Vendor Name';
                     ToolTip = 'Specifies the account name.';
                     Editable = false;
+                    Style = Strong;
+                    StyleExpr = not Rec."Is Document Line";
                 }
 
-                field("Description 2"; Rec."Description 2")
+                field("Description"; Rec."Description")
                 {
                     ApplicationArea = All;
-                    Caption = 'Description 2';
-                    ToolTip = 'Specifies an additional description.';
+                    Caption = 'Description';
+                    ToolTip = 'Specifies the description.';
                     Editable = false;
+                    Style = Subordinate;
+                    StyleExpr = Rec."Is Document Line";
                 }
 
                 field("Total Quantity"; Rec."Total Quantity")
@@ -219,22 +237,8 @@ page 77008 "Source Document Selection"
                     Caption = 'Quantity';
                     ToolTip = 'Specifies the total quantity in the document.';
                     Editable = false;
-                }
-
-                field("Quantity (Base)"; Rec."Quantity (Base)")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Quantity (Base)';
-                    ToolTip = 'Specifies the quantity in base unit of measure.';
-                    Editable = false;
-                }
-
-                field("Qty. per Unit of Measure"; Rec."Qty. per Unit of Measure")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Qty. per Unit of Measure';
-                    ToolTip = 'Specifies the quantity per unit of measure.';
-                    Editable = false;
+                    Style = Subordinate;
+                    StyleExpr = Rec."Is Document Line";
                 }
 
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
@@ -243,30 +247,8 @@ page 77008 "Source Document Selection"
                     Caption = 'Unit of Measure Code';
                     ToolTip = 'Specifies the unit of measure code.';
                     Editable = false;
-                }
-
-                field("Qty. Rounding Precision"; Rec."Qty. Rounding Precision")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Qty. Rounding Precision';
-                    ToolTip = 'Specifies the quantity rounding precision.';
-                    Editable = false;
-                }
-
-                field("Qty. Rounding Precision (Base)"; Rec."Qty. Rounding Precision (Base)")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Qty. Rounding Precision (Base)';
-                    ToolTip = 'Specifies the quantity rounding precision in base unit.';
-                    Editable = false;
-                }
-
-                field("Unit Volume"; Rec."Unit Volume")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Unit Volume';
-                    ToolTip = 'Specifies the unit volume.';
-                    Editable = false;
+                    Style = Subordinate;
+                    StyleExpr = Rec."Is Document Line";
                 }
 
                 field("Gross Weight"; Rec."Gross Weight")
@@ -277,59 +259,11 @@ page 77008 "Source Document Selection"
                     Editable = false;
                 }
 
-                field("Net Weight"; Rec."Net Weight")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Net Weight';
-                    ToolTip = 'Specifies the net weight.';
-                    Editable = false;
-                }
-
-                field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Global Dimension 1 Code';
-                    ToolTip = 'Specifies the global dimension 1 code.';
-                    Editable = false;
-                }
-
-                field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Global Dimension 2 Code';
-                    ToolTip = 'Specifies the global dimension 2 code.';
-                    Editable = false;
-                }
-
-                field("Dimension Set ID"; Rec."Dimension Set ID")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Dimension Set ID';
-                    ToolTip = 'Specifies the dimension set ID.';
-                    Editable = false;
-                }
-
                 field("Delivery Date"; Rec."Delivery Date")
                 {
                     ApplicationArea = All;
                     Caption = 'Planned Date';
                     ToolTip = 'Specifies the requested delivery date.';
-                    Editable = false;
-                }
-
-                field("Expected Shipment Date"; Rec."Expected Shipment Date")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Expected Shipment Date';
-                    ToolTip = 'Specifies the expected shipment date.';
-                    Editable = false;
-                }
-
-                field("Expected Receipt Date"; Rec."Expected Receipt Date")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Expected Receipt Date';
-                    ToolTip = 'Specifies the expected receipt date.';
                     Editable = false;
                 }
             }
@@ -415,6 +349,7 @@ page 77008 "Source Document Selection"
         ActionOK: Boolean;
         CurrentTourNo: Code[20];
         CurrentTourNoStyle: Boolean;
+        Indentation: Integer;
 
     trigger OnOpenPage()
     begin
@@ -429,6 +364,15 @@ page 77008 "Source Document Selection"
 
         // Load available documents
         LoadDocuments();
+    end;
+
+    trigger OnAfterGetRecord()
+    begin
+        // Calculate indentation based on whether this is a document line
+        if Rec."Is Document Line" then
+            Indentation := 1
+        else
+            Indentation := 0;
     end;
 
     procedure SetTourHeader(TourHeaderRec: Record "Planification Header")
@@ -482,16 +426,19 @@ page 77008 "Source Document Selection"
         SalesLine: Record "Sales Line";
         Item: Record Item;
         LineNo: Integer;
+        HeaderLineNo: Integer;
     begin
         SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
         SalesHeader.SetFilter(Status, '%1|%2', SalesHeader.Status::Open, SalesHeader.Status::Released);
 
         if SalesHeader.FindSet() then
             repeat
+                // Create header record
                 Clear(Rec);
                 Rec.Init();
                 LineNo += 1;
-                Rec."Line No." := LineNo;
+                HeaderLineNo := LineNo;
+                Rec."Line No." := HeaderLineNo;
                 Rec."Document Type" := Rec."Document Type"::"Sales Order";
                 Rec."Document No." := SalesHeader."No.";
                 Rec."Account Type" := Rec."Account Type"::Customer;
@@ -500,9 +447,11 @@ page 77008 "Source Document Selection"
                 Rec."Location Code" := SalesHeader."Location Code";
                 Rec."Document Date" := SalesHeader."Document Date";
                 Rec."Delivery Date" := SalesHeader."Requested Delivery Date";
-                // Explicitly set the tour number on each record
                 Rec."Tour No." := CurrentTourNo;
                 Rec.Priority := Rec.Priority::Normal;
+                Rec."Is Document Line" := false;
+                Rec."Source Line No." := SalesLine."Line No.";
+                Rec."Parent Line No." := 0;
 
                 // New fields
                 Rec."Global Dimension 1 Code" := SalesHeader."Shortcut Dimension 1 Code";
@@ -521,24 +470,63 @@ page 77008 "Source Document Selection"
                         if SalesLine.Type = SalesLine.Type::Item then begin
                             // Get additional info from the item
                             if Item.Get(SalesLine."No.") then begin
-                                Rec."Unit Volume" := Item."Unit Volume";
-                                Rec."Gross Weight" := Item."Gross Weight";
-                                Rec."Net Weight" := Item."Net Weight";
+                                Rec."Unit Volume" += Item."Unit Volume" * SalesLine.Quantity;
+                                Rec."Gross Weight" += Item."Gross Weight" * SalesLine.Quantity;
+                                Rec."Net Weight" += Item."Net Weight" * SalesLine.Quantity;
                             end;
-
-                            Rec."Variant Code" := SalesLine."Variant Code";
-                            Rec."Description 2" := SalesLine."Description 2";
-                            Rec."Unit of Measure Code" := SalesLine."Unit of Measure Code";
-                            Rec."Qty. per Unit of Measure" := SalesLine."Qty. per Unit of Measure";
-
-                            // These fields might not be directly available in sales line
-                            // Assign default values if needed
-                            Rec."Qty. Rounding Precision" := 0.00001;
-                            Rec."Qty. Rounding Precision (Base)" := 0.00001;
                         end;
                     until SalesLine.Next() = 0;
 
                 Rec.Insert();
+
+                // Now add detail lines for each sales line
+                SalesLine.Reset();
+                SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                SalesLine.SetRange("Document No.", SalesHeader."No.");
+                if SalesLine.FindSet() then
+                    repeat
+                        if SalesLine.Type = SalesLine.Type::Item then begin
+                            Clear(Rec);
+                            Rec.Init();
+                            LineNo += 1;
+                            Rec."Line No." := LineNo;
+                            Rec."Document Type" := Rec."Document Type"::"Sales Order";
+                            Rec."Document No." := SalesHeader."No.";
+                            Rec."Account Type" := Rec."Account Type"::Customer;
+                            Rec."Account No." := SalesHeader."Sell-to Customer No.";
+                            Rec."Account Name" := SalesHeader."Sell-to Customer Name";
+                            Rec."Location Code" := SalesHeader."Location Code";
+                            Rec."Document Date" := SalesHeader."Document Date";
+                            Rec."Delivery Date" := SalesHeader."Requested Delivery Date";
+                            Rec."Tour No." := CurrentTourNo;
+                            Rec.Priority := Rec.Priority::Normal;
+                            Rec."Is Document Line" := true;
+                            Rec."Source Line No." := SalesLine."Line No."; // Réinitialiser d'abord
+                            Rec."Parent Line No." := HeaderLineNo;
+
+                            // Item specific fields
+                            Rec."Variant Code" := SalesLine."Variant Code";
+                            Rec."Description" := SalesLine."Description";
+                            Rec."Total Quantity" := SalesLine.Quantity;
+                            Rec."Quantity (Base)" := SalesLine."Quantity (Base)";
+                            Rec."Unit of Measure Code" := SalesLine."Unit of Measure Code";
+                            Rec."Qty. per Unit of Measure" := SalesLine."Qty. per Unit of Measure";
+                            // Rec."Line No." := SalesLine."Line No.";
+
+                            // Stocker le numéro d'article dans le nouveau champ
+                            if SalesLine.Type = SalesLine.Type::Item then
+                                Rec."Item No." := SalesLine."No.";
+
+                            // Get additional info from the item
+                            if Item.Get(SalesLine."No.") then begin
+                                Rec."Unit Volume" := Item."Unit Volume" * SalesLine.Quantity;
+                                Rec."Gross Weight" := Item."Gross Weight" * SalesLine.Quantity;
+                                Rec."Net Weight" := Item."Net Weight" * SalesLine.Quantity;
+                            end;
+
+                            Rec.Insert();
+                        end;
+                    until SalesLine.Next() = 0;
             until SalesHeader.Next() = 0;
     end;
 
@@ -548,6 +536,7 @@ page 77008 "Source Document Selection"
         PurchLine: Record "Purchase Line";
         Item: Record Item;
         LineNo: Integer;
+        HeaderLineNo: Integer;
     begin
         if Rec.FindLast() then
             LineNo := Rec."Line No.";
@@ -557,10 +546,12 @@ page 77008 "Source Document Selection"
 
         if PurchHeader.FindSet() then
             repeat
+                // Create header record
                 Clear(Rec);
                 Rec.Init();
                 LineNo += 1;
-                Rec."Line No." := LineNo;
+                HeaderLineNo := LineNo;
+                Rec."Line No." := HeaderLineNo;
                 Rec."Document Type" := Rec."Document Type"::"Purchase Order";
                 Rec."Document No." := PurchHeader."No.";
                 Rec."Account Type" := Rec."Account Type"::Vendor;
@@ -569,9 +560,11 @@ page 77008 "Source Document Selection"
                 Rec."Location Code" := PurchHeader."Location Code";
                 Rec."Document Date" := PurchHeader."Document Date";
                 Rec."Delivery Date" := PurchHeader."Expected Receipt Date";
-                // Explicitly set the tour number on each record
                 Rec."Tour No." := CurrentTourNo;
                 Rec.Priority := Rec.Priority::Normal;
+                Rec."Is Document Line" := false;
+                Rec."Source Line No." := PurchLine."Line No."; // Réinitialiser d'abord
+                Rec."Parent Line No." := 0;
 
                 // New fields
                 Rec."Global Dimension 1 Code" := PurchHeader."Shortcut Dimension 1 Code";
@@ -590,24 +583,63 @@ page 77008 "Source Document Selection"
                         if PurchLine.Type = PurchLine.Type::Item then begin
                             // Get additional info from the item
                             if Item.Get(PurchLine."No.") then begin
-                                Rec."Unit Volume" := Item."Unit Volume";
-                                Rec."Gross Weight" := Item."Gross Weight";
-                                Rec."Net Weight" := Item."Net Weight";
+                                Rec."Unit Volume" += Item."Unit Volume" * PurchLine.Quantity;
+                                Rec."Gross Weight" += Item."Gross Weight" * PurchLine.Quantity;
+                                Rec."Net Weight" += Item."Net Weight" * PurchLine.Quantity;
                             end;
-
-                            Rec."Variant Code" := PurchLine."Variant Code";
-                            Rec."Description 2" := PurchLine."Description 2";
-                            Rec."Unit of Measure Code" := PurchLine."Unit of Measure Code";
-                            Rec."Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
-
-                            // These fields might not be directly available in purchase line
-                            // Assign default values if needed
-                            Rec."Qty. Rounding Precision" := 0.00001;
-                            Rec."Qty. Rounding Precision (Base)" := 0.00001;
                         end;
                     until PurchLine.Next() = 0;
 
                 Rec.Insert();
+
+                // Now add detail lines for each purchase line
+                PurchLine.Reset();
+                PurchLine.SetRange("Document Type", PurchHeader."Document Type");
+                PurchLine.SetRange("Document No.", PurchHeader."No.");
+                if PurchLine.FindSet() then
+                    repeat
+                        if PurchLine.Type = PurchLine.Type::Item then begin
+                            Clear(Rec);
+                            Rec.Init();
+                            LineNo += 1;
+                            Rec."Line No." := LineNo;
+                            Rec."Document Type" := Rec."Document Type"::"Purchase Order";
+                            Rec."Document No." := PurchHeader."No.";
+                            Rec."Account Type" := Rec."Account Type"::Vendor;
+                            Rec."Account No." := PurchHeader."Buy-from Vendor No.";
+                            Rec."Account Name" := PurchHeader."Buy-from Vendor Name";
+                            Rec."Location Code" := PurchHeader."Location Code";
+                            Rec."Document Date" := PurchHeader."Document Date";
+                            Rec."Delivery Date" := PurchHeader."Expected Receipt Date";
+                            Rec."Tour No." := CurrentTourNo;
+                            Rec.Priority := Rec.Priority::Normal;
+                            Rec."Is Document Line" := true;
+                            Rec."Source Line No." := PurchLine."Line No."; // Réinitialiser d'abord
+                            Rec."Parent Line No." := HeaderLineNo;
+
+                            // Item specific fields
+                            Rec."Variant Code" := PurchLine."Variant Code";
+                            Rec."Description" := PurchLine."Description";
+                            Rec."Total Quantity" := PurchLine.Quantity;
+                            Rec."Quantity (Base)" := PurchLine."Quantity (Base)";
+                            Rec."Unit of Measure Code" := PurchLine."Unit of Measure Code";
+                            Rec."Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
+                            // Rec."Line No." := PurchLine."Line No.";
+
+                            // Stocker le numéro d'article dans le nouveau champ
+                            if PurchLine.Type = PurchLine.Type::Item then
+                                Rec."Item No." := PurchLine."No.";
+
+                            // Get additional info from the item
+                            if Item.Get(PurchLine."No.") then begin
+                                Rec."Unit Volume" := Item."Unit Volume" * PurchLine.Quantity;
+                                Rec."Gross Weight" := Item."Gross Weight" * PurchLine.Quantity;
+                                Rec."Net Weight" := Item."Net Weight" * PurchLine.Quantity;
+                            end;
+
+                            Rec.Insert();
+                        end;
+                    until PurchLine.Next() = 0;
             until PurchHeader.Next() = 0;
     end;
 
@@ -617,6 +649,7 @@ page 77008 "Source Document Selection"
         TransferLine: Record "Transfer Line";
         Item: Record Item;
         LineNo: Integer;
+        HeaderLineNo: Integer;
     begin
         if Rec.FindLast() then
             LineNo := Rec."Line No.";
@@ -625,10 +658,12 @@ page 77008 "Source Document Selection"
 
         if TransferHeader.FindSet() then
             repeat
+                // Create header record
                 Clear(Rec);
                 Rec.Init();
                 LineNo += 1;
-                Rec."Line No." := LineNo;
+                HeaderLineNo := LineNo;
+                Rec."Line No." := HeaderLineNo;
                 Rec."Document Type" := Rec."Document Type"::"Transfer Order";
                 Rec."Document No." := TransferHeader."No.";
                 Rec."Account Type" := Rec."Account Type"::Location;
@@ -637,9 +672,11 @@ page 77008 "Source Document Selection"
                 Rec."Location Code" := TransferHeader."Transfer-from Code";
                 Rec."Document Date" := TransferHeader."Posting Date";
                 Rec."Delivery Date" := TransferHeader."Receipt Date";
-                // Explicitly set the tour number on each record
                 Rec."Tour No." := CurrentTourNo;
                 Rec.Priority := Rec.Priority::Normal;
+                Rec."Is Document Line" := false;
+                Rec."Source Line No." := TransferLine."Line No."; // Réinitialiser d'abord
+                Rec."Parent Line No." := 0;
 
                 // New fields
                 Rec."Expected Shipment Date" := TransferHeader."Shipment Date";
@@ -654,24 +691,68 @@ page 77008 "Source Document Selection"
 
                         // Get additional info from the item
                         if Item.Get(TransferLine."Item No.") then begin
-                            Rec."Unit Volume" := Item."Unit Volume";
-                            Rec."Gross Weight" := Item."Gross Weight";
-                            Rec."Net Weight" := Item."Net Weight";
+                            Rec."Unit Volume" += Item."Unit Volume" * TransferLine.Quantity;
+                            Rec."Gross Weight" += Item."Gross Weight" * TransferLine.Quantity;
+                            Rec."Net Weight" += Item."Net Weight" * TransferLine.Quantity;
+
+                            // Add dimension information from the item
+                            Rec."Global Dimension 1 Code" := Item."Global Dimension 1 Code";
+                            Rec."Global Dimension 2 Code" := Item."Global Dimension 2 Code";
+                        end;
+                    until TransferLine.Next() = 0;
+
+                Rec.Insert();
+
+                // Now add detail lines for each transfer line
+                TransferLine.Reset();
+                TransferLine.SetRange("Document No.", TransferHeader."No.");
+                if TransferLine.FindSet() then
+                    repeat
+                        Clear(Rec);
+                        Rec.Init();
+                        LineNo += 1;
+                        Rec."Line No." := LineNo;
+                        Rec."Document Type" := Rec."Document Type"::"Transfer Order";
+                        Rec."Document No." := TransferHeader."No.";
+                        Rec."Account Type" := Rec."Account Type"::Location;
+                        Rec."Account No." := TransferHeader."Transfer-to Code";
+                        Rec."Account Name" := GetLocationName(TransferHeader."Transfer-to Code");
+                        Rec."Location Code" := TransferHeader."Transfer-from Code";
+                        Rec."Document Date" := TransferHeader."Posting Date";
+                        Rec."Delivery Date" := TransferHeader."Receipt Date";
+                        Rec."Tour No." := CurrentTourNo;
+                        Rec.Priority := Rec.Priority::Normal;
+                        Rec."Is Document Line" := true;
+                        Rec."Source Line No." := TransferLine."Line No."; // Réinitialiser d'abord
+                        Rec."Parent Line No." := HeaderLineNo;
+
+                        // Item specific fields
+                        Rec."Variant Code" := TransferLine."Variant Code";
+                        Rec."Description" := TransferLine."Description";
+                        Rec."Total Quantity" := TransferLine.Quantity;
+                        Rec."Quantity (Base)" := TransferLine."Quantity (Base)";
+                        Rec."Unit of Measure Code" := TransferLine."Unit of Measure Code";
+                        Rec."Qty. per Unit of Measure" := TransferLine."Qty. per Unit of Measure";
+                        Rec."Qty. Rounding Precision" := TransferLine."Qty. Rounding Precision";
+                        Rec."Qty. Rounding Precision (Base)" := TransferLine."Qty. Rounding Precision (Base)";
+                        Rec."Source Line No." := TransferLine."Line No.";
+
+                        // Stocker le numéro d'article dans le nouveau champ
+                        Rec."Item No." := TransferLine."Item No.";
+
+                        // Get additional info from the item
+                        if Item.Get(TransferLine."Item No.") then begin
+                            Rec."Unit Volume" := Item."Unit Volume" * TransferLine.Quantity;
+                            Rec."Gross Weight" := Item."Gross Weight" * TransferLine.Quantity;
+                            Rec."Net Weight" := Item."Net Weight" * TransferLine.Quantity;
 
                             // Add dimension information from the item
                             Rec."Global Dimension 1 Code" := Item."Global Dimension 1 Code";
                             Rec."Global Dimension 2 Code" := Item."Global Dimension 2 Code";
                         end;
 
-                        Rec."Variant Code" := TransferLine."Variant Code";
-                        Rec."Description 2" := TransferLine."Description 2";
-                        Rec."Unit of Measure Code" := TransferLine."Unit of Measure Code";
-                        Rec."Qty. per Unit of Measure" := TransferLine."Qty. per Unit of Measure";
-                        Rec."Qty. Rounding Precision" := TransferLine."Qty. Rounding Precision";
-                        Rec."Qty. Rounding Precision (Base)" := TransferLine."Qty. Rounding Precision (Base)";
+                        Rec.Insert();
                     until TransferLine.Next() = 0;
-
-                Rec.Insert();
             until TransferHeader.Next() = 0;
     end;
 
@@ -745,6 +826,8 @@ page 77008 "Source Document Selection"
         PlanningLine: Record "Planning Lines";
         CountBefore: Integer;
         CountAfter: Integer;
+        DocBuffer: Record "Planning Document Buffer" temporary;
+        ProcessedDocuments: List of [Code[20]];
     begin
         // Verify tour number exists
         if CurrentTourNo = '' then begin
@@ -765,38 +848,52 @@ page 77008 "Source Document Selection"
         PlanningLine.SetRange("Logistic Tour No.", CurrentTourNo);
         CountBefore := PlanningLine.Count;
 
-        // Count selected documents
+        // Count all selected records (headers and lines)
         Rec.Reset();
         Rec.SetRange(Selected, true);
         if not Rec.FindSet() then begin
-            Message('No documents are selected. Please select at least one document.');
+            Message('No documents or lines are selected. Please select at least one document or line.');
             exit;
         end;
 
-        // Count the selected documents first
+        // Process all selected records
         repeat
             AttemptsCount += 1;
-        until Rec.Next() = 0;
 
-        // Process documents (need to find records again)
-        Rec.Reset();
-        Rec.SetRange(Selected, true);
-        Rec.FindSet();
+            if Rec."Is Document Line" then begin
+                // C'est une ligne de document - vérifier si son document parent a déjà été traité
+                if not ProcessedDocuments.Contains(Rec."Document No.") then begin
+                    // Traiter cette ligne individuelle
+                    Clear(DocBuffer);
+                    DocBuffer := Rec;
+                    DocBuffer."Tour No." := CurrentTourNo;
 
-        // Process selected documents
-        repeat
-            // Force the tour number in buffer
-            Rec."Tour No." := CurrentTourNo;
-            Rec.Modify();
+                    // Clear any error message before calling
+                    ClearLastError();
 
-            // Clear any error message before calling
-            ClearLastError();
+                    // Call with the CORRECT tour header record
+                    PlanningLineMgt.AddDocumentLineToTour(TourHeader, DocBuffer);
 
-            // Call with the CORRECT tour header record
-            PlanningLineMgt.AddDocumentToTour(TourHeader, Rec);
+                    if GetLastErrorText = '' then
+                        SelectedCount += 1;
+                end;
+            end else begin
+                // C'est un en-tête de document
+                ProcessedDocuments.Add(Rec."Document No.");
 
-            if GetLastErrorText = '' then
-                SelectedCount += 1;
+                // Force the tour number in buffer
+                DocBuffer := Rec;
+                DocBuffer."Tour No." := CurrentTourNo;
+
+                // Clear any error message before calling
+                ClearLastError();
+
+                // Call with the CORRECT tour header record
+                PlanningLineMgt.AddDocumentToTour(TourHeader, DocBuffer);
+
+                if GetLastErrorText = '' then
+                    SelectedCount += 1;
+            end;
         until Rec.Next() = 0;
 
         // Get count of planning lines after
@@ -806,7 +903,7 @@ page 77008 "Source Document Selection"
 
         // Final message and close page
         if (SelectedCount > 0) and (CountAfter > CountBefore) then begin
-            Message('Successfully added %1 out of %2 selected document(s) to tour %3. Added %4 planning lines.',
+            Message('Successfully added %1 out of %2 selected item(s) to tour %3. Added %4 planning lines.',
                     SelectedCount, AttemptsCount, CurrentTourNo, CountAfter - CountBefore);
             ActionOK := true;
             CurrPage.Close();
@@ -814,6 +911,23 @@ page 77008 "Source Document Selection"
             Message('Documents were processed but no planning lines were added. Please check the tour configuration.');
         end else
             Message('No documents were added to the tour. Error: %1', GetLastErrorText);
+    end;
+
+    local procedure UpdateChildLines(ParentLineNo: Integer; SelectValue: Boolean)
+    var
+        DocBuffer: Record "Planning Document Buffer";
+    begin
+        DocBuffer.Reset();
+        DocBuffer.SetRange("Parent Line No.", ParentLineNo);
+        DocBuffer.SetRange("Is Document Line", true);
+
+        if DocBuffer.FindSet() then
+            repeat
+                DocBuffer.Selected := SelectValue;
+                DocBuffer.Modify();
+            until DocBuffer.Next() = 0;
+
+        CurrPage.Update(false);
     end;
 
     procedure IsActionOK(): Boolean

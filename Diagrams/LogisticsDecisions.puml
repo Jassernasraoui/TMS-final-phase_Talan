@@ -1,0 +1,144 @@
+@startuml Logistics_Decisions
+
+skinparam {
+  BackgroundColor white
+  ArrowColor #666666
+  BorderColor #666666
+  
+  ActivityBackgroundColor #3498DB
+  ActivityBorderColor #2874A6
+  ActivityFontColor white
+  ActivityFontStyle bold
+  
+  ActivityDiamondBackgroundColor #F9E79F
+  ActivityDiamondBorderColor #F1C40F
+  ActivityDiamondFontColor black
+  ActivityDiamondFontStyle bold
+  
+  NoteBackgroundColor #E8F8F5
+  NoteBorderColor #1ABC9C
+  NoteFontColor #333333
+}
+
+title <b>DÉCISIONS CRITIQUES DU PROCESSUS LOGISTIQUE</b>
+
+|Planification|
+start
+:Création d'une nouvelle tournée;
+
+if (Date de tournée >= aujourd'hui?) then (Oui)
+else (Non)
+  :Correction de la date de tournée;
+  note right: Date invalide
+  backward:Mise à jour de la date;
+endif
+
+:Assignation des ressources à la tournée;
+
+if (Ressources disponibles?) then (Oui)
+else (Non)
+  :Recherche d'autres ressources;
+  note right: Indisponibilité ressources
+  backward:Nouvelle sélection;
+endif
+
+if (Permis du chauffeur compatible avec véhicule?) then (Oui)
+else (Non)
+  :Réaffectation du chauffeur ou véhicule;
+  note right: Incompatibilité permis
+  backward:Vérification compatibilité;
+endif
+
+:Ajout des livraisons planifiées;
+
+if (Poids/volume <= capacité véhicule?) then (Oui)
+else (Non)
+  :Ajustement quantités ou changement de véhicule;
+  note right: Dépassement capacité
+  backward:Vérification capacité;
+endif
+
+:Attribution des créneaux horaires;
+
+if (Planning réalisable avec temps de trajet?) then (Oui)
+else (Non)
+  :Réajustement des créneaux;
+  note right: Planning irréalisable
+  backward:Révision planning;
+endif
+
+|Préparation chargement|
+:Création document préparation chargement;
+
+:Génération des arrêts de livraison;
+
+:Calcul des totaux de chargement;
+
+if (Totaux respectent les limites du véhicule?) then (Oui)
+else (Non)
+  :Recalcul et ajustement des quantités;
+  note right: Dépassement marges
+  backward:Vérification totaux;
+endif
+
+:Libération du document préparation;
+
+:Validation par superviseur;
+
+if (Document validé par superviseur?) then (Oui)
+else (Non)
+  :Correction des éléments signalés;
+  note right: Validation refusée
+  backward:Soumission corrections;
+endif
+
+|Chargement véhicule|
+:Création document chargement véhicule;
+
+:Début processus chargement physique;
+
+:Saisie des quantités réelles chargées;
+
+if (Écarts quantités <= 10% ou justifiés?) then (Oui)
+else (Non)
+  :Compléter justifications des écarts;
+  note right: Écarts non justifiés
+  backward:Vérification écarts;
+endif
+
+:Finalisation du chargement;
+
+if (Toutes lignes avec statut final?) then (Oui)
+else (Non)
+  :Compléter éléments manquants;
+  note right: Finalisation incomplète
+  backward:Vérification complétude;
+endif
+
+|Exécution tournée|
+:Départ en mission;
+
+:Livraisons aux clients;
+
+if (Anomalies de livraison?) then (Non)
+else (Oui)
+  :Documentation des anomalies;
+  note right: Problèmes terrain
+endif
+
+:Clôture de la tournée;
+
+if (Toutes livraisons effectuées/documentées?) then (Oui)
+else (Non)
+  :Traitement des exceptions;
+  note right: Livraisons manquantes
+  backward:Gestion exceptions;
+endif
+
+:Libération des ressources;
+
+stop
+
+footer DÉCISIONS CRITIQUES PAR PHASE: Planification (6) | Préparation (3) | Chargement (3) | Exécution (2)
+
+@enduml 

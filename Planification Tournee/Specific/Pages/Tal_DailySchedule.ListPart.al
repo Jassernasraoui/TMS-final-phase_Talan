@@ -1,4 +1,4 @@
-page 77011 "Daily Schedule ListPart"
+page 77114 "Daily Schedule ListPart"
 {
     PageType = ListPart;
     SourceTable = "Planning Lines";
@@ -24,8 +24,8 @@ page 77011 "Daily Schedule ListPart"
                         ApplyDayFilter();
                     end;
                 }
-            }
 
+            }
             repeater(DailySchedule)
             {
                 Caption = 'Schedule Items';
@@ -92,6 +92,21 @@ page 77011 "Daily Schedule ListPart"
 
     actions
     {
+        area(Prompting)
+        {
+            action("Calender View")
+            {
+                ApplicationArea = All;
+                Caption = 'Calendar View';
+                Image = SparkleFilled;
+                ToolTip = 'View the schedule in a calendar format.';
+
+                trigger OnAction()
+                begin
+                    PAGE.Run(PAGE::"Tal Simple Calendar Page", Rec);
+                end;
+            }
+        }
         area(Processing)
         {
             action(PreviousDay)

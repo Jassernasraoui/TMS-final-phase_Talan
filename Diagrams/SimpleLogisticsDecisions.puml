@@ -1,0 +1,105 @@
+@startuml Simple_Logistics_Decisions
+
+title Décisions Critiques du Processus Logistique
+
+|Planification|
+start
+:Création d'une nouvelle tournée;
+
+if (Date de tournée >= aujourd'hui?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Correction de la date de tournée;
+endif
+
+:Assignation des ressources à la tournée;
+
+if (Ressources disponibles?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Recherche d'autres ressources;
+endif
+
+if (Permis compatible avec véhicule?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Réaffectation des ressources;
+endif
+
+:Ajout des livraisons planifiées;
+
+if (Capacité véhicule suffisante?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Ajustement quantités/véhicule;
+endif
+
+:Attribution des créneaux horaires;
+
+if (Planning réalisable?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Réajustement des créneaux;
+endif
+
+|Préparation|
+:Création document préparation;
+:Génération arrêts livraison;
+:Calcul totaux chargement;
+
+if (Totaux OK?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Recalcul et ajustement;
+endif
+
+:Libération document préparation;
+:Validation superviseur;
+
+if (Document validé?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Correction éléments signalés;
+endif
+
+|Chargement|
+:Document chargement véhicule;
+:Début processus chargement;
+:Saisie quantités réelles;
+
+if (Écarts justifiés?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Compléter justifications;
+endif
+
+:Finalisation chargement;
+
+if (Toutes lignes finalisées?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Compléter éléments manquants;
+endif
+
+|Exécution|
+:Départ en mission;
+:Livraisons aux clients;
+
+if (Anomalies livraison?) then (Non)
+  :Processus continue;
+else (Oui)
+  :Documentation anomalies;
+endif
+
+:Clôture tournée;
+
+if (Livraisons complètes?) then (Oui)
+  :Processus continue;
+else (Non)
+  :Traitement exceptions;
+endif
+
+:Libération ressources;
+stop
+
+@enduml 

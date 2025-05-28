@@ -11,12 +11,19 @@ page 77001 "Vehicle Stop List"
             repeater(Group)
             {
                 field("Stop No."; rec."Stop No.") { }
-                field("Customer No."; rec."Customer No.") { }
+                field("Customer No."; rec."Customer No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer/Vendor No.';
+                    ToolTip = 'Specifies the account number.';
+                    Editable = false;
+                    Style = Strong;
+                }
                 field("Delivery Address"; rec."Delivery Address") { }
                 field("Estimated Arrival Time"; rec."Estimated Arrival Time") { }
                 field("Estimated Departure Time"; rec."Estimated Departure Time") { }
                 field("Quantity to Deliver"; rec."Quantity to Deliver") { }
-                field("Remarks"; rec."Remarks") { }
+                field("Remarks"; rec."Remarks") { caption = 'Description'; }
             }
         }
     }

@@ -1,0 +1,145 @@
+@startuml Logistics Decision Diagram
+!theme plain
+skinparam {
+  ActivityBackgroundColor white
+  ActivityBorderColor black
+  ActivityDiamondBackgroundColor white
+  ActivityDiamondBorderColor black
+  NoteBackgroundColor #FFFFCC
+  NoteBorderColor #CCCCCC
+  ArrowColor black
+  defaultFontName Arial
+  defaultFontSize 11
+  DiamondFontSize 10
+}
+
+title Processus de Planification & Exécution des Tournées Logistiques - Diagramme de Décision
+
+' Resource Management Phase
+(*) --> "Création des ressources"
+--> "Type de ressource?"
+--> if "Type = Personne" then
+  -->[yes] "Configuration ressource Personne"
+  --> "Permis valide?"
+  if "Permis valide?" then
+    -->[yes] "Configuration valide"
+  else
+    -->[no] "Mise à jour informations permis"
+    --> "Permis valide?"
+  endif
+else
+  -->[Type = Véhicule] "Configuration ressource Véhicule"
+  --> "Documents véhicule valides?"
+  if "Documents véhicule valides?" then
+    -->[yes] "Configuration valide"
+  else
+    -->[no] "Mise à jour documents véhicule"
+    --> "Documents véhicule valides?"
+  endif
+endif
+
+' Resource Configuration Completion
+"Configuration valide" -[hidden]-> "Ressources configurées" 
+"Ressources configurées" --> "Création Tournée"
+
+' Tour Planning Phase
+"Création Tournée" --> "Date tournée >= aujourd'hui?"
+if "Date tournée >= aujourd'hui?" then
+  -->[yes] "Assignation ressources"
+  --> "Vérification disponibilité ressources"
+  if "Ressources disponibles?" then
+    -->[yes] "Validation compatibilité ressources"
+    if "Compatibilité OK?" then
+      -->[yes] "Génération lignes planification"
+    else
+      -->[no] "Réaffectation ressources"
+      --> "Validation compatibilité ressources"
+    endif
+  else
+    -->[no] "Recherche autres ressources"
+    --> "Vérification disponibilité ressources"
+  endif
+else
+  -->[no] "Correction date tournée"
+  --> "Date tournée >= aujourd'hui?"
+endif
+
+' Planning Lines Phase
+"Génération lignes planification" --> "Vérification capacité transport"
+if "Capacité suffisante?" then
+  -->[yes] "Attribution créneaux horaires"
+else
+  -->[no] "Ajustement quantités/véhicule"
+  --> "Vérification capacité transport"
+endif
+
+"Attribution créneaux horaires" --> "Planning réalisable?"
+if "Planning réalisable?" then
+  -->[yes] "Document préparation chargement"
+else
+  -->[no] "Réajustement créneaux"
+  --> "Planning réalisable?"
+endif
+
+' Loading Document Phase
+"Document préparation chargement" --> "Génération arrêts livraison"
+--> "Calcul totaux chargement"
+--> "Totaux adéquats?"
+if "Totaux adéquats?" then
+  -->[yes] "Libération document préparation"
+else
+  -->[no] "Recalcul/ajustement"
+  --> "Totaux adéquats?"
+endif
+
+"Libération document préparation" --> "Validation superviseur"
+--> "Préparation validée?"
+if "Préparation validée?" then
+  -->[yes] "Document chargement véhicule"
+else
+  -->[no] "Retour pour corrections"
+  --> "Calcul totaux chargement"
+endif
+
+' Vehicle Charging Phase
+"Document chargement véhicule" --> "Génération lignes chargement"
+--> "Début processus chargement"
+--> "Saisie quantités réelles"
+--> "Écarts justifiés?"
+if "Écarts justifiés?" then
+  -->[yes] "Finalisation chargement"
+else
+  -->[no] "Compléter justifications"
+  --> "Écarts justifiés?"
+endif
+
+"Finalisation chargement" --> "Vérification finale"
+--> "Chargement complet?"
+if "Chargement complet?" then
+  -->[yes] "Départ en mission"
+else
+  -->[no] "Compléter éléments manquants"
+  --> "Vérification finale"
+endif
+
+' Tour Execution Phase
+"Départ en mission" --> "Livraisons aux clients"
+--> "Toutes livraisons effectuées?"
+if "Toutes livraisons effectuées?" then
+  -->[yes] "Clôture tournée"
+  --> "Libération ressources"
+  --> (*)
+else
+  -->[no] "Traitement exceptions"
+  --> "Documentation incidents"
+  --> "Toutes livraisons effectuées?"
+endif
+
+legend
+  <b>Processus Complet de Logistique</b>
+  De la création des ressources à l'exécution des tournées
+  Incluant gestion des ressources, planification,
+  préparation, chargement et livraison
+end legend
+
+@enduml 

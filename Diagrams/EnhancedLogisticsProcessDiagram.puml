@@ -1,0 +1,200 @@
+@startuml Enhanced Logistics Process
+skinparam {
+  ActivityBackgroundColor white
+  ActivityBorderColor black
+  ActivityDiamondBackgroundColor white
+  ActivityDiamondBorderColor black
+  NoteBackgroundColor #FFFFCC
+  NoteBorderColor #CCCCCC
+  ArrowColor black
+  defaultFontName Arial
+  defaultFontSize 11
+  DiamondFontSize 10
+}
+
+title Processus Logistique Complet - Chargement et Exécution des Tournées
+
+' ===== PHASE DE PLANIFICATION =====
+(*) --> "Planification de tournée"
+note right of "Planification de tournée" #FFFFCC
+  <b>Données de base</b>
+  - Date et horaires
+  - Ressources (chauffeur/véhicule)
+  - Liste des clients à livrer
+  - Types de marchandises
+  - Statut initial: "Planifiée"
+end note
+
+"Planification de tournée" --> "Vérification statut ressources"
+
+note right of "Vérification statut ressources" #FFFFCC
+  <b>Validation Ressources</b>
+  - Chauffeur avec statut "Disponible"
+  - Véhicule avec statut "Disponible"
+  - Permis chauffeur compatible avec véhicule
+  - Pas d'autre affectation ce jour pour ressources
+end note
+
+"Vérification statut ressources" -down-> "Vérification compatibilité ressources"
+"Vérification compatibilité ressources" -right-> [Incompatible] "Réaffectation des ressources"
+"Réaffectation des ressources" -left-> "Vérification compatibilité ressources"
+"Vérification compatibilité ressources" -down-> [Compatible] "Génération lignes de planification"
+
+"Génération lignes de planification" -down-> "Vérification capacité"
+"Vérification capacité" -right-> [Capacité dépassée] "Ajustement quantités/véhicule"
+"Ajustement quantités/véhicule" -left-> "Vérification capacité"
+"Vérification capacité" -down-> [Capacité OK] "Attribution créneaux horaires"
+
+"Attribution créneaux horaires" -down-> "Vérification planning"
+"Vérification planning" -right-> [Planning irréalisable] "Réajustement créneaux"
+"Réajustement créneaux" -left-> "Vérification planning"
+"Vérification planning" -down-> [Planning réalisable] "Finalisation planification"
+
+note right of "Finalisation planification" #FFFFCC
+  <b>Validation Planification</b>
+  - Tournée complète validée
+  - Routes optimisées
+  - Ressources bloquées pour la date
+  - Statut tournée = "Validée"
+  - Notification équipe chargement
+end note
+
+' ===== POINTS D'ENTRÉE POUR L'EXÉCUTION =====
+"Finalisation planification" -down-> "Décision mode d'exécution"
+
+' Point de décision pour le chemin d'exécution
+"Décision mode d'exécution" -left-> [Exécution directe] "Préparation exécution directe"
+"Décision mode d'exécution" -right-> [Exécution avec chargement] "Préparation chargement"
+
+note left of "Préparation exécution directe" #FFFFCC
+  <b>Mode Sans Chargement</b>
+  - Scénario pour tournées sans marchandises
+  - Transport de personnes
+  - Services techniques
+  - Tournées de reconnaissance
+  - Pas de phase de chargement requise
+end note
+
+note right of "Préparation chargement" #FFFFCC
+  <b>Mode Avec Chargement</b>
+  - Scénario classique de livraison
+  - Transport de marchandises
+  - Préparation document de chargement
+  - Statut tournée = "En chargement"
+  - Quai et équipement assignés
+end note
+
+' ===== FLUX DE CHARGEMENT =====
+"Préparation chargement" -down-> "Génération document chargement"
+
+note right of "Génération document chargement" #FFFFCC
+  <b>Document de Chargement</b>
+  - Liste des articles à charger
+  - Plan de chargement
+  - Séquence optimisée pour livraisons
+  - Instructions spéciales
+  - Contrôles qualité requis
+end note
+
+"Génération document chargement" -down-> "Processus de chargement"
+
+note right of "Processus de chargement" #FFFFCC
+  <b>Étapes de Chargement</b>
+  - Préparation articles (picking)
+  - Chargement physique
+  - Vérifications quantités
+  - Arrimage
+  - Scellés si nécessaire
+end note
+
+"Processus de chargement" -down-> "Vérification chargement"
+"Vérification chargement" -right-> [Problèmes détectés] "Ajustements chargement"
+"Ajustements chargement" -left-> "Vérification chargement"
+"Vérification chargement" -down-> [Chargement OK] "Finalisation chargement"
+
+note right of "Finalisation chargement" #FFFFCC
+  <b>Validation Finalisation</b>
+  - Toutes lignes avec statut final
+  - Totaux finaux (poids/volume) calculés
+  - Signatures responsable et chauffeur
+  - Statut tournée = "Chargée"
+  - Documents de transport générés
+end note
+
+' ===== JONCTION DES FLUX =====
+"Préparation exécution directe" -down-> "Briefing chauffeur"
+"Finalisation chargement" -down-> "Briefing chauffeur"
+
+note right of "Briefing chauffeur" #FFFFCC
+  <b>Points de Briefing</b>
+  - Révision itinéraire et clients
+  - Consignes spéciales livraison
+  - Remise documents de transport
+  - Procédures d'urgence
+  - Contacts pendant la tournée
+end note
+
+' ===== PHASE D'EXÉCUTION =====
+"Briefing chauffeur" -down-> "Départ en mission"
+
+note right of "Départ en mission" #FFFFCC
+  <b>Validation Départ</b>
+  - Statut tournée = "En mission"
+  - Heure départ enregistrée
+  - Vérification documents
+  - Derniers contrôles véhicule
+  - Statut ressources = "En mission"
+end note
+
+"Départ en mission" -down-> "Exécution des livraisons"
+
+note right of "Exécution des livraisons" #FFFFCC
+  <b>Processus de Livraison</b>
+  - Confirmation arrivée à chaque point
+  - Documentation des heures réelles
+  - Saisie des signatures clients
+  - Gestion des exceptions (refus, absences)
+  - Saisie des commentaires
+end note
+
+"Exécution des livraisons" -down-> "Vérification des livraisons"
+"Vérification des livraisons" -right-> [Livraisons incomplètes] "Traitement exceptions"
+"Traitement exceptions" -left-> "Vérification des livraisons"
+"Vérification des livraisons" -down-> [Livraisons terminées] "Retour au dépôt"
+
+note right of "Retour au dépôt" #FFFFCC
+  <b>Validation Retour</b>
+  - Heure retour enregistrée
+  - Kilométrage final saisi
+  - Carburant consommé
+  - État du véhicule noté
+  - Marchandises retournées documentées
+end note
+
+"Retour au dépôt" -down-> "Debriefing et clôture"
+
+note right of "Debriefing et clôture" #FFFFCC
+  <b>Validation Clôture</b>
+  - Révision complète tournée
+  - Rapport d'incidents établi
+  - Retours clients documentés
+  - Statut tournée = "Terminée"
+  - Ressources libérées (statut "Disponible")
+end note
+
+"Debriefing et clôture" -down-> "Analyse de performance"
+
+note right of "Analyse de performance" #FFFFCC
+  <b>Métriques Analysées</b>
+  - KPIs logistiques calculés
+  - Écarts par rapport au planning
+  - Taux de livraison à temps
+  - Efficacité énergétique
+  - Satisfaction client
+end note
+
+"Analyse de performance" -down-> (*)
+
+footer Processus logistique complet avec exécution à partir de la planification ou du chargement
+
+@enduml 

@@ -308,6 +308,33 @@ page 77012 "Vehicle Charging Card"
                         Message('Loading sheet %1 was not found.', rec."Loading Sheet No.");
                 end;
             }
+
+            action("Go to Execution")
+            {
+                ApplicationArea = All;
+                Caption = 'Go to Execution';
+                Image = Next;
+                Promoted = true;
+                PromotedCategory = Process;
+                Visible = false;
+
+                trigger OnAction()
+                var
+                    TourExecutionPage: Page "Tour Execution Page";
+                    TourExecutionRec: Record "Tour Execution Tracking";
+                begin
+                    if rec.Status <> rec.Status::Completed then begin
+                        Message('Charging phase must be completed before proceeding to execution.');
+                        exit;
+                    end;
+
+                    // Optionally, filter the execution record to the current tour
+                    TourExecutionRec.SetRange("Tour No.", rec."Tour No.");
+
+                    // Open the execution page for this tour
+                    PAGE.Run(PAGE::"Tour Execution Page", TourExecutionRec);
+                end;
+            }
         }
     }
 

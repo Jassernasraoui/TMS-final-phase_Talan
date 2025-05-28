@@ -1,0 +1,273 @@
+@startuml Complete Logistics Process
+skinparam {
+  ActivityBackgroundColor white
+  ActivityBorderColor black
+  ActivityDiamondBackgroundColor white
+  ActivityDiamondBorderColor black
+  NoteBackgroundColor #FFFFCC
+  NoteBorderColor #CCCCCC
+  ArrowColor black
+  defaultFontName Arial
+  defaultFontSize 11
+  DiamondFontSize 10
+}
+
+title Processus d'Affectation des Resources et Planification Logistique - Validations et Conditions
+
+' Resource Creation Phase
+(*) --> "Création des ressources"
+note right of "Création des ressources" #FFFFCC
+  <b>Données de base</b>
+  - Type: Personne/Véhicule
+  - No., Nom, Description
+  - Informations générales
+  - Statut initial: Disponible
+end note
+
+' Person and Vehicle Configuration
+"Création des ressources" --> "Vérification type de ressource"
+"Vérification type de ressource" -left-> [Type = Personne] "Configuration ressource Personne"
+"Vérification type de ressource" -right-> [Type = Véhicule] "Configuration ressource Véhicule"
+
+note left of "Configuration ressource Personne" #FFFFCC
+  <b>Validation Personne</b>
+  - Infos personnelles complètes
+  - Permis de conduire valide (non expiré)
+  - Type de permis renseigné
+  - Coordonnées valides (tel/email)
+  - Certifications vérifiées
+end note
+
+note right of "Configuration ressource Véhicule" #FFFFCC
+  <b>Validation Véhicule</b>
+  - Type véhicule défini
+  - Immatriculation unique
+  - Assurance et contrôle technique valides
+  - Dimensions (poids/volume) renseignées
+  - Configuration tracteur/remorque définie
+end note
+
+' Tour Planning Phase
+"Configuration ressource Personne" -down-> "Création de la tournée"
+"Configuration ressource Véhicule" -down-> "Création de la tournée"
+
+note right of "Création de la tournée" #FFFFCC
+  <b>Validation Tournée</b>
+  - No. tournée unique
+  - Date ≥ aujourd'hui
+  - Période valide (début/fin)
+  - Lieux départ/arrivée définis
+  - Statut initial = "Planifiée"
+end note
+
+"Création de la tournée" -down-> "Vérification tournée"
+"Vérification tournée" -right-> [Tournée invalide] "Correction données tournée"
+"Correction données tournée" -left-> "Vérification tournée"
+"Vérification tournée" -down-> [Tournée valide] "Affectation des ressources"
+
+note right of "Affectation des ressources" #FFFFCC
+  <b>Validation Affectation</b>
+  - Chauffeur avec statut "Disponible"
+  - Véhicule avec statut "Disponible"
+  - Permis chauffeur compatible avec véhicule
+  - Pas d'autre affectation ce jour pour chauffeur
+  - Chauffeur et véhicule → statut "Assigné"
+end note
+
+"Affectation des ressources" -down-> "Vérification compatibilité ressources"
+"Vérification compatibilité ressources" -right-> [Incompatible] "Réaffectation des ressources"
+"Réaffectation des ressources" -left-> "Vérification compatibilité ressources"
+"Vérification compatibilité ressources" -down-> [Compatible] "Génération lignes de planification"
+
+note right of "Génération lignes de planification" #FFFFCC
+  <b>Validation Lignes</b>
+  - Au moins une ligne de planification
+  - Client, article, quantité renseignés
+  - Coordonnées géographiques valides
+  - Poids total ≤ capacité véhicule
+  - Volume total ≤ capacité véhicule
+end note
+
+"Génération lignes de planification" -down-> "Vérification capacité"
+"Vérification capacité" -right-> [Capacité dépassée] "Ajustement quantités/véhicule"
+"Ajustement quantités/véhicule" -left-> "Vérification capacité"
+"Vérification capacité" -down-> [Capacité OK] "Attribution créneaux horaires"
+
+note right of "Attribution créneaux horaires" #FFFFCC
+  <b>Validation Créneaux</b>
+  - Toutes les lignes ont un créneau
+  - Créneaux ne se chevauchent pas
+  - Planning réalisable (temps trajet inclus)
+  - Charge équilibrée sur période
+  - Priorités clients respectées
+end note
+
+"Attribution créneaux horaires" -down-> "Vérification planning"
+"Vérification planning" -right-> [Planning irréalisable] "Réajustement créneaux"
+"Réajustement créneaux" -left-> "Vérification planning"
+"Vérification planning" -down-> [Planning réalisable] "Création document préparation chargement"
+
+' Vehicle Loading Preparation
+note right of "Création document préparation chargement" #FFFFCC
+  <b>Validation Document</b>
+  - No. document unique
+  - Référence tournée au statut "Planifiée"
+  - Date chargement valide
+  - Lieu chargement spécifié
+  - Référence chauffeur et véhicule
+end note
+
+"Création document préparation chargement" -down-> "Génération arrêts livraison"
+
+note right of "Génération arrêts livraison" #FFFFCC
+  <b>Validation Arrêts</b>
+  - Chaque arrêt avec adresse complète
+  - Heures arrivée/départ cohérentes
+  - Ordre des arrêts optimisé
+  - Quantités à livrer définies
+  - Routes accessibles pour le véhicule
+end note
+
+"Génération arrêts livraison" -down-> "Calcul totaux de chargement"
+
+note right of "Calcul totaux de chargement" #FFFFCC
+  <b>Validation Totaux</b>
+  - Poids total ≤ capacité véhicule
+  - Volume total ≤ capacité véhicule
+  - Nombre d'arrêts réalisable
+  - Taux d'utilisation véhicule optimal
+  - Marge de sécurité respectée (95% max)
+end note
+
+"Calcul totaux de chargement" -down-> "Vérification des totaux"
+"Vérification des totaux" -right-> [Totaux inadéquats] "Recalcul/ajustement"
+"Recalcul/ajustement" -left-> "Vérification des totaux"
+"Vérification des totaux" -down-> [Totaux OK] "Libération document préparation"
+
+note right of "Libération document préparation" #FFFFCC
+  <b>Validation Libération</b>
+  - Toutes informations obligatoires remplies
+  - Statut passe à "En chargement"
+  - Modifications verrouillées
+  - Document prêt pour validation
+  - Notification envoyée aux responsables
+end note
+
+"Libération document préparation" -down-> "Validation préparation chargement"
+
+note right of "Validation préparation chargement" #FFFFCC
+  <b>Validation Superviseur</b>
+  - Vérification complète par superviseur
+  - Statut passe à "Validé"
+  - Signature électronique superviseur
+  - Date/heure validation enregistrée
+  - Notifications envoyées aux équipes
+end note
+
+' Vehicle Charging
+"Validation préparation chargement" -down-> "Vérification statut préparation"
+"Vérification statut préparation" -right-> [Non validé] "Retour pour corrections"
+"Retour pour corrections" -up-> "Calcul totaux de chargement"
+"Vérification statut préparation" -down-> [Validé] "Création document chargement véhicule"
+
+note right of "Création document chargement véhicule" #FFFFCC
+  <b>Validation Document Chargement</b>
+  - Référence document préparation validé
+  - Date chargement correspondant aux ressources
+  - Statut initial "En cours"
+  - Ressources physiquement disponibles
+  - Autorisation de chargement obtenue
+end note
+
+"Création document chargement véhicule" -down-> "Génération lignes chargement"
+
+note right of "Génération lignes chargement" #FFFFCC
+  <b>Validation Lignes Chargement</b>
+  - Une ligne par arrêt validé
+  - Quantités planifiées = validées
+  - Statut initial ligne "En attente"
+  - Préparation de l'interface de saisie
+  - Instructions de chargement générées
+end note
+
+"Génération lignes chargement" -down-> "Début processus chargement"
+
+note right of "Début processus chargement" #FFFFCC
+  <b>Validation Démarrage</b>
+  - Heure début enregistrée
+  - Chauffeur et manutentionnaires présents
+  - Marchandises disponibles
+  - Équipement de chargement prêt
+  - Véhicule positionné à quai
+end note
+
+"Début processus chargement" -down-> "Saisie quantités réelles"
+
+note right of "Saisie quantités réelles" #FFFFCC
+  <b>Validation Quantités</b>
+  - Toutes les lignes avec quantité réelle
+  - Écarts quantité calculés automatiquement
+  - Écarts >10% avec justification obligatoire
+  - Statut ligne = Chargé/Partiellement/Non chargé
+  - Opérateur identifié pour chaque ligne
+end note
+
+"Saisie quantités réelles" -down-> "Vérification des écarts"
+"Vérification des écarts" -right-> [Écarts non justifiés] "Compléter justifications"
+"Compléter justifications" -left-> "Vérification des écarts"
+"Vérification des écarts" -down-> [Écarts justifiés/acceptables] "Finalisation chargement"
+
+note right of "Finalisation chargement" #FFFFCC
+  <b>Validation Finalisation</b>
+  - Toutes lignes avec statut final
+  - Totaux finaux (poids/volume) calculés
+  - Signatures responsable et chauffeur
+  - Statut document passe à "Complété"
+  - Documents de transport générés
+end note
+
+' Tour Execution
+"Finalisation chargement" -down-> "Vérification finalisation"
+"Vérification finalisation" -right-> [Incomplet] "Compléter éléments manquants"
+"Compléter éléments manquants" -left-> "Vérification finalisation"
+"Vérification finalisation" -down-> [Complet] "Départ en mission"
+
+note right of "Départ en mission" #FFFFCC
+  <b>Validation Départ</b>
+  - Statut tournée "En mission"
+  - Heure départ enregistrée
+  - Documents d'expédition remis
+  - GPS/suivi activé si disponible
+  - Ressources bloquées pendant mission
+end note
+
+"Départ en mission" -down-> "Livraisons aux clients"
+
+note right of "Livraisons aux clients" #FFFFCC
+  <b>Validation Livraisons</b>
+  - Confirmation pour chaque livraison
+  - Documentation anomalies terrain
+  - Heures réelles de livraison
+  - Signatures clients obtenues
+  - Incidents de trajet documentés
+end note
+
+"Livraisons aux clients" -down-> "Vérification livraisons"
+"Vérification livraisons" -right-> [Livraisons incomplètes] "Traitement exceptions"
+"Traitement exceptions" -left-> "Vérification livraisons"
+"Vérification livraisons" -down-> [Livraisons terminées] "Clôture de la tournée"
+
+note right of "Clôture de la tournée" #FFFFCC
+  <b>Validation Clôture</b>
+  - Statut tournée "Terminée"
+  - Ressources libérées (statut "Disponible")
+  - Documents de retour complétés
+  - Performances enregistrées
+  - Anomalies documentées pour analyse
+end note
+
+"Clôture de la tournée" -down-> (*)
+
+footer Processus complet avec validations et conditions - De la création des ressources à l'exécution
+
+@enduml 

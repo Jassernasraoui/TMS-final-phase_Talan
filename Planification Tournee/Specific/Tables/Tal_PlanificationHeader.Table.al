@@ -4,11 +4,11 @@ table 77100 "Planification Header"
 
     fields
     {
-        field(7701; "Document Type"; Enum "Sales Document Type")
+        field(77001; "Document Type"; Enum "Sales Document Type")
         {
             Caption = 'Document Type';
         }
-        field(7706; "Logistic Tour No."; Code[20])
+        field(77006; "Logistic Tour No."; Code[20])
         {
             DataClassification = CustomerContent;
 
@@ -27,7 +27,7 @@ table 77100 "Planification Header"
             end;
         }
 
-        field(7702; "Date de Tournée"; Date)
+        field(77002; "Date de Tournée"; Date)
         {
             DataClassification = ToBeClassified;
             Caption = 'Tour Date';
@@ -100,28 +100,10 @@ table 77100 "Planification Header"
             DataClassification = CustomerContent;
             Caption = 'Véhicule';
             TableRelation = Resource."No." where("Type" = const(Machine));
-            
+
         }
 
-        field(77005; "Statut"; Option)
-        {
-            DataClassification = ToBeClassified;
-            OptionMembers = Plannified,"On Mission",Stopped;
-            OptionCaption = 'Planifiée,En cours,Terminée';
-            trigger OnLookup()
-            var
-                Style: Enum "Style";
-            begin
-                case "Statut" of
-                    "Statut"::Plannified:
-                        Style := Style::Green;
-                    "Statut"::"On Mission":
-                        Style := Style::Yellow;
-                    "Statut"::Stopped:
-                        Style := Style::Red;
-                end;
-            end;
-        }
+        field(77005; "Statut"; Option) { DataClassification = ToBeClassified; OptionMembers = Plannified,Loading,Stopped,EnCours; OptionCaption = 'Scheduling,Loading,Closed,In Progress'; trigger OnLookup() var Style: Enum "Style"; begin case "Statut" of "Statut"::Plannified: Style := Style::Green; "Statut"::Loading: Style := Style::Yellow; "Statut"::Stopped: Style := Style::Red; "Statut"::EnCours: Style := Style::Green; end; end; }
 
         field(77007; "Commentaire"; Text[100])
         {
@@ -260,5 +242,11 @@ table 77100 "Planification Header"
 
         "Document Date" := Today;
         "Created By" := UserId;
+
+        begin
+            // Set initial status to Scheduling
+            Rec.Statut := Rec.Statut::Plannified;
+        end
     end;
+
 }

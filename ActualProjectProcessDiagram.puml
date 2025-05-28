@@ -1,0 +1,217 @@
+@startuml Actual_Project_Process_Diagram
+
+skinparam {
+  BackgroundColor white
+  ArrowColor black
+  ArrowFontColor black
+  
+  NoteBackgroundColor white
+  NoteBorderColor black
+  NoteFontColor black
+  NoteFontSize 10
+  
+  ActivityBackgroundColor white
+  ActivityBorderColor black
+  ActivityFontColor black
+  
+  ActivityDiamondBackgroundColor white
+  ActivityDiamondBorderColor black
+  ActivityDiamondFontColor black
+}
+
+title Processus Actuel du Système Logistique - Basé sur l'Implémentation
+
+|#white|Gestion des Ressources|
+|#white|Planification Tournée|
+|#white|Préparation et Chargement|
+|#white|Exécution Tournée|
+
+|Gestion des Ressources|
+start
+:Création des ressources;
+note right
+**Structure actuelle (Tables)**
+- Person Resource
+- Vehicle Resource
+end note
+
+:Configuration des ressources;
+note right
+**Implémenté:**
+- Informations de base (code, nom)
+- Spécifications techniques
+- Statut (disponible/assigné)
+end note
+
+|Planification Tournée|
+:Création d'une tournée;
+note right
+**Planification Header**
+- Logistic Tour No.
+- Dates (Start/End)
+- Statut
+- Ressources (Driver/Vehicle)
+- Locations (Start/End)
+end note
+
+if (Date tournée >= aujourd'hui?) then (Oui)
+else (Non)
+  :Correction de la date;
+  -[#black]->
+endif
+
+:Assignation des ressources;
+note right
+**Relations actuelles:**
+- Planification Header -> Person Resource
+- Planification Header -> Vehicle Resource
+end note
+
+if (Ressources disponibles?) then (Oui)
+else (Non)
+  :Recherche d'autres ressources;
+  -[#black]->
+endif
+
+:Ajout des livraisons;
+note right
+**Planning Lines**
+- Document info (Type, No., Line)
+- Item details
+- Customer info
+- Quantities and weights
+- Time slots
+end note
+
+if (Capacité véhicule suffisante?) then (Oui)
+else (Non)
+  :Ajustement des quantités;
+  -[#black]->
+endif
+
+:Planification des arrêts;
+
+|Préparation et Chargement|
+:Création document préparation;
+note right
+**Vehicle Loading Header**
+- Loading Date
+- Resources (Truck, Driver)
+- Locations
+- Statistics (Weight, Volume)
+- Status management
+end note
+
+:Génération des arrêts de livraison;
+note right
+**Vehicle Stop Line**
+- Customer info
+- Delivery details
+- Timing (arrival/departure)
+- Quantities
+end note
+
+:Validation préparation;
+note right
+**Validation process**
+- Status updates
+- Signature requirements
+- User tracking
+end note
+
+if (Document validé?) then (Oui)
+else (Non)
+  :Correction des erreurs;
+  -[#black]->
+endif
+
+:Création document chargement;
+note right
+**Vehicle Charging Header**
+- Reference to Loading Sheet
+- Timing information
+- Actual metrics
+- Status tracking
+end note
+
+:Saisie quantités réelles;
+note right
+**Vehicle Charging Line**
+- Planned vs Actual quantities
+- Difference calculation
+- Status tracking
+- Operator identification
+end note
+
+if (Écarts justifiés?) then (Oui)
+else (Non)
+  :Justification des écarts;
+  -[#black]->
+endif
+
+:Finalisation chargement;
+
+|Exécution Tournée|
+:Départ en mission;
+note right
+**Tour Execution Tracking**
+- Status updates
+- Customer information
+- Planning line references
+- GPS coordinates
+end note
+
+:Livraisons aux clients;
+note right
+**Implemented fields:**
+- Delivery timing
+- Status tracking
+- Signature capture
+- Notes & comments
+end note
+
+if (Anomalies?) then (Non)
+else (Oui)
+  :Documentation anomalies;
+  note right
+  **Activity Log Table**
+  - Event tracking
+  - Issue documentation
+  - Resolution steps
+  end note
+endif
+
+:Clôture de la tournée;
+note right
+**Status Management**
+- Final status updates
+- Performance metrics
+- Resource liberation
+end note
+
+if (Tournée complète?) then (Oui)
+else (Non)
+  :Traitement exceptions;
+  -[#black]->
+endif
+
+:Libération des ressources;
+note right
+**Resource Status Update**
+- Status changes
+- Availability for new assignments
+end note
+
+:Analyse performance;
+note right
+**Performance Metrics**
+- KPIs calculation
+- Statistics reporting
+- Process improvement
+end note
+
+stop
+
+footer Système Logistique - État d'Implémentation Actuel - Base: Business Central AL
+
+@enduml 

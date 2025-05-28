@@ -75,7 +75,7 @@ page 77009 "Vehicle Loading Card"
                 field("Planned Route"; rec."Planned Route") { ApplicationArea = All; Editable = not IsReleased; }
             }
 
-            group("Vehicle Status")
+            group("Loading Status")
             {
                 field("Status"; rec."Status") { ApplicationArea = All; Editable = false; StyleExpr = StatusStyleExpr; }
                 field("Validated By"; rec."Validated By") { ApplicationArea = All; Editable = false; }
@@ -248,6 +248,8 @@ page 77009 "Vehicle Loading Card"
 
                     VehicleChargingCard.SetRecord(VehicleChargingHeader);
                     VehicleChargingCard.Run();
+                    SetStatusInProgressIfChargingStarted(VehicleChargingHeader."Tour No.");
+
                 end;
             }
 
@@ -343,6 +345,16 @@ page 77009 "Vehicle Loading Card"
     begin
         Rec := LoadingRec;
         IsReleased := (Rec.Status <> Rec.Status::Planned);
+    end;
+
+    procedure SetStatusInProgressIfChargingStarted(TourNo: Code[20])
+    var
+        PlanHeader: Record "Planification Header";
+    begin
+        if PlanHeader.Get(TourNo) then begin
+            PlanHeader.Statut := PlanHeader.Statut::EnCours;
+            PlanHeader.Modify(true);
+        end;
     end;
 
     procedure CalculateTotals()

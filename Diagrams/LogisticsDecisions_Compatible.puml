@@ -1,0 +1,133 @@
+@startuml Logistics_Decisions_Compatible
+
+skinparam backgroundColor white
+skinparam ArrowColor gray
+skinparam ActivityBackgroundColor #3498DB
+skinparam ActivityBorderColor #2874A6
+skinparam ActivityFontColor white
+skinparam ActivityDiamondBackgroundColor #F9E79F
+skinparam ActivityDiamondBorderColor #F1C40F
+skinparam ActivityDiamondFontColor black
+
+title DÉCISIONS CRITIQUES DU PROCESSUS LOGISTIQUE
+
+|Planification|
+start
+:Création d'une nouvelle tournée;
+
+if (Date de tournée >= aujourd'hui?) then (Oui)
+else (Non)
+  :Correction de la date de tournée;
+  note right: Date invalide
+  -(0)[#red]-> 
+endif
+
+:Assignation des ressources à la tournée;
+
+if (Ressources disponibles?) then (Oui)
+else (Non)
+  :Recherche d'autres ressources;
+  note right: Indisponibilité
+  -(0)[#red]-> 
+endif
+
+if (Permis compatible avec véhicule?) then (Oui)
+else (Non)
+  :Réaffectation des ressources;
+  note right: Incompatibilité
+  -(0)[#red]-> 
+endif
+
+:Ajout des livraisons planifiées;
+
+if (Capacité véhicule suffisante?) then (Oui)
+else (Non)
+  :Ajustement quantités/véhicule;
+  note right: Surcharge
+  -(0)[#red]-> 
+endif
+
+:Attribution des créneaux horaires;
+
+if (Planning réalisable?) then (Oui)
+else (Non)
+  :Réajustement des créneaux;
+  note right: Irréalisable
+  -(0)[#red]-> 
+endif
+
+|Préparation|
+:Création document préparation;
+
+:Génération arrêts livraison;
+
+:Calcul totaux chargement;
+
+if (Totaux OK?) then (Oui)
+else (Non)
+  :Recalcul et ajustement;
+  note right: Dépassement
+  -(0)[#red]-> 
+endif
+
+:Libération document préparation;
+
+:Validation superviseur;
+
+if (Document validé?) then (Oui)
+else (Non)
+  :Correction éléments signalés;
+  note right: Refusé
+  -(0)[#red]-> 
+endif
+
+|Chargement|
+:Document chargement véhicule;
+
+:Début processus chargement;
+
+:Saisie quantités réelles;
+
+if (Écarts justifiés?) then (Oui)
+else (Non)
+  :Compléter justifications;
+  note right: Non justifié
+  -(0)[#red]-> 
+endif
+
+:Finalisation chargement;
+
+if (Toutes lignes finalisées?) then (Oui)
+else (Non)
+  :Compléter éléments manquants;
+  note right: Incomplet
+  -(0)[#red]-> 
+endif
+
+|Exécution|
+:Départ en mission;
+
+:Livraisons aux clients;
+
+if (Anomalies livraison?) then (Non)
+else (Oui)
+  :Documentation anomalies;
+  note right: Problèmes
+endif
+
+:Clôture tournée;
+
+if (Livraisons complètes?) then (Oui)
+else (Non)
+  :Traitement exceptions;
+  note right: Manquantes
+  -(0)[#red]-> 
+endif
+
+:Libération ressources;
+
+stop
+
+footer DÉCISIONS CRITIQUES: Planification (6) | Préparation (3) | Chargement (3) | Exécution (2)
+
+@enduml 

@@ -86,7 +86,8 @@ codeunit 77200 "Planning Lines Management"
                     PlanningLine."Qty. per Unit of Measure" := SalesLine."Qty. per Unit of Measure";
                     PlanningLine."Unit of Measure Code" := SalesLine."Unit of Measure Code";
                     PlanningLine."Expected Shipment Date" := SalesLine."Shipment Date";
-                    PlanningLine."Customer No." := SalesHeader."Sell-to Customer No.";
+                    PlanningLine."Customer No." := SalesLine."Sell-to Customer No.";
+                    PlanningLine."Account No." := SalesHeader."Sell-to Customer Name";
                     PlanningLine."Location Code" := SalesHeader."Location Code";
                     PlanningLine." Delivery Date" := SalesHeader."Shipment Date";
 
@@ -182,7 +183,8 @@ codeunit 77200 "Planning Lines Management"
                     PlanningLine."Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
                     PlanningLine."Unit of Measure Code" := PurchLine."Unit of Measure Code";
                     PlanningLine."Expected Receipt Date" := PurchLine."Expected Receipt Date";
-                    PlanningLine."Vendor No." := PurchHeader."Buy-from Vendor No.";
+                    PlanningLine."Vendor No." := PurchLine."Buy-from Vendor No.";
+                    PlanningLine."Account No." := PurchHeader."Buy-from Vendor Name";
                     PlanningLine."Location Code" := PurchHeader."Location Code";
                     PlanningLine." Delivery Date" := PurchHeader."Expected Receipt Date";
 
@@ -269,7 +271,7 @@ codeunit 77200 "Planning Lines Management"
                 PlanningLine."Qty. per Unit of Measure" := TransferLine."Qty. per Unit of Measure";
                 PlanningLine."Unit of Measure Code" := TransferLine."Unit of Measure Code";
                 PlanningLine."Transfer-from Code" := TransferHeader."Transfer-from Code";
-                PlanningLine."Location Code" := TransferHeader."Transfer-to Code";
+                PlanningLine."Location Code" := TransferLine."Transfer-to Code";
                 PlanningLine."Expected Receipt Date" := TransferHeader."Receipt Date";
                 PlanningLine." Delivery Date" := TransferHeader."Receipt Date";
 
@@ -1009,5 +1011,306 @@ codeunit 77200 "Planning Lines Management"
         end;
 
         exit(true);
+    end;
+
+    procedure AddDocumentLineToTour(var TourHeader: Record "Planification Header"; var DocBuffer: Record "Planning Document Buffer")
+    var
+        PlanningDiag: Codeunit "Planning Diagnostics";
+    begin
+        // Debug information
+        Message('Adding document line to tour: %1, Document: %2-%3, Item: %4',
+                TourHeader."Logistic Tour No.", Format(DocBuffer."Document Type"), DocBuffer."Document No.", DocBuffer."Item No.");
+
+        // Validate that we have a valid tour number
+        if TourHeader."Logistic Tour No." = '' then begin
+            Error('Tour number is missing in the TourHeader record.');
+            exit;
+        end;
+
+        // Ensure the DocBuffer has the correct tour number
+        DocBuffer."Tour No." := TourHeader."Logistic Tour No.";
+
+        // Proceed with line addition based on document type
+        case DocBuffer."Document Type" of
+            DocBuffer."Document Type"::"Sales Order":
+                begin
+                    AddSalesLineToTour(TourHeader, DocBuffer);
+                end;
+            DocBuffer."Document Type"::"Purchase Order":
+                begin
+                    AddPurchaseLineToTour(TourHeader, DocBuffer);
+                end;
+            DocBuffer."Document Type"::"Transfer Order":
+                begin
+                    AddTransferLineToTour(TourHeader, DocBuffer);
+                end;
+            else
+                Error('Unsupported document type: %1', Format(DocBuffer."Document Type"));
+        end;
+    end;
+
+    local procedure AddSalesLineToTour(var TourHeader: Record "Planification Header"; var DocBuffer: Record "Planning Document Buffer")
+    var
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        PlanningLine: Record "Planning Lines";
+        NextLineNo: Integer;
+        LinesAdded: Integer;
+        PlanningDiag: Codeunit "Planning Diagnostics";
+    begin
+        // Vérifier que la commande client existe
+        SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+        SalesHeader.SetRange("No.", DocBuffer."Document No.");
+        if not SalesHeader.FindFirst() then begin
+            Error('Sales Order %1 not found', DocBuffer."Document No.");
+            exit;
+        end;
+
+        // Chercher le prochain numéro de ligne
+        PlanningLine.Reset();
+        PlanningLine.SetRange("Logistic Tour No.", TourHeader."Logistic Tour No.");
+        if PlanningLine.FindLast() then
+            NextLineNo := PlanningLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+
+        // Rechercher la ligne spécifique
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.SetRange("No.", DocBuffer."Item No.");
+        if not SalesLine.FindFirst() then begin
+            Error('Sales Line for item %1 in order %2 not found', DocBuffer."Item No.", DocBuffer."Document No.");
+            exit;
+        end;
+
+        // Créer la ligne de planification
+        Clear(PlanningLine);
+        PlanningLine.Init();
+        PlanningLine."Logistic Tour No." := TourHeader."Logistic Tour No.";
+        PlanningLine."Line No." := NextLineNo;
+        PlanningLine.Type := PlanningLine.Type::Sales;
+        PlanningLine."Source ID" := SalesLine."Document No.";
+        PlanningLine."Item No." := SalesLine."No.";
+        PlanningLine.Description := SalesLine.Description;
+        PlanningLine."Description 2" := SalesLine."Description 2";
+        PlanningLine.Quantity := SalesLine.Quantity;
+        PlanningLine."Quantity (Base)" := SalesLine."Quantity (Base)";
+        PlanningLine."Qty. per Unit of Measure" := SalesLine."Qty. per Unit of Measure";
+        PlanningLine."Unit of Measure Code" := SalesLine."Unit of Measure Code";
+        PlanningLine."Expected Shipment Date" := SalesLine."Shipment Date";
+        PlanningLine."Customer No." := SalesHeader."Sell-to Customer No.";
+        PlanningLine."Account No." := SalesHeader."Sell-to Customer Name";
+        PlanningLine."Location Code" := SalesHeader."Location Code";
+        PlanningLine." Delivery Date" := SalesHeader."Shipment Date";
+
+        // Valeurs par défaut pour les nouveaux champs
+        if (SalesLine."Shipment Date" >= TourHeader."Start Date") and
+           (SalesLine."Shipment Date" <= TourHeader."End Date") then
+            PlanningLine."Assigned Day" := SalesLine."Shipment Date"
+        else if (SalesHeader."Requested Delivery Date" >= TourHeader."Start Date") and
+                (SalesHeader."Requested Delivery Date" <= TourHeader."End Date") then
+            PlanningLine."Assigned Day" := SalesHeader."Requested Delivery Date"
+        else
+            PlanningLine."Assigned Day" := TourHeader."Start Date";
+
+        // Extraire ou définir la priorité
+        case DocBuffer.Priority of
+            DocBuffer.Priority::Low:
+                PlanningLine.Priority := PlanningLine.Priority::Low;
+            DocBuffer.Priority::Normal:
+                PlanningLine.Priority := PlanningLine.Priority::Normal;
+            DocBuffer.Priority::High:
+                PlanningLine.Priority := PlanningLine.Priority::High;
+            DocBuffer.Priority::Critical:
+                PlanningLine.Priority := PlanningLine.Priority::Critical;
+        end;
+
+        // Définir le type d'activité à Livraison pour une commande client
+        PlanningLine."Activity Type" := PlanningLine."Activity Type"::Delivery;
+
+        if PlanningLine.Insert() then begin
+            LinesAdded += 1;
+            Message('Successfully added line for item %1 from Sales Order %2 to tour %3',
+                    PlanningLine."Item No.", SalesHeader."No.", TourHeader."Logistic Tour No.");
+        end else begin
+            Error('Failed to insert planning line for Sales Order %1, Item %2: %3',
+                SalesLine."Document No.", SalesLine."No.", GetLastErrorText);
+        end;
+
+        // Mettre à jour le nombre total de lignes de planification
+        TourHeader.CalcFields("No. of Planning Lines", "Total Quantity");
+    end;
+
+    local procedure AddPurchaseLineToTour(var TourHeader: Record "Planification Header"; var DocBuffer: Record "Planning Document Buffer")
+    var
+        PurchHeader: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
+        PlanningLine: Record "Planning Lines";
+        NextLineNo: Integer;
+        LinesAdded: Integer;
+        PlanningDiag: Codeunit "Planning Diagnostics";
+    begin
+        // Vérifier que la commande fournisseur existe
+        PurchHeader.SetRange("Document Type", PurchHeader."Document Type"::Order);
+        PurchHeader.SetRange("No.", DocBuffer."Document No.");
+        if not PurchHeader.FindFirst() then begin
+            Error('Purchase Order %1 not found', DocBuffer."Document No.");
+            exit;
+        end;
+
+        // Chercher le prochain numéro de ligne
+        PlanningLine.Reset();
+        PlanningLine.SetRange("Logistic Tour No.", TourHeader."Logistic Tour No.");
+        if PlanningLine.FindLast() then
+            NextLineNo := PlanningLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+
+        // Rechercher la ligne spécifique
+        PurchLine.SetRange("Document Type", PurchHeader."Document Type");
+        PurchLine.SetRange("Document No.", PurchHeader."No.");
+        PurchLine.SetRange("No.", DocBuffer."Item No.");
+        if not PurchLine.FindFirst() then begin
+            Error('Purchase Line for item %1 in order %2 not found', DocBuffer."Item No.", DocBuffer."Document No.");
+            exit;
+        end;
+
+        // Créer la ligne de planification
+        Clear(PlanningLine);
+        PlanningLine.Init();
+        PlanningLine."Logistic Tour No." := TourHeader."Logistic Tour No.";
+        PlanningLine."Line No." := NextLineNo;
+        PlanningLine.Type := PlanningLine.Type::Purchase;
+        PlanningLine."Source ID" := PurchLine."Document No.";
+        PlanningLine."Item No." := PurchLine."No.";
+        PlanningLine.Description := PurchLine.Description;
+        PlanningLine."Description 2" := PurchLine."Description 2";
+        PlanningLine.Quantity := PurchLine.Quantity;
+        PlanningLine."Quantity (Base)" := PurchLine."Quantity (Base)";
+        PlanningLine."Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
+        PlanningLine."Unit of Measure Code" := PurchLine."Unit of Measure Code";
+        PlanningLine."Expected Receipt Date" := PurchLine."Expected Receipt Date";
+        PlanningLine."Vendor No." := PurchHeader."Buy-from Vendor No.";
+        PlanningLine."Account No." := PurchHeader."Buy-from Vendor Name";
+        PlanningLine."Location Code" := PurchHeader."Location Code";
+        PlanningLine." Delivery Date" := PurchHeader."Expected Receipt Date";
+
+        // Valeurs par défaut pour les nouveaux champs
+        if (PurchLine."Expected Receipt Date" >= TourHeader."Start Date") and
+           (PurchLine."Expected Receipt Date" <= TourHeader."End Date") then
+            PlanningLine."Assigned Day" := PurchLine."Expected Receipt Date"
+        else
+            PlanningLine."Assigned Day" := TourHeader."Start Date";
+
+        // Extraire ou définir la priorité
+        case DocBuffer.Priority of
+            DocBuffer.Priority::Low:
+                PlanningLine.Priority := PlanningLine.Priority::Low;
+            DocBuffer.Priority::Normal:
+                PlanningLine.Priority := PlanningLine.Priority::Normal;
+            DocBuffer.Priority::High:
+                PlanningLine.Priority := PlanningLine.Priority::High;
+            DocBuffer.Priority::Critical:
+                PlanningLine.Priority := PlanningLine.Priority::Critical;
+        end;
+
+        // Définir le type d'activité à Ramassage pour une commande fournisseur
+        PlanningLine."Activity Type" := PlanningLine."Activity Type"::Pickup;
+
+        if PlanningLine.Insert() then begin
+            LinesAdded += 1;
+            Message('Successfully added line for item %1 from Purchase Order %2 to tour %3',
+                    PlanningLine."Item No.", PurchHeader."No.", TourHeader."Logistic Tour No.");
+        end else
+            Error('Failed to insert planning line for Purchase Order %1, Item %2: %3',
+                PurchLine."Document No.", PurchLine."No.", GetLastErrorText);
+
+        // Mettre à jour le nombre total de lignes de planification
+        TourHeader.CalcFields("No. of Planning Lines", "Total Quantity");
+    end;
+
+    local procedure AddTransferLineToTour(var TourHeader: Record "Planification Header"; var DocBuffer: Record "Planning Document Buffer")
+    var
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        PlanningLine: Record "Planning Lines";
+        NextLineNo: Integer;
+        LinesAdded: Integer;
+        PlanningDiag: Codeunit "Planning Diagnostics";
+    begin
+        // Vérifier que l'ordre de transfert existe
+        TransferHeader.SetRange("No.", DocBuffer."Document No.");
+        if not TransferHeader.FindFirst() then begin
+            Error('Transfer Order %1 not found', DocBuffer."Document No.");
+            exit;
+        end;
+
+        // Chercher le prochain numéro de ligne
+        PlanningLine.Reset();
+        PlanningLine.SetRange("Logistic Tour No.", TourHeader."Logistic Tour No.");
+        if PlanningLine.FindLast() then
+            NextLineNo := PlanningLine."Line No." + 10000
+        else
+            NextLineNo := 10000;
+
+        // Rechercher la ligne spécifique
+        TransferLine.SetRange("Document No.", TransferHeader."No.");
+        TransferLine.SetRange("Item No.", DocBuffer."Item No.");
+        if not TransferLine.FindFirst() then begin
+            Error('Transfer Line for item %1 in order %2 not found', DocBuffer."Item No.", DocBuffer."Document No.");
+            exit;
+        end;
+
+        // Créer la ligne de planification
+        Clear(PlanningLine);
+        PlanningLine.Init();
+        PlanningLine."Logistic Tour No." := TourHeader."Logistic Tour No.";
+        PlanningLine."Line No." := NextLineNo;
+        PlanningLine.Type := PlanningLine.Type::Transfer;
+        PlanningLine."Source ID" := TransferLine."Document No.";
+        PlanningLine."Item No." := TransferLine."Item No.";
+        PlanningLine.Description := TransferLine.Description;
+        PlanningLine.Quantity := TransferLine.Quantity;
+        PlanningLine."Quantity (Base)" := TransferLine."Quantity (Base)";
+        PlanningLine."Qty. per Unit of Measure" := TransferLine."Qty. per Unit of Measure";
+        PlanningLine."Unit of Measure Code" := TransferLine."Unit of Measure Code";
+        PlanningLine."Expected Shipment Date" := TransferHeader."Shipment Date";
+        PlanningLine."Expected Receipt Date" := TransferHeader."Receipt Date";
+        PlanningLine."Location Code" := TransferHeader."Transfer-from Code";
+        PlanningLine." Delivery Date" := TransferHeader."Receipt Date";
+        PlanningLine."Account No." := TransferHeader."Transfer-to Code";
+
+        // Valeurs par défaut pour les nouveaux champs
+        if (TransferHeader."Shipment Date" >= TourHeader."Start Date") and
+           (TransferHeader."Shipment Date" <= TourHeader."End Date") then
+            PlanningLine."Assigned Day" := TransferHeader."Shipment Date"
+        else
+            PlanningLine."Assigned Day" := TourHeader."Start Date";
+
+        // Extraire ou définir la priorité
+        case DocBuffer.Priority of
+            DocBuffer.Priority::Low:
+                PlanningLine.Priority := PlanningLine.Priority::Low;
+            DocBuffer.Priority::Normal:
+                PlanningLine.Priority := PlanningLine.Priority::Normal;
+            DocBuffer.Priority::High:
+                PlanningLine.Priority := PlanningLine.Priority::High;
+            DocBuffer.Priority::Critical:
+                PlanningLine.Priority := PlanningLine.Priority::Critical;
+        end;
+
+        // Définir le type d'activité pour un ordre de transfert
+        PlanningLine."Activity Type" := PlanningLine."Activity Type"::Delivery;
+
+        if PlanningLine.Insert() then begin
+            LinesAdded += 1;
+            Message('Successfully added line for item %1 from Transfer Order %2 to tour %3',
+                    PlanningLine."Item No.", TransferHeader."No.", TourHeader."Logistic Tour No.");
+        end else
+            Error('Failed to insert planning line for Transfer Order %1, Item %2: %3',
+                TransferLine."Document No.", TransferLine."Item No.", GetLastErrorText);
+
+        // Mettre à jour le nombre total de lignes de planification
+        TourHeader.CalcFields("No. of Planning Lines", "Total Quantity");
     end;
 }

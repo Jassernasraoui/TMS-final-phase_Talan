@@ -1,0 +1,236 @@
+/* calender.css - Styles pour le calendrier */
+
+/* Reset et base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #323130;
+    line-height: 1.4;
+}
+
+/* Conteneur principal */
+#calendarWrapper {
+    display: flex;
+    gap: 25px;
+    padding: 20px;
+    height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Section de sélection de date */
+#datePicker {
+    width: 300px;
+    min-width: 300px;
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+}
+
+#datePicker h3 {
+    margin-bottom: 20px;
+    color: #0078d4;
+    font-size: 18px;
+    border-bottom: 2px solid #0078d4;
+    padding-bottom: 8px;
+}
+
+#datePicker label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #323130;
+}
+
+/* Input de date */
+#planningDatePicker {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d2d0ce;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    background-color: #ffffff;
+}
+
+#planningDatePicker:focus {
+    outline: none;
+    border-color: #0078d4;
+    box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+/* Bouton de chargement */
+#loadBtn {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 15px;
+}
+
+#loadBtn:hover {
+    background-color: #106ebe;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 120, 212, 0.3);
+}
+
+#loadBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 120, 212, 0.2);
+}
+
+#loadBtn:focus {
+    outline: 2px solid #0078d4;
+    outline-offset: 2px;
+}
+
+/* Zone de statut */
+#status {
+    padding: 8px 12px;
+    background-color: #f3f2f1;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    color: #605e5c;
+    border: 1px solid #e1e1e1;
+}
+
+/* Zone d'affichage principal */
+#placeholder {
+    flex: 1;
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+}
+
+#placeholder h3 {
+    margin-bottom: 20px;
+    color: #323130;
+    font-size: 20px;
+    border-bottom: 2px solid #0078d4;
+    padding-bottom: 10px;
+}
+
+#placeholder p {
+    margin-bottom: 15px;
+    color: #605e5c;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Messages colorés */
+#placeholder p:contains("✅") {
+    color: #107c10;
+    font-weight: 500;
+}
+
+#placeholder p:contains("🔄") {
+    color: #0078d4;
+    font-weight: 500;
+}
+
+#placeholder p:contains("❌") {
+    color: #d13438;
+    font-weight: 500;
+}
+
+#placeholder p:contains("⚠️") {
+    color: #ff8c00;
+    font-weight: 500;
+}
+
+/* Design responsive */
+@media (max-width: 768px) {
+    #calendarWrapper {
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px;
+        height: auto;
+    }
+    
+    #datePicker {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    #placeholder {
+        min-height: 300px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#calendarWrapper {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* États de chargement */
+.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #0078d4, transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    to {
+        left: 100%;
+    }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

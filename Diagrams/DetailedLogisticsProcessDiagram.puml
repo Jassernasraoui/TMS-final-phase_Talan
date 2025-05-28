@@ -1,0 +1,152 @@
+@startuml Detailed Logistics Process
+
+!theme plain
+skinparam dpi 300
+skinparam handwritten false
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 8
+
+skinparam swimlane {
+  BorderColor black
+  BorderThickness 1
+  TitleFontSize 14
+  TitleFontColor black
+}
+
+skinparam activity {
+  BackgroundColor #E8F4FF
+  BorderColor black
+  FontColor black
+  ArrowColor black
+}
+
+skinparam activityDiamond {
+  BackgroundColor #FCF2DB
+  BorderColor black
+  FontColor black
+}
+
+title SYSTÈME DE GESTION LOGISTIQUE - PROCESSUS DÉTAILLÉ
+
+|Administrateur|
+start
+:Création et configuration des ressources;
+note right: Type = Personne/Véhicule
+
+|Planificateur|
+:Création nouvelle tournée;
+note right: No. unique, dates, lieux
+
+if (Date tournée ≥ aujourd'hui?) then (oui)
+else (non)
+  :Corriger date;
+  note left: La date doit être future
+  backward:Mise à jour date tournée;
+endif
+
+:Assignation ressources;
+note right: Chauffeur et véhicule
+
+if (Ressources disponibles?) then (oui)
+else (non)
+  :Rechercher autres ressources;
+  backward:Nouvelle sélection;
+endif
+
+if (Permis compatible avec véhicule?) then (oui)
+else (non)
+  :Réaffecter ressources;
+  backward:Nouvelle sélection;
+endif
+
+:Génération lignes planification;
+note right: Clients, articles, quantités
+
+if (Capacité véhicule suffisante?) then (oui)
+else (non)
+  :Ajuster quantités/véhicule;
+  backward:Vérification capacité;
+endif
+
+:Attribution créneaux horaires;
+note right: Planification temporelle
+
+if (Planning réalisable?) then (oui)
+else (non)
+  :Réajuster créneaux;
+  backward:Vérification planning;
+endif
+
+|Responsable Logistique|
+:Validation tournée;
+:Changement statut tournée à "Planifiée";
+
+:Création document préparation chargement;
+note right: Document lié à la tournée
+
+:Génération arrêts livraison;
+note right: Optimisation du parcours
+
+:Calcul totaux chargement;
+note right: Poids, volume total
+
+if (Totaux respectent capacité?) then (oui)
+else (non)
+  :Recalculer/ajuster;
+  backward:Vérification capacité;
+endif
+
+:Libération document préparation;
+note right: Statut "En chargement"
+
+:Validation document préparation;
+note right: Vérification superviseur
+
+|Opérateur Entrepôt|
+:Création document chargement véhicule;
+note right: Référence doc. préparation
+
+:Génération lignes chargement;
+:Début processus chargement;
+note right: Statut "En cours"
+
+:Saisie quantités réelles;
+note right: Par ligne de livraison
+
+if (Écarts quantité justifiés?) then (oui)
+else (non)
+  :Compléter justifications;
+  backward:Vérification écarts;
+endif
+
+:Finalisation chargement;
+note right: Signatures, statut "Complété"
+
+|Chauffeur|
+:Départ en mission;
+note right: Statut tournée "En mission"
+
+:Livraisons aux clients;
+note right: Signatures clients
+
+if (Toutes livraisons effectuées?) then (oui)
+else (non)
+  :Documentation anomalies;
+  note left: Causes et actions
+endif
+
+:Clôture tournée;
+note right: Statut "Terminée"
+
+|Administrateur|
+:Libération ressources;
+note right: Statut "Disponible"
+
+:Analyse performances;
+stop
+
+footer SYSTÈME DE GESTION LOGISTIQUE - PROCESSUS COMPLET - CYCLE DE VIE DE LA TOURNÉE
+
+@enduml 

@@ -1,0 +1,181 @@
+@startuml Enterprise_Logistics_Workflow
+
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master
+!includeurl ICONURL/common.puml
+!includeurl ICONURL/font-awesome-5/truck.puml
+!includeurl ICONURL/font-awesome-5/user.puml
+!includeurl ICONURL/font-awesome-5/calendar_check.puml
+!includeurl ICONURL/font-awesome-5/clipboard_list.puml
+!includeurl ICONURL/font-awesome-5/warehouse.puml
+!includeurl ICONURL/font-awesome-5/boxes.puml
+!includeurl ICONURL/font-awesome-5/chart_bar.puml
+
+!define ENTITY_COLOR #3C7DC0
+!define PROCESS_COLOR #4C9ABF
+!define DECISION_COLOR #5DADE2
+!define PRIMARY_TEXT_COLOR #2C3E50
+!define SECONDARY_TEXT_COLOR #34495E
+!define BACKGROUND_COLOR #ECF0F1
+!define BORDER_COLOR #2874A6
+!define HIGHLIGHT_COLOR #1ABC9C
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultTextAlignment center
+
+skinparam titleFontName "Segoe UI"
+skinparam titleFontSize 20
+skinparam titleFontColor #1F618D
+skinparam titleFontStyle bold
+
+skinparam footerFontName "Segoe UI"
+skinparam footerFontSize 10
+skinparam footerFontColor #566573
+
+skinparam activityFontName "Segoe UI"
+skinparam activityFontSize 12
+skinparam activityFontColor #FFFFFF
+skinparam activityBorderColor BORDER_COLOR
+skinparam activityBackgroundColor PROCESS_COLOR
+skinparam activityBorderThickness 1
+
+skinparam swimlaneTitleFontName "Segoe UI"
+skinparam swimlaneTitleFontSize 14
+skinparam swimlaneTitleFontColor #1F618D
+skinparam swimlaneTitleFontStyle bold
+skinparam swimlaneBorderColor #85C1E9
+skinparam swimlaneBorderThickness 2
+
+skinparam arrowColor #34495E
+skinparam arrowThickness 1.5
+
+skinparam noteFontName "Segoe UI"
+skinparam noteFontSize 10
+skinparam noteBorderColor #D4AC0D
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteFontColor #7D6608
+
+title <b>PROCESSUS DE GESTION LOGISTIQUE - WORKFLOW ENTREPRISE</b>\n<font size=12>Système intégré de planification et exécution des tournées</font>
+
+|<#5499C7,#D6EAF8>| <$user> <b>Gestion des Ressources</b> |
+|<#5DADE2,#D6EAF8>| <$calendar_check> <b>Planification</b> |
+|<#48C9B0,#D1F2EB>| <$clipboard_list> <b>Préparation</b> |
+|<#F4D03F,#FCF3CF>| <$warehouse> <b>Chargement</b> |
+|<#EB984E,#FAE5D3>| <$truck> <b>Exécution des Tournées</b> |
+|<#A569BD,#EBDEF0>| <$chart_bar> <b>Suivi & Analyse</b> |
+
+|Gestion des Ressources|
+start
+:<b>Création des Ressources</b>
+<i>Définition des personnes et véhicules</i>;
+note right: Données de base, identifiants, caractéristiques
+
+:<b>Qualification des Ressources</b>
+<i>Configuration spécifique par type</i>;
+note right: Permis, certifications, capacités, conformité réglementaire
+
+:<b>Validation & Activation</b>
+<i>Vérification des informations obligatoires</i>;
+note right: Statut Disponible, prêt pour assignation
+
+|Planification|
+:<b>Création Tournée</b>
+<i>Initialisation document planification</i>;
+note right: No. unique, dates, période validité
+
+if (Informations valides?) then (Oui)
+  :<b>Assignation Ressources</b>
+  <i>Affectation chauffeur et véhicule</i>;
+  note right: Vérification disponibilité, compatibilité
+else (Non)
+  :<b>Correction données</b>;
+  note left: Gestion des erreurs
+  backward:Mise à jour informations;
+endif
+
+:<b>Constitution Tournée</b>
+<i>Ajout des livraisons planifiées</i>;
+note right: Clients, articles, quantités, géolocalisation
+
+:<b>Planification Temporelle</b>
+<i>Définition des créneaux horaires</i>;
+note right: Ordonnancement, optimisation parcours
+
+:<b>Validation Planning</b>
+<i>Confirmation faisabilité technique</i>;
+note right: Vérification contraintes capacitaires
+
+|Préparation|
+:<b>Préparation Chargement</b>
+<i>Création document préparatoire</i>;
+note right: Référence tournée, séquence arrêts
+
+:<b>Calcul Charges</b>
+<i>Consolidation poids et volumes</i>;
+note right: Vérification marges capacitaires
+
+:<b>Libération Préparation</b>
+<i>Validation technique du document</i>;
+note right: Gel des modifications, notification
+
+:<b>Approbation Superviseur</b>
+<i>Contrôle qualité préparation</i>;
+note right: Signature électronique, statut Validé
+
+|Chargement|
+:<b>Document Chargement</b>
+<i>Création ordre de chargement</i>;
+note right: Initiation processus physique
+
+:<b>Opérations Chargement</b>
+<i>Exécution du plan de chargement</i>;
+note right: Traçabilité des opérations
+
+:<b>Saisie Quantités Réelles</b>
+<i>Enregistrement données effectives</i>;
+note right: Écarts, justifications, anomalies
+
+:<b>Finalisation Chargement</b>
+<i>Validation finale avant départ</i>;
+note right: Documentation complète, signatures
+
+|Exécution des Tournées|
+:<b>Départ Mission</b>
+<i>Lancement exécution de la tournée</i>;
+note right: Statut En Mission, horodatage
+
+:<b>Livraisons Clients</b>
+<i>Exécution des arrêts planifiés</i>;
+note right: Signatures, preuves livraison
+
+:<b>Gestion Exceptions</b>
+<i>Traitement écarts et incidents</i>;
+note right: Documentation anomalies terrain
+
+:<b>Clôture Tournée</b>
+<i>Finalisation exécution</i>;
+note right: Statut Terminée, retour base
+
+|Suivi & Analyse|
+:<b>Libération Ressources</b>
+<i>Retour au statut Disponible</i>;
+note right: Préparation cycle suivant
+
+:<b>Analyse Performance</b>
+<i>Mesure KPIs et indicateurs</i>;
+note right: Qualité service, efficacité, rentabilité
+
+:<b>Amélioration Continue</b>
+<i>Identification axes optimisation</i>;
+note right: Recommandations, actions correctives
+stop
+
+legend
+  <b>RÉFÉRENTIEL DES STATUTS</b>
+  <i>Ressources:</i> <back:lightgreen>Disponible</back> → <back:lightyellow>Assigné</back> → <back:lightcoral>En Mission</back> → <back:lightgreen>Disponible</back>
+  <i>Tournée:</i> <back:lightyellow>Brouillon</back> → <back:lightgreen>Planifiée</back> → <back:lightcoral>En Mission</back> → <back:lightblue>Terminée</back>
+  <i>Documents:</i> <back:lightyellow>En Préparation</back> → <back:lightgreen>Validé</back> → <back:lightcoral>En Cours</back> → <back:lightblue>Complété</back>
+endlegend
+
+footer SYSTÈME DE GESTION LOGISTIQUE INTÉGRÉ | Version 2.0 | Dernière mise à jour: Septembre 2023
+
+@enduml 

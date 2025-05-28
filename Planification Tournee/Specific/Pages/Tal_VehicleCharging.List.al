@@ -63,10 +63,12 @@ page 77022 "Vehicle Charging List"
                 var
                     VehicleChargingHeader: Record "Vehicle Charging Header";
                     VehicleChargingCard: Page "Vehicle Charging Card";
+                    PlanHeader: Record "Planification Header";
                 begin
                     VehicleChargingHeader.Init();
                     VehicleChargingHeader."Charging Date" := Today;
                     VehicleChargingHeader."Status" := VehicleChargingHeader."Status"::InProgress;
+                    VehicleChargingHeader.Status := PlanHeader.Statut::EnCours;
                     VehicleChargingHeader.Insert(true);
 
                     Commit();

@@ -10,7 +10,7 @@
             "serverInstance": "BC250",
             "authentication": "Windows",
             "port": 8049,
-            "startupObjectId": 77000 ,
+            "startupObjectId": 77007 ,
             "startupObjectType": "Page",
             "breakOnError": "All",
             "launchBrowser": true,

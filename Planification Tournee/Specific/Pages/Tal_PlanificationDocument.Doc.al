@@ -216,7 +216,7 @@ page 77007 "Planification Document"
                 Caption = 'Daily Schedule';
                 SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
                 ApplicationArea = Basic, Suite;
-                Editable = false;
+                Editable = true;
                 Visible = true;
             }
         }
@@ -575,6 +575,10 @@ page 77007 "Planification Document"
                     if not Confirm('Do you want to create a vehicle loading preparation for this tour?') then
                         exit;
 
+                    // Set status to Loading when loading phase starts
+                    Rec.Statut := Rec.Statut::Loading;
+                    Rec.Modify(true);
+
                     // Check if a vehicle loading sheet already exists for this tour
                     VehicleLoadingHeader.Reset();
                     VehicleLoadingHeader.SetRange("Tour No.", Rec."Logistic Tour No.");
@@ -616,7 +620,7 @@ page 77007 "Planification Document"
                                 VehicleStopLine.Init();
                                 VehicleStopLine."Fiche No." := VehicleLoadingHeader."No.";
                                 VehicleStopLine."Stop No." := StopNo;
-                                VehicleStopLine."Customer No." := PlanningLine."Customer No.";
+                                VehicleStopLine."Customer No." := PlanningLine."Account No.";
                                 VehicleStopLine."Delivery Address" := PlanningLine."Geographic Coordinates";
                                 VehicleStopLine."Estimated Arrival Time" := PlanningLine."Time Slot Start";
                                 VehicleStopLine."Estimated Departure Time" := PlanningLine."Time Slot End";
@@ -642,6 +646,21 @@ page 77007 "Planification Document"
                         Error('Failed to create vehicle loading preparation.');
                 end;
             }
+            action("Go to Execution")
+            {
+                ApplicationArea = All;
+                Caption = 'Go to Execution';
+                Image = Next;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    TMSProcessFlow: Codeunit "Tour Execution Management";
+                begin
+                    TMSProcessFlow.InitializeTourExecution(Rec."Logistic Tour No.");
+                end;
+            }
 
             action("Transfer Routes")
             {
@@ -656,7 +675,7 @@ page 77007 "Planification Document"
             {
                 ApplicationArea = All;
                 Caption = 'Vehicle Loading Management';
-                Image = ProductionPlan;
+                Image = MachineCenterLoad;
                 Promoted = true;
                 PromotedCategory = Process;
                 RunObject = Page "Vehicle Loading Management";
@@ -685,7 +704,7 @@ page 77007 "Planification Document"
         case Rec.Statut of
             Rec.Statut::Plannified:
                 StatusStyleExpr := 'Favorable';
-            Rec.Statut::"On Mission":
+            Rec.Statut::Loading:
                 StatusStyleExpr := 'Attention';
             Rec.Statut::Stopped:
                 StatusStyleExpr := 'Unfavorable';
@@ -1284,4 +1303,27 @@ page 77007 "Planification Document"
     //         end;
     //     }
     // }
+
+    // Add a procedure to update status to InProgress when charging phase starts
+    procedure SetStatusInProgressIfChargingStarted(TourNo: Code[20])
+    var
+        PlanHeader: Record "Planification Header";
+    begin
+        if PlanHeader.Get(TourNo) then begin
+            PlanHeader.Statut := PlanHeader.Statut::EnCours;
+            PlanHeader.Modify(true);
+        end;
+    end;
+
+    // Add a procedure to update status to Closed when execution is completed
+    procedure SetStatusClosedIfExecutionCompleted(TourNo: Code[20])
+    var
+        PlanHeader: Record "Planification Header";
+    begin
+        if PlanHeader.Get(TourNo) then begin
+            PlanHeader.Statut := PlanHeader.Statut::Stopped;
+            PlanHeader.Modify(true);
+        end;
+    end;
+
 }

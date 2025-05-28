@@ -1,0 +1,550 @@
+@startuml Processus_Logistique_Complet
+
+!define LIGHTBLUE #E6F3FB
+!define LIGHTYELLOW #FFFACD
+!define LIGHTGREEN #E6FFE6
+!define LIGHTORANGE #FFE6CC
+
+title Processus de Gestion Logistique - Diagramme Détaillé
+
+skinparam {
+  ArrowColor #333333
+  ArrowFontColor #333333
+  
+  NoteBackgroundColor LIGHTYELLOW
+  NoteBorderColor #CCCC00
+  NoteFontSize 11
+}
+
+skinparam ActivityBorderColor #333333
+skinparam ActivityBackgroundColor white
+
+|Création Ressources|
+start
+:Création des ressources;
+note right LIGHTYELLOW
+**Données de base des ressources**
+- Type: Personne / Véhicule
+- No., Nom, Description
+- Informations générales
+- Date de création
+- Catégories
+- Statut initial: "Disponible"
+end note
+
+:Configuration des ressources;
+note right LIGHTYELLOW
+**Pour ressource Personne**
+- Informations personnelles
+- Type de permis de conduire
+- Date d'expiration du permis
+- Compétences et certifications
+- Disponibilité (jours/horaires)
+- Contraintes spécifiques
+- Historique des affectations
+
+**Pour ressource Véhicule**
+- Type de véhicule
+- Immatriculation
+- Dates validité assurance/contrôle technique
+- Dimensions (L/l/h)
+- Capacité poids maximal (kg)
+- Capacité volume maximal (m³)
+- Équipements spécifiques
+- Configuration (tracteur/remorque)
+- Consommation moyenne
+end note
+
+|Planification|
+:Création d'une nouvelle tournée;
+note right LIGHTYELLOW
+**Données de base de la tournée**
+- No. unique généré par le système
+- No. Série
+- Date de création
+- Créé par
+- Date de tournée (≥ aujourd'hui)
+- Date début/fin
+- Statut initial: "Brouillon"
+- Lieux de départ/arrivée
+- Zone de livraison
+- Commentaire
+end note
+
+if (Date de tournée >= aujourd'hui?) then (Oui)
+else (Non)
+  :Correction de la date de tournée;
+  note right LIGHTYELLOW
+  **Règles de validation**
+  - Date de tournée doit être ≥ aujourd'hui
+  - Si date invalide, l'utilisateur est notifié
+  - Message d'erreur spécifique affiché
+  - Correction requise avant de continuer
+  end note
+  -[#red]>
+endif
+
+:Assignation des ressources à la tournée;
+note right LIGHTYELLOW
+**Processus d'assignation**
+- Recherche des ressources disponibles
+- Filtres par type, capacité, zone géographique
+- Vérification des disponibilités calendaires
+- Vérification des compétences requises
+- Attribution d'un chauffeur (Personne)
+- Attribution d'un véhicule
+- Changement du statut des ressources: "Assigné"
+- Verrouillage des ressources pour la période
+end note
+
+if (Ressources disponibles?) then (Oui)
+else (Non)
+  :Recherche d'autres ressources;
+  note right LIGHTYELLOW
+  **Gestion de l'indisponibilité**
+  - Élargissement des critères de recherche
+  - Proposition de ressources alternatives
+  - Vérification de conflits de planning
+  - Notification aux responsables si pénurie
+  - Possibilité de réservation préventive
+  - Ajustement des dates possibles
+  end note
+  -[#red]>
+endif
+
+if (Permis du chauffeur compatible avec véhicule?) then (Oui)
+else (Non)
+  :Réaffectation du chauffeur ou véhicule;
+  note right LIGHTYELLOW
+  **Gestion de la compatibilité**
+  - Vérification permis requis pour le véhicule
+  - Vérification permis valide (non expiré)
+  - Vérification formations spécifiques 
+  - Si incompatibilité, nouvelle recherche
+  - Proposition automatique d'alternatives
+  - Historique des incompatibilités
+  end note
+  -[#red]>
+endif
+
+:Ajout des livraisons planifiées;
+note right LIGHTYELLOW
+**Configuration des livraisons**
+- Type document (commande client, etc.)
+- No. document source
+- No. ligne document source
+- No. article
+- Description de l'article
+- Quantité à livrer
+- Poids brut/net
+- Volume
+- No. client
+- Adresse livraison
+- Coordonnées géographiques
+- Contraintes spécifiques de livraison
+- Exigences particulières
+- Priorité (Haute/Normale/Basse)
+end note
+
+if (Poids/volume <= capacité véhicule?) then (Oui)
+else (Non)
+  :Ajustement quantités ou changement de véhicule;
+  note right LIGHTYELLOW
+  **Gestion des contraintes capacitaires**
+  - Calcul poids total de la tournée
+  - Calcul volume total de la tournée
+  - Comparaison avec capacité du véhicule
+  - Si dépassement: 
+    * Réduction des quantités
+    * Répartition sur plusieurs tournées
+    * Proposition véhicule plus adapté
+  - Calcul taux de remplissage
+  - Optimisation espace de chargement
+  end note
+  -[#red]>
+endif
+
+:Attribution des créneaux horaires;
+note right LIGHTYELLOW
+**Planification temporelle**
+- Affectation jour de livraison
+- Définition créneaux horaires début/fin
+- Estimation durée de livraison
+- Estimation temps de trajet entre arrêts
+- Prise en compte horaires d'ouverture clients
+- Pause repas chauffeur
+- Temps de repos obligatoires
+- Optimisation de l'ordre des arrêts
+- Réduction distance totale parcourue
+- Respect des priorités clients
+end note
+
+if (Planning réalisable avec temps de trajet?) then (Oui)
+else (Non)
+  :Réajustement des créneaux;
+  note right LIGHTYELLOW
+  **Gestion des conflits temporels**
+  - Identification des chevauchements
+  - Vérification temps de trajet réalistes
+  - Élargissement des créneaux si nécessaire
+  - Réorganisation de la séquence des arrêts
+  - Prise en compte conditions circulation
+  - Ajout de marge de sécurité
+  - Respect des contraintes réglementaires
+  - Proposition planifications alternatives
+  end note
+  -[#red]>
+endif
+
+|Préparation Chargement|
+:Création document préparation chargement;
+note right LIGHTYELLOW
+**Document préparation**
+- No. document unique
+- Référence à la tournée
+- Date de préparation
+- Lieu de chargement
+- Responsable préparation
+- Chauffeur assigné
+- Véhicule assigné
+- Statut: "En préparation"
+- Instructions spéciales
+- Documents d'accompagnement requis
+end note
+
+:Génération des arrêts de livraison;
+note right LIGHTYELLOW
+**Organisation des arrêts**
+- Séquence optimisée des arrêts
+- Adresse complète de chaque arrêt
+- Coordonnées GPS
+- Heures prévues arrivée/départ
+- Contact sur site
+- Instructions d'accès
+- Équipements nécessaires
+- Contraintes de déchargement
+- Spécificités du site de livraison
+- Documentation des accès difficiles
+end note
+
+:Calcul des totaux de chargement;
+note right LIGHTYELLOW
+**Consolidation des charges**
+- Poids total (kg)
+- Volume total (m³)
+- Nombre total de colis
+- Nombre total de palettes
+- Nombre d'arrêts planifiés
+- Distance totale (km)
+- Durée estimée totale
+- Taux d'utilisation du véhicule (%)
+- Consommation estimée
+- Vérification marge sécurité (≤95%)
+end note
+
+if (Totaux respectent les limites du véhicule?) then (Oui)
+else (Non)
+  :Recalcul et ajustement des quantités;
+  note right LIGHTYELLOW
+  **Gestion des dépassements**
+  - Identification des éléments critiques
+  - Calcul du dépassement (kg ou m³)
+  - Options de réduction:
+    * Priorisation des livraisons
+    * Report de certains arrêts
+    * Réduction des quantités
+    * Changement de véhicule
+  - Notification des ajustements nécessaires
+  - Recalcul après modifications
+  end note
+  -[#red]>
+endif
+
+:Libération du document préparation;
+note right LIGHTYELLOW
+**Processus de libération**
+- Vérification complétude des informations
+- Validation des données saisies
+- Changement statut: "En chargement"
+- Verrouillage des modifications
+- Génération documents d'accompagnement
+- Notification au superviseur
+- Préparation interface de chargement
+- Mise à disposition documents pour entrepôt
+end note
+
+:Validation par superviseur;
+note right LIGHTYELLOW
+**Contrôle qualité**
+- Revue complète par superviseur
+- Vérification conformité réglementaire
+- Vérification optimisation chargement
+- Vérification respect priorités clients
+- Signature électronique superviseur
+- Horodatage de la validation
+- Changement statut: "Validé"
+- Notification aux équipes chargement
+- Historique des validations
+end note
+
+if (Document validé par superviseur?) then (Oui)
+else (Non)
+  :Correction des éléments signalés;
+  note right LIGHTYELLOW
+  **Processus de correction**
+  - Liste détaillée des anomalies
+  - Indication des champs à corriger
+  - Retour au statut "En préparation"
+  - Déverrouillage des champs concernés
+  - Notification au créateur du document
+  - Traçabilité des corrections
+  - Nouvelle soumission après corrections
+  - Historique des rejets et corrections
+  end note
+  -[#red]>
+endif
+
+|Chargement Véhicule|
+:Création document chargement véhicule;
+note right LIGHTYELLOW
+**Document de chargement**
+- No. document unique
+- Référence au document préparation
+- Date de chargement
+- Heure début planifiée
+- Quai de chargement assigné
+- Équipe de manutention
+- Équipements spéciaux requis
+- Statut initial: "En cours"
+- Instructions de chargement
+- Plan de chargement
+end note
+
+:Début processus chargement physique;
+note right LIGHTYELLOW
+**Exécution du chargement**
+- Enregistrement heure début réelle
+- Positionnement du véhicule à quai
+- Vérification état du véhicule
+- Vérification disponibilité marchandises
+- Préparation équipement de manutention
+- Respect du plan de chargement
+- Sécurisation du chargement
+- Respect normes d'arrimage
+- Répartition du poids dans le véhicule
+- Documentation visuelle du chargement
+end note
+
+:Saisie des quantités réelles chargées;
+note right LIGHTYELLOW
+**Enregistrement des quantités**
+- Saisie ligne par ligne des quantités
+- Scan des codes-barres/QR codes
+- Vérification correspondance article
+- Quantité réelle vs quantité planifiée
+- Calcul automatique des écarts
+- Motifs d'écart prédéfinis
+- Photo des articles si nécessaire
+- Traçabilité de l'opérateur
+- Horodatage de la saisie
+- Suivi temps réel de l'avancement
+end note
+
+if (Écarts quantités <= 10% ou justifiés?) then (Oui)
+else (Non)
+  :Compléter justifications des écarts;
+  note right LIGHTYELLOW
+  **Gestion des écarts**
+  - Si écart > 10%: justification obligatoire
+  - Sélection motif d'écart:
+    * Rupture de stock
+    * Article endommagé
+    * Erreur préparation
+    * Substitution d'article
+    * Modification client
+  - Documentation détaillée
+  - Validation par responsable si >20%
+  - Impact sur facturation
+  - Alerte automatique si écarts récurrents
+  end note
+  -[#red]>
+endif
+
+:Finalisation du chargement;
+note right LIGHTYELLOW
+**Clôture du chargement**
+- Vérification de toutes les lignes
+- Calcul totaux finaux (poids/volume)
+- Vérification arrimage et sécurité
+- Documentation photographique
+- Signature électronique responsable
+- Signature chauffeur
+- Changement statut: "Complété"
+- Génération documents transport
+- CMR, Bon de livraison, Étiquettes
+- Plombage véhicule si nécessaire
+end note
+
+if (Toutes lignes avec statut final?) then (Oui)
+else (Non)
+  :Compléter éléments manquants;
+  note right LIGHTYELLOW
+  **Résolution anomalies chargement**
+  - Identification lignes non finalisées
+  - Raisons possibles:
+    * Articles non disponibles
+    * Données manquantes
+    * Erreurs de scan
+    * Problèmes techniques
+  - Procédure de régularisation
+  - Décision: reporter ou annuler ligne
+  - Documentation des mesures prises
+  - Notification des parties prenantes
+  end note
+  -[#red]>
+endif
+
+|Exécution Tournée|
+:Départ en mission;
+note right LIGHTYELLOW
+**Lancement mission**
+- Changement statut tournée: "En mission"
+- Enregistrement heure départ réelle
+- Vérification documents complets:
+  * Feuille de route
+  * Bons de livraison
+  * CMR international si requis
+  * Documents douaniers si requis
+- Activation suivi GPS
+- Communication données chauffeur
+- Notification automatique clients
+- Estimation heures arrivée
+end note
+
+:Livraisons aux clients;
+note right LIGHTYELLOW
+**Exécution livraisons**
+- Pour chaque arrêt:
+  * Enregistrement heure arrivée
+  * Notification automatique client
+  * Déchargement marchandises
+  * Confirmation quantités livrées
+  * Scan codes-barres livraison
+  * Signature client (tablet/mobile)
+  * Photo livraison si nécessaire
+  * Enregistrement heure départ
+  * Commentaires/feedback client
+  * Évaluation satisfaction client
+  * Mise à jour statut temps réel
+end note
+
+if (Anomalies de livraison?) then (Non)
+else (Oui)
+  :Documentation des anomalies;
+  note right LIGHTYELLOW
+  **Gestion incidents terrain**
+  - Types d'anomalies:
+    * Refus total/partiel
+    * Client absent
+    * Adresse incorrecte
+    * Conditions d'accès impossibles
+    * Marchandises endommagées
+    * Litiges client
+  - Documentation détaillée
+  - Photos de la situation
+  - Instruction immédiate par centrale
+  - Solutions alternatives proposées
+  - Communication au client
+  - Gestion retours marchandises
+  - Impact planning tournée
+end note
+endif
+
+:Clôture de la tournée;
+note right LIGHTYELLOW
+**Finalisation tournée**
+- Enregistrement retour dépôt
+- Heure fin de tournée
+- Kilométrage final
+- Consommation carburant
+- État du véhicule au retour
+- Synthèse livraisons effectuées
+- Retours marchandises
+- Récapitulatif anomalies
+- Temps total vs temps estimé
+- Gestion des documents signés
+- Changement statut: "Terminée"
+end note
+
+if (Toutes livraisons effectuées/documentées?) then (Oui)
+else (Non)
+  :Traitement des exceptions;
+  note right LIGHTYELLOW
+  **Gestion non-conformités**
+  - Analyse des livraisons non effectuées
+  - Détermination des causes racines
+  - Décisions:
+    * Replanification
+    * Annulation définitive
+    * Modification commande
+    * Avoir commercial
+  - Communication clients
+  - Traitement administratif
+  - Mesures correctives process
+  - Analyse d'impact commercial
+  end note
+  -[#red]>
+endif
+
+|Analyse & Suivi|
+:Libération des ressources;
+note right LIGHTYELLOW
+**Retour disponibilité ressources**
+- Changement statut chauffeur: "Disponible"
+- Changement statut véhicule: "Disponible"
+- Vérification entretien véhicule
+- Planification maintenance si nécessaire
+- Mise à jour compteurs véhicule
+- Mise à jour historique ressources
+- Calcul temps utilisation
+- Disponibilité pour nouvelles missions
+end note
+
+:Analyse performance de la tournée;
+note right LIGHTYELLOW
+**Mesure KPIs**
+- Indicateurs opérationnels:
+  * Taux de livraison dans les délais
+  * Taux de conformité livraisons
+  * Taux d'incidents
+  * Coût par km / par livraison
+  * Taux utilisation véhicule
+  * Temps moyen par arrêt
+  * Précision des estimations
+  * Écarts quantités planifiées/réelles
+  * Satisfaction client mesurée
+- Tableau de bord performance
+- Comparaison objectifs
+- Identification axes d'amélioration
+end note
+
+:Amélioration continue;
+note right LIGHTYELLOW
+**Optimisation processus**
+- Analyse des tendances
+- Identification goulots d'étranglement
+- Benchmark des meilleures pratiques
+- Recommandations d'amélioration
+- Révision des procédures
+- Ajustement des prévisions
+- Formation des équipes
+- Optimisation des tournées futures
+- Innovations technologiques
+- Réduction de l'empreinte carbone
+end note
+
+stop
+
+footer Système Gestion Logistique Intégré | Version 3.0 | Processus complet de la création des ressources à l'analyse des performances
+
+@enduml 

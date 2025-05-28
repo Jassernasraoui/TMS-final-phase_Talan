@@ -15,25 +15,32 @@ page 77100 "Planning Lines"
                 {
                     ApplicationArea = All;
                 }
-                field("Line No."; rec."Line No.")
-                {
-                    ApplicationArea = All;
-                }
                 field("Logistic Tour No."; rec."Logistic Tour No.")
                 {
                     ApplicationArea = All;
+                    visible = false;
                 }
                 field("Source ID"; rec."Source ID")
                 {
                     ApplicationArea = All;
+                    Caption = 'Source Document ID' ;
                 }
                 field("Item No."; rec."Item No.")
                 {
                     ApplicationArea = All;
                 }
+                 field("Account No."; Rec."Account No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Customer/Vendor No.';
+                    ToolTip = 'Specifies the account number.';
+                    Editable = false;
+                }
+                
                 field("Variant Code"; rec."Variant Code")
                 {
                     ApplicationArea = All;
+                    visible = false;
                 }
                 field(Description; rec.Description)
                 {
@@ -42,6 +49,7 @@ page 77100 "Planning Lines"
                 field("Description 2"; rec."Description 2")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field(Quantity; rec.Quantity)
                 {
@@ -466,6 +474,7 @@ page 77100 "Planning Lines"
             // Transfert des données de la ligne de vente
             PlanningLine."Source ID" := SalesLine."Document No.";
             PlanningLine."Item No." := SalesLine."No.";
+            Planningline."Account No." := SalesLine."Sell-to Customer No.";
             PlanningLine.Description := SalesLine.Description;
             PlanningLine."Description 2" := SalesLine."Description 2";
             PlanningLine.Quantity := SalesLine.Quantity;
