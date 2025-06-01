@@ -37,7 +37,7 @@ codeunit 77060 "Tour Execution Management"
                     InitializeExecutionTrackingFromPlanning(TourNo);
 
                     // Mettre à jour le statut de la tournée à "En Cours"
-                    PlanificationHeader.Statut := PlanificationHeader.Statut::EnCours;
+                    PlanificationHeader.Statut := PlanificationHeader.Statut::Inprogress;
                     PlanificationHeader.Modify(true);
 
                     // Loguer l'activité
@@ -60,15 +60,15 @@ codeunit 77060 "Tour Execution Management"
                               TourNo, Format(PlanificationHeader.Statut));
 
                     // Initialiser le suivi d'exécution à partir du chargement
-                    InitializeExecutionTrackingFromLoading(TourNo, VehicleChargingHeader."No.");
+                    InitializeExecutionTrackingFromLoading(TourNo, VehicleChargingHeader."Vehicle Charging No.");
 
                     // Mettre à jour le statut de la tournée à "En Cours"
-                    PlanificationHeader.Statut := PlanificationHeader.Statut::EnCours;
+                    PlanificationHeader.Statut := PlanificationHeader.Statut::Inprogress;
                     PlanificationHeader.Modify(true);
 
                     // Loguer l'activité
                     LogTourActivity(TourNo, 'Exécution démarrée après chargement',
-                                   'Chargement: ' + VehicleChargingHeader."No.");
+                                   'Chargement: ' + VehicleChargingHeader."Vehicle Charging No.");
                 end;
         end;
 
@@ -196,7 +196,7 @@ codeunit 77060 "Tour Execution Management"
         if not PlanificationHeader.Get(TourNo) then
             Error('La tournée %1 n''existe pas.', TourNo);
 
-        if PlanificationHeader.Statut <> PlanificationHeader.Statut::EnCours then
+        if PlanificationHeader.Statut <> PlanificationHeader.Statut::Inprogress then
             Error('La tournée %1 n''est pas au statut "En Cours". Statut actuel: %2',
                   TourNo, Format(PlanificationHeader.Statut));
 

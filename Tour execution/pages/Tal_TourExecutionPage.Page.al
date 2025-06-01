@@ -433,7 +433,7 @@ page 77055 "Tour Execution Page"
                         StatusStyleTxt := 'Attention';
                         ExecutionMode := ExecutionMode::FromLoading;
                     end;
-                PlanificationHeader.Statut::EnCours:
+                PlanificationHeader.Statut::Inprogress:
                     begin
                         StatusStyleTxt := 'Favorable';
                         IsNewTour := false;

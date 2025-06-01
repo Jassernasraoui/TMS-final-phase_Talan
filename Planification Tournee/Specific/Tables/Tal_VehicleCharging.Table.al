@@ -4,7 +4,7 @@ table 77401 "Vehicle Charging Header"
 
     fields
     {
-        field(77001; "No."; Code[20])
+        field(77001; "Vehicle Charging No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
@@ -93,7 +93,7 @@ table 77401 "Vehicle Charging Header"
 
     keys
     {
-        key(PK; "No.")
+        key(PK; "Vehicle Charging No.")
         {
             Clustered = true;
         }
@@ -104,11 +104,11 @@ table 77401 "Vehicle Charging Header"
 
     trigger OnInsert()
     begin
-        if "No." = '' then begin
+        if "Vehicle Charging No." = '' then begin
             // Make sure the no. series exists
             InitVehicleChargingNoSeries();
             // Get the next number
-            "No." := NoSeriesMgt.GetNextNo('VCHARGE', Today, true);
+            "Vehicle Charging No." := NoSeriesMgt.GetNextNo('VCHARGE', Today, true);
         end;
     end;
 
@@ -181,7 +181,7 @@ table 77401 "Vehicle Charging Header"
 
         // Check if there are any charging lines
         ChargingLine.Reset();
-        ChargingLine.SetRange("Charging No.", "No.");
+        ChargingLine.SetRange("Charging No.", "Vehicle Charging No.");
         HasLines := not ChargingLine.IsEmpty();
 
         if not HasLines then
@@ -190,7 +190,7 @@ table 77401 "Vehicle Charging Header"
         // Check if there are any pending lines
         if HasLines then begin
             ChargingLine.Reset();
-            ChargingLine.SetRange("Charging No.", "No.");
+            ChargingLine.SetRange("Charging No.", "Vehicle Charging No.");
             ChargingLine.SetRange("Loading Status", ChargingLine."Loading Status"::Pending);
             HasPendingLines := not ChargingLine.IsEmpty();
 

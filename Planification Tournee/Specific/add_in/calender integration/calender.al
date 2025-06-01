@@ -1,23 +1,27 @@
-controladdin SimpleCalendarAddIn
+controladdin PlanningCalendarAddIn
 {
-    // Fichiers JavaScript à charger
-    Scripts = 'Planification Tournee/Specific/Scripts/calender.js';
-    
-    // Fichiers CSS à charger
-    StyleSheets = 'Planification Tournee/Specific/Scripts/calender.css';
-    
-    // Script d'initialisation (s'exécute au démarrage du contrôle)
-    StartupScript = 'Planification Tournee/Specific/Scripts/calender.js';
-    
-    // Dimensions par défaut
-    RequestedHeight = 400;
-    RequestedWidth = 800;
-    
-    // Permet au contrôle de s'étendre
+    // Fichiers de ressources externes
+    Scripts = 'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js',
+             'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js',
+             'script/calender.js';
+    StyleSheets = 'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css',
+                 'style/calender.css';
+    StartupScript = 'script/calender.js';
+
+    // Dimensions
+    RequestedHeight = 600;
+    RequestedWidth = 1000;
+    MinimumHeight = 400;
+    MinimumWidth = 800;
+
+    // Propriétés d'étirement
     VerticalStretch = true;
     HorizontalStretch = true;
-    
+
     // Événements exposés vers AL
     event OnDateChanged(selectedDate: Text);
     event OnControlReady();
+
+    // Méthodes appelables depuis AL
+    procedure UpdateCalendarEvents(eventsJSON: Text);
 }

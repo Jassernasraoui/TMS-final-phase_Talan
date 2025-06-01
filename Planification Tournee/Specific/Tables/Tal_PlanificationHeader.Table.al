@@ -103,7 +103,7 @@ table 77100 "Planification Header"
 
         }
 
-        field(77005; "Statut"; Option) { DataClassification = ToBeClassified; OptionMembers = Plannified,Loading,Stopped,EnCours; OptionCaption = 'Scheduling,Loading,Closed,In Progress'; trigger OnLookup() var Style: Enum "Style"; begin case "Statut" of "Statut"::Plannified: Style := Style::Green; "Statut"::Loading: Style := Style::Yellow; "Statut"::Stopped: Style := Style::Red; "Statut"::EnCours: Style := Style::Green; end; end; }
+        field(77005; "Statut"; Option) { DataClassification = ToBeClassified; OptionMembers = Draft,Plannified,Loading,Inprogress,Completed,Stopped; OptionCaption = 'Draft,Plannified,Loading,In Progress,completed,Stopped'; trigger OnLookup() var Style: Enum "Style"; begin case "Statut" of "Statut"::Plannified: Style := Style::Green; "Statut"::Loading: Style := Style::Yellow; "Statut"::Stopped: Style := Style::Red; "Statut"::Inprogress: Style := Style::Green; end; end; }
 
         field(77007; "Commentaire"; Text[100])
         {
@@ -220,6 +220,7 @@ table 77100 "Planification Header"
         }
 
 
+
     }
     keys
     {
@@ -245,8 +246,9 @@ table 77100 "Planification Header"
 
         begin
             // Set initial status to Scheduling
-            Rec.Statut := Rec.Statut::Plannified;
-        end
+            Rec.Statut := Rec.Statut::Draft;
+        end;
+
     end;
 
 }

@@ -15,7 +15,7 @@ page 77022 "Vehicle Charging List"
         {
             repeater(Group)
             {
-                field("No."; Rec."No.") { ApplicationArea = All; }
+                field("No."; Rec."Vehicle Charging No.") { ApplicationArea = All; }
                 field("Loading Sheet No."; Rec."Loading Sheet No.") { ApplicationArea = All; }
                 field("Charging Date"; Rec."Charging Date") { ApplicationArea = All; }
                 field("Tour No."; Rec."Tour No.") { ApplicationArea = All; }
@@ -68,7 +68,7 @@ page 77022 "Vehicle Charging List"
                     VehicleChargingHeader.Init();
                     VehicleChargingHeader."Charging Date" := Today;
                     VehicleChargingHeader."Status" := VehicleChargingHeader."Status"::InProgress;
-                    VehicleChargingHeader.Status := PlanHeader.Statut::EnCours;
+                    VehicleChargingHeader.Status := PlanHeader.Statut::Inprogress;
                     VehicleChargingHeader.Insert(true);
 
                     Commit();

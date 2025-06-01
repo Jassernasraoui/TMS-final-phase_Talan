@@ -27,6 +27,12 @@ table 77015 TripScedulingCueTable
             CalcFormula = count("Planification Header" where(Statut = FILTER(Stopped)));
 
         }
+        field(9; TripScedulingCompleted; Integer)
+        {
+            FieldClass = FlowField;
+            CalcFormula = count("Planification Header" where(Statut = FILTER(completed)));
+
+        }
         field(5; TripExecutionInProgress; Integer)
         {
             Caption = 'In Progress';

@@ -167,6 +167,34 @@ page 77005 "Tour Planning List"
                 RunObject = Page "Transfer Routes";
                 ToolTip = 'View the list of transfer routes that are set up to transfer items from one location to another.';
             }
+            action(ViewDashboard)
+            {
+                ApplicationArea = All;
+                Caption = '🗺️ Vue Dashboard';
+                ToolTip = 'Ouvrir le dashboard avec carte et calendrier';
+                Image = Map;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+
+                trigger OnAction()
+                var
+                    PlanningDashboard: Page "Tal Planning Dashboard";
+                    PlanningLine: Record "Planning Lines";
+                begin
+                    // Filtrer les lignes de planning pour cette tournée
+                    PlanningLine.Reset();
+                    PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+
+                    if PlanningLine.FindFirst() then begin
+                        // Ouvrir le dashboard en passant la ligne de planning
+                        PlanningDashboard.SetRecord(PlanningLine);
+                        PlanningDashboard.Run();
+                    end else begin
+                        Message('Aucune ligne de planning trouvée pour cette tournée.');
+                    end;
+                end;
+            }
         }
         area(Processing)
         {

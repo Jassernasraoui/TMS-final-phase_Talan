@@ -1,0 +1,28 @@
+// Script de démarrage pour le control add-in de carte en ligne
+(function () {
+    // Variable pour suivre l'état de préparation du contrôle
+    let isControlReady = false;
+    
+    // Exposer la méthode IsReady pour vérifier si le contrôle est prêt
+    window.IsReady = function() {
+        return isControlReady;
+    };
+    
+    // Écouter l'événement de chargement du DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("🚀 Startup script chargé");
+        
+        // Attendre que le script principal soit chargé
+        const checkReadyInterval = setInterval(function() {
+            if (typeof window.initGoogleMap === 'function') {
+                clearInterval(checkReadyInterval);
+                console.log("✅ Script principal détecté, initialisation...");
+                
+                // Marquer le contrôle comme prêt
+                isControlReady = true;
+                
+                // Initialiser la carte (sera fait automatiquement par le script principal)
+            }
+        }, 100);
+    });
+})(); 

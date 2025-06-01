@@ -4,7 +4,7 @@ table 77101 "Planning Lines"
 
     fields
     {
-        field (77000; "Show Calender"; Boolean)
+        field(77000; "Show Calender"; Boolean)
         {
             DataClassification = ToBeClassified;
             Caption = 'Show All';
@@ -169,7 +169,7 @@ table 77101 "Planning Lines"
             TableRelation = Location.Code;
         }
 
-        field(77034; "Geographic Coordinates"; Text[100])
+        field(77034; "Geographic Coordinates"; Decimal)
         {
             DataClassification = ToBeClassified;
             Caption = 'Geographic Coordinates';
@@ -243,6 +243,26 @@ table 77101 "Planning Lines"
         {
             DataClassification = ToBeClassified;
         }
+        field(77044; "Address"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Assigned To';
+        }
+        field(77045; "City"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'City';
+        }
+        field(77046; "State (County)"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Postal Code';
+        }
+        field(77047; "Country/Region Code"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Postal Code';
+        }
 
     }
 
@@ -251,8 +271,27 @@ table 77101 "Planning Lines"
         key(PK; "Logistic Tour No.", "Line No.") { Clustered = true; }
         key(AssignedDay; "Logistic Tour No.", "Assigned Day") { }
         key(Priority; "Logistic Tour No.", "Priority") { }
-        key(Customer; "Logistic Tour No.", "Customer No.") { }
+        key(Customer; "Address", "Country/Region Code", "City") { }
         key(Location; "Logistic Tour No.", "Location Code") { }
         key(ActivityType; "Logistic Tour No.", "Activity Type") { }
     }
+
+    procedure DisplayMap()
+    var
+        OnlineMapManagement: Codeunit "Online Map Management";
+    begin
+        OnlineMapManagement.MakeSelectionIfMapEnabled(Database::Customer, GetPosition());
+    end;
+
+    procedure GetFullAddress(): Text
+    var
+        Address: Text;
+    begin
+        // Construct a simple Google Maps-compatible address
+        Address := Rec.Address + ', ' + Rec."State (County)" + ' ' + Rec.City + ', ' + Format(Rec."Country/Region Code");
+        exit(Address);
+    end;
+
+
+
 }

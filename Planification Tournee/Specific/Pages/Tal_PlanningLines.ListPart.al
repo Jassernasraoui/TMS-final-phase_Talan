@@ -129,6 +129,13 @@ page 77100 "Planning Lines"
                 {
                     ApplicationArea = All;
                 }
+                field ("Location Code";Rec."Location Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Location Code';
+                    ToolTip = 'Specifies the location code for the transfer order.';
+                    Visible = true; // Set to true if you want to show this field
+                }
                 
             }
         }
@@ -320,6 +327,38 @@ page 77100 "Planning Lines"
                     ToolTip = 'View items that are inbound or outbound on warehouse put-away or warehouse pick documents for the transfer order.';
                 }
             }
+            group ("Maps")
+            {
+                action(ShowMap)
+        {
+            ApplicationArea = All;
+            Caption = 'Show All on Map';
+            Image = Map;
+            trigger OnAction()
+            var
+                PlanningLine: Record "Planning Lines";
+                AddressList: Text;
+                FullAddress: Text;
+            begin
+                AddressList := '';
+                PlanningLine.SetRange("Source ID", Rec."Source ID");
+                if PlanningLine.FindSet() then begin
+                    repeat
+                        FullAddress := PlanningLine.GetFullAddress();
+                        if FullAddress <> '' then
+                            AddressList += FullAddress + '/';
+                    until PlanningLine.Next() = 0;
+                end;
+
+                // Remove last slash
+                if AddressList <> '' then
+                    AddressList := DelStr(AddressList, StrLen(AddressList), 1);
+
+                // Build Google Maps URL
+                HYPERLINK('https://www.google.com/maps/dir/' + AddressList);
+            end;
+        }
+            }
             
             
     }
@@ -482,6 +521,7 @@ page 77100 "Planning Lines"
             PlanningLine."Unit of Measure Code" := SalesLine."Unit of Measure Code";
             PlanningLine."Qty. per Unit of Measure" := SalesLine."Qty. per Unit of Measure";
             PlanningLine."Variant Code" := SalesLine."Variant Code";
+            PlanningLine."Location Code" := SalesLine."Location Code";
             
             // Vous pouvez ajouter d'autres champs selon votre structure de données
             PlanningLine." Delivery Date" := WorkDate();
@@ -491,6 +531,27 @@ page 77100 "Planning Lines"
         until SalesLine.Next() = 0;
         
         Message('Les lignes de vente ont été extraites avec succès.');
+    end;
+     procedure EncodeUrl(Address: Text): Text
+    var
+        TempText: Text;
+    begin
+        TempText := Address;
+        TempText := DelChr(TempText, '=', ' '); // Supprime les espaces
+        TempText := ReplaceStr(TempText, ' ', '+');
+        exit(TempText);
+    end;
+
+    procedure ReplaceStr(Source: Text; OldValue: Text; NewValue: Text): Text
+    var
+        Pos: Integer;
+    begin
+        while true do begin
+            Pos := StrPos(Source, OldValue);
+            if Pos = 0 then
+                exit(Source);
+            Source := CopyStr(Source, 1, Pos - 1) + NewValue + CopyStr(Source, Pos + StrLen(OldValue));
+        end;
     end;
 }
 //
@@ -1178,4 +1239,3 @@ page 77100 "Planning Lines"
 //         //     }
 //         // }
    
-

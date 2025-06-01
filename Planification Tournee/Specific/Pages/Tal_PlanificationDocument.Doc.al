@@ -388,18 +388,26 @@ page 77007 "Planification Document"
                     end;
                 }
 
-                action("Map View")
+                action("Show on Google Maps")
                 {
+                    Caption = 'Show on Google Maps';
                     ApplicationArea = All;
-                    Caption = 'Map View';
-                    Image = Map;
-                    ToolTip = 'View the planning on a map.';
 
                     trigger OnAction()
+                    var
+                        Place: Text;
+                        EncodedPlace: Text;
+                        URL: Text;
                     begin
-                        ShowMapView();
+                        Place := Rec."Delivery Area"; // Replace with your actual field name
+                        EncodedPlace := Place.Replace(' ', '%20'); // Replace spaces with %20
+                        URL := 'https://www.google.com/maps/search/?api=1&query=' + EncodedPlace;
+                        HYPERLINK(URL);
                     end;
                 }
+
+
+
 
                 action("Route Overview")
                 {
@@ -621,7 +629,7 @@ page 77007 "Planification Document"
                                 VehicleStopLine."Fiche No." := VehicleLoadingHeader."No.";
                                 VehicleStopLine."Stop No." := StopNo;
                                 VehicleStopLine."Customer No." := PlanningLine."Account No.";
-                                VehicleStopLine."Delivery Address" := PlanningLine."Geographic Coordinates";
+                                VehicleStopLine."Delivery Address" := PlanningLine."Address";
                                 VehicleStopLine."Estimated Arrival Time" := PlanningLine."Time Slot Start";
                                 VehicleStopLine."Estimated Departure Time" := PlanningLine."Time Slot End";
                                 VehicleStopLine."Quantity to Deliver" := PlanningLine.Quantity;
@@ -1310,7 +1318,7 @@ page 77007 "Planification Document"
         PlanHeader: Record "Planification Header";
     begin
         if PlanHeader.Get(TourNo) then begin
-            PlanHeader.Statut := PlanHeader.Statut::EnCours;
+            PlanHeader.Statut := PlanHeader.Statut::Inprogress;
             PlanHeader.Modify(true);
         end;
     end;

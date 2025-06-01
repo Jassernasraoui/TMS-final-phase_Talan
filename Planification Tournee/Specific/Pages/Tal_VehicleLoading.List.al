@@ -192,7 +192,7 @@ page 77011 "Vehicle Loading List"
                     VehicleChargingHeader.GetLoadingInfo();
 
                     // Open the new vehicle charging card
-                    Message('Vehicle charging sheet %1 has been created.', VehicleChargingHeader."No.");
+                    Message('Vehicle charging sheet %1 has been created.', VehicleChargingHeader."Vehicle Charging No.");
 
                     Commit();
 

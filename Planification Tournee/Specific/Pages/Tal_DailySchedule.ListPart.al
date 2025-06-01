@@ -24,6 +24,28 @@ page 77114 "Daily Schedule ListPart"
                         ApplyDayFilter();
                     end;
                 }
+                field(ShowMap; ShowMapLbl)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Editable = false;
+                    ShowCaption = false;
+                    Style = StrongAccent;
+                    StyleExpr = true;
+                    ToolTip = 'Specifies the customer''s address on your preferred map website.';
+
+                    trigger OnDrillDown()
+                    var
+                        Address: Text;
+                        EncodedAddress: Text;
+                        URL: Text;
+                    begin
+                        CurrPage.Update(true);
+                        Address := Rec.GetFullAddress();
+                        EncodedAddress := EncodeUrl(Address); // on crée cette fonction juste après
+                        URL := 'https://www.google.com/maps/search/?api=1&query=' + 'EncodedAddress';
+                        HYPERLINK(URL);
+                    end;
+                }
 
             }
             repeater(DailySchedule)
@@ -154,6 +176,7 @@ page 77114 "Daily Schedule ListPart"
     }
 
     var
+        ShowMapLbl: Label 'Show on Map';
         DayFilter: Date;
         TimeSlotStyle: Text;
         StatusStyleExpr: Text;
@@ -205,4 +228,27 @@ page 77114 "Daily Schedule ListPart"
                 PriorityStyleExpr := 'Unfavorable';
         end;
     end;
+
+    procedure EncodeUrl(Address: Text): Text
+    var
+        TempText: Text;
+    begin
+        TempText := Address;
+        TempText := DelChr(TempText, '=', ' '); // Supprime les espaces
+        TempText := ReplaceStr(TempText, ' ', '+');
+        exit(TempText);
+    end;
+
+    procedure ReplaceStr(Source: Text; OldValue: Text; NewValue: Text): Text
+    var
+        Pos: Integer;
+    begin
+        while true do begin
+            Pos := StrPos(Source, OldValue);
+            if Pos = 0 then
+                exit(Source);
+            Source := CopyStr(Source, 1, Pos - 1) + NewValue + CopyStr(Source, Pos + StrLen(OldValue));
+        end;
+    end;
+
 }

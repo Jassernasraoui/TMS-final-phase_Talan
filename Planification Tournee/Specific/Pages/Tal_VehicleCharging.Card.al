@@ -10,7 +10,7 @@ page 77012 "Vehicle Charging Card"
         {
             group("General")
             {
-                field("No."; rec."No.")
+                field("No."; rec."Vehicle Charging No.")
                 {
                     ApplicationArea = All;
                     Importance = Promoted;
@@ -100,7 +100,7 @@ page 77012 "Vehicle Charging Card"
 
             part("ChargingLinesPart"; "Vehicle Charging Line List")
             {
-                SubPageLink = "Charging No." = FIELD("No.");
+                SubPageLink = "Charging No." = FIELD("Vehicle Charging No.");
                 ApplicationArea = All;
                 Editable = IsReleased and (rec.Status = rec.Status::InProgress);
             }
@@ -368,7 +368,7 @@ page 77012 "Vehicle Charging Card"
     begin
         // Clear existing charging lines for this charging sheet
         ChargingLine.Reset();
-        ChargingLine.SetRange("Charging No.", Rec."No.");
+        ChargingLine.SetRange("Charging No.", Rec."Vehicle Charging No.");
         if ChargingLine.FindSet() then
             ChargingLine.DeleteAll();
 
@@ -382,7 +382,7 @@ page 77012 "Vehicle Charging Card"
             repeat
                 LineNo += 1;
                 ChargingLine.Init();
-                ChargingLine."Charging No." := Rec."No.";
+                ChargingLine."Charging No." := Rec."Vehicle Charging No.";
                 ChargingLine."Line No." := LineNo;
                 ChargingLine."Stop No." := StopLine."Stop No.";
                 ChargingLine."Customer No." := StopLine."Customer No.";

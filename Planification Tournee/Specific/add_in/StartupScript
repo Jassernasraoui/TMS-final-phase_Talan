@@ -1,9 +1,8 @@
-function InitializeControl() {
-    // Notifier BC que le contrôle est prêt
-    Microsoft.Dynamics.NAV.InvokeExtensibilityMethod('ControlAddInReady', []);
-}
-
-// Appeler la fonction d'initialisation quand la page est chargée
-window.addEventListener('load', function() {
-    InitializeControl();
-});  
+window.ctrlGoogleMap = new google.maps.Map(document.getElementById("controlAddIn"),
+    {
+        center: new google.maps.LatLng(55.77044, 12.50378),
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    
+Microsoft.Dynamics.NAV.InvokeExtensibilityMethod('ControlReady', []);

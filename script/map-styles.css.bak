@@ -1,0 +1,153 @@
+/* Styles pour le control add-in de carte en ligne */
+
+/* Styles généraux */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Conteneur principal */
+#mapWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+/* En-tête de la carte */
+#mapHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #0078D4;
+    color: white;
+    border-bottom: 1px solid #005a9e;
+}
+
+#mapHeader h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#mapStatus {
+    font-size: 14px;
+    font-weight: normal;
+}
+
+/* Conteneur de la carte */
+#planningMapContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+}
+
+/* La carte elle-même */
+#map {
+    flex: 1;
+    min-height: 300px;
+    position: relative;
+}
+
+/* Section des détails */
+#mapDetails {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px 16px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+}
+
+#mapDetails h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Informations sur la localisation sélectionnée */
+#selectedLocationInfo {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f0f7ff;
+    border-left: 4px solid #0078D4;
+    border-radius: 2px;
+}
+
+#selectedLocationInfo h4 {
+    margin: 0 0 8px 0;
+    color: #0078D4;
+}
+
+#selectedLocationInfo p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Données d'itinéraire */
+#routeData {
+    padding: 10px;
+    background-color: #f0fff0;
+    border-left: 4px solid #107C10;
+    border-radius: 2px;
+}
+
+#routeData h4 {
+    margin: 0 0 8px 0;
+    color: #107C10;
+}
+
+#routeData p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Fenêtres d'info Google Maps */
+.gm-style-iw {
+    padding: 12px !important;
+}
+
+.info-window h4 {
+    margin: 0 0 8px 0;
+    color: #0078D4;
+    font-size: 16px;
+}
+
+.info-window p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.info-window button {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: #0078D4;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.info-window button:hover {
+    background-color: #106EBE;
+}
+
+/* Responsive design pour petits écrans */
+@media (max-width: 600px) {
+    #mapHeader h3 {
+        font-size: 14px;
+    }
+    
+    #mapStatus {
+        font-size: 12px;
+    }
+    
+    #mapDetails {
+        max-height: 150px;
+    }
+} 

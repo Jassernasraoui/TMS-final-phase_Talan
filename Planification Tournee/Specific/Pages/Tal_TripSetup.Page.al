@@ -28,6 +28,18 @@ page 77017 "Trip Setup"
                     ToolTip = 'Spécifice the Planned Tour Numbers that will be assigned for each saving';
                     TableRelation = "No. Series";
                 }
+                field(Loading; Rec."Loading Sheet No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Spécifique the Loading Numbers that will be assigned for each saving';
+                    TableRelation = "No. Series";
+                }
+                field(Charing; Rec."Vehicle Charging No.")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Spécifique the Itinerary Numbers that will be assigned for each saving';
+                    TableRelation = "No. Series";
+                }
             }
         }
     }

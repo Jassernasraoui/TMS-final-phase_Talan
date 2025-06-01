@@ -7,7 +7,7 @@ table 77402 "Vehicle Charging Line"
         field(77001; "Charging No."; Code[20])
         {
             DataClassification = CustomerContent;
-            TableRelation = "Vehicle Charging Header"."No.";
+            TableRelation = "Vehicle Charging Header"."Vehicle Charging No.";
         }
         field(77002; "Line No."; Integer)
         {

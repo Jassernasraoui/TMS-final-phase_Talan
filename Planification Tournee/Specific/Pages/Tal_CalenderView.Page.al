@@ -9,7 +9,7 @@ page 77136 "Tal Simple Calendar Page"
     {
         area(content)
         {
-            usercontrol(Calendar; SimpleCalendarAddIn)
+            usercontrol(Calendar; PlanningCalendarAddIn)
             {
                 ApplicationArea = All;
 

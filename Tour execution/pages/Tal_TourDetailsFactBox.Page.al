@@ -87,7 +87,7 @@ page 77060 "Tour Details FactBox"
                 StatusStyleExpr := 'Attention';
             Rec.Statut::Stopped:
                 StatusStyleExpr := 'Ambiguous';
-            Rec.Statut::EnCours:
+            Rec.Statut::Inprogress:
                 StatusStyleExpr := 'Favorable';
         end;
     end;

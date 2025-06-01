@@ -19,7 +19,7 @@ page 77016 TripScedulingCuePage
                 }
                 field(OnMissionTripCue; Rec.TripScedulingOnMission)
                 {
-                    Caption = 'On Mission';
+                    Caption = 'Loading';
                     DrillDownPageId = "Tour Planning List";
                 }
                 field(StoppedTripCue; Rec.TripScedulingStopped)
@@ -27,6 +27,12 @@ page 77016 TripScedulingCuePage
                     Caption = 'Stopped';
                     DrillDownPageId = "Tour Planning List";
                 }
+                field(TripScedulingCompleted; Rec.TripScedulingCompleted)
+                {
+                    Caption = 'Completed';
+                    DrillDownPageId = "Tour Planning List";
+                }
+
             }
             cuegroup(TripExecutionCueContainer)
             {

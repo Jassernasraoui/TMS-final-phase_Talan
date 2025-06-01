@@ -242,7 +242,7 @@ page 77009 "Vehicle Loading Card"
                     VehicleChargingHeader.GetLoadingInfo();
 
                     // Open the new vehicle charging card
-                    Message('Vehicle charging sheet %1 has been created.', VehicleChargingHeader."No.");
+                    Message('Vehicle charging sheet %1 has been created.', VehicleChargingHeader."Vehicle Charging No.");
 
                     Commit();
 
@@ -326,6 +326,23 @@ page 77009 "Vehicle Loading Card"
                         Message('Associated tour %1 was not found.', rec."Tour No.");
                 end;
             }
+
+            action(CreateChargingDocument)
+            {
+                ApplicationArea = All;
+                Caption = '🚚 Créer Document Chargement';
+                ToolTip = 'Créer un document de chargement basé sur ce document de préparation';
+                Image = NewShipment;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                Visible = false;
+
+                trigger OnAction()
+                begin
+                    Message('Cette fonctionnalité sera disponible dans une version future.');
+                end;
+            }
         }
     }
 
@@ -352,7 +369,7 @@ page 77009 "Vehicle Loading Card"
         PlanHeader: Record "Planification Header";
     begin
         if PlanHeader.Get(TourNo) then begin
-            PlanHeader.Statut := PlanHeader.Statut::EnCours;
+            PlanHeader.Statut := PlanHeader.Statut::Inprogress;
             PlanHeader.Modify(true);
         end;
     end;

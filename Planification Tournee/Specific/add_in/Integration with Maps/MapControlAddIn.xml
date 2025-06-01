@@ -1,4 +1,4 @@
-<!-- <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ControlAddIn xmlns="http://schemas.microsoft.com/dynamics/nav/controladdins" 
               ControlAddInName="MapControl" 
               VerticalStretch="true" 
@@ -33,4 +33,4 @@
         <Parameter Name="Longitude" Type="Decimal" />
     </Method>
 </ControlAddIn>
-*/ -->
+*/
