@@ -1,4 +1,4 @@
-page 77004 " Tal Vehicule resources card "
+page 73504 " Tal Vehicule resources card "
 {
     PageType = Card;
     ApplicationArea = All;
@@ -93,12 +93,76 @@ page 77004 " Tal Vehicule resources card "
                     ApplicationArea = Jobs;
                     ToolTip = 'Specifies that the related record is blocked from being posted in transactions, for example a customer that is declared insolvent or an item that is placed in quarantine.';
                 }
+                field("used as location"; Rec."used as location")
+
+                {
+                    ApplicationArea = Jobs;
+                    ToolTip = 'Specifies whether the resource is a location or not.';
+                }
                 group("Vehicule Status")
                 {
                     field("Vehicle Status"; rec."Resource Status")
                     {
                         ApplicationArea = jobs;
                         Caption = 'Vehicle Status';
+                    }
+                }
+
+                group("Tour Statistics")
+                {
+                    Caption = 'Statistiques des Tournées';
+
+                    field("Total Tours"; TotalTours)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Nombre Total de Tournées';
+                        ToolTip = 'Affiche le nombre total de tournées associées à ce véhicule.';
+                        Editable = false;
+                    }
+
+                    field("Tours Plannified"; ToursPlannified)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Tournées Planifiées';
+                        ToolTip = 'Affiche le nombre de tournées planifiées pour ce véhicule.';
+                        Editable = false;
+                        StyleExpr = 'Favorable';
+                    }
+
+                    field("Tours Loading"; ToursLoading)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Tournées en Chargement';
+                        ToolTip = 'Affiche le nombre de tournées en cours de chargement pour ce véhicule.';
+                        Editable = false;
+                        StyleExpr = 'Attention';
+                    }
+
+                    field("Tours In Progress"; ToursInProgress)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Tournées en Cours';
+                        ToolTip = 'Affiche le nombre de tournées en cours pour ce véhicule.';
+                        Editable = false;
+                        StyleExpr = 'Favorable';
+                    }
+
+                    field("Tours Completed"; ToursCompleted)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Tournées Terminées';
+                        ToolTip = 'Affiche le nombre de tournées terminées pour ce véhicule.';
+                        Editable = false;
+                        StyleExpr = 'Favorable';
+                    }
+
+                    field("Tours Stopped"; ToursStopped)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Tournées Arrêtées';
+                        ToolTip = 'Affiche le nombre de tournées arrêtées pour ce véhicule.';
+                        Editable = false;
+                        StyleExpr = 'Unfavorable';
                     }
                 }
             }
@@ -108,7 +172,7 @@ page 77004 " Tal Vehicule resources card "
                 {
                     ApplicationArea = Jobs;
                 }
-                field("vehicle Volume"; rec."Vehicule Volume")
+                field("vehicle Volume"; rec."Vehicle Volume")
                 {
                     ApplicationArea = Jobs;
                     ToolTip = 'Vehicule Volume ( by m3 )';
@@ -245,7 +309,63 @@ page 77004 " Tal Vehicule resources card "
                 }
             }
         }
+        area(factboxes)
+        {
+#if not CLEAN25
+            part("Attached Documents"; "Document Attachment Factbox")
+            {
+                ObsoleteTag = '25.0';
+                ObsoleteState = Pending;
+                ObsoleteReason = 'The "Document Attachment FactBox" has been replaced by "Doc. Attachment List Factbox", which supports multiple files upload.';
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                SubPageLink = "Table ID" = const(Database::Resource), "No." = field("No.");
+            }
+#endif
+            part("Attached Documents List"; "Doc. Attachment List Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Documents';
+                UpdatePropagation = Both;
+                SubPageLink = "Table ID" = const(Database::Resource), "No." = field("No.");
+            }
+            part(Control1906609707; "Resource Statistics FactBox")
+            {
+                ApplicationArea = Jobs;
+                SubPageLink = "No." = field("No."),
+                              "Chargeable Filter" = field("Chargeable Filter"),
+#if not CLEAN25
+                              "Service Zone Filter" = field("Service Zone Filter"),
+#endif
+                              "Unit of Measure Filter" = field("Unit of Measure Filter");
+                Visible = true;
+            }
+            part(Control1907012907; "Resource Details FactBox")
+            {
+                ApplicationArea = Jobs;
+                SubPageLink = "No." = field("No."),
+                              "Chargeable Filter" = field("Chargeable Filter"),
+#if not CLEAN25
+                              "Service Zone Filter" = field("Service Zone Filter"),
+#endif
+                              "Unit of Measure Filter" = field("Unit of Measure Filter");
+                Visible = true;
+            }
+            systempart(Control1900383207; Links)
+            {
+                ApplicationArea = RecordLinks;
+                Visible = false;
+            }
+            systempart(Control1905767507; Notes)
+            {
+                ApplicationArea = Notes;
+                Visible = true;
+            }
+        }
+
+
     }
+
 
     actions
     {
@@ -361,5 +481,54 @@ page 77004 " Tal Vehicule resources card "
             Rec.Type := Rec.Type::Machine;
             Rec.Modify(); // Enregistre la modification dans la base de données
         end;
+
+        UpdateTourStatistics();
     end;
+
+    trigger OnAfterGetRecord()
+    begin
+        UpdateTourStatistics();
+    end;
+
+    local procedure UpdateTourStatistics()
+    var
+        PlanificationHeader: Record "Planification Header";
+    begin
+        // Réinitialiser les compteurs
+        TotalTours := 0;
+        ToursPlannified := 0;
+        ToursLoading := 0;
+        ToursInProgress := 0;
+        ToursCompleted := 0;
+        ToursStopped := 0;
+
+        // Compter toutes les tournées associées à ce véhicule
+        PlanificationHeader.Reset();
+        PlanificationHeader.SetRange("Véhicule No.", Rec."No.");
+        TotalTours := PlanificationHeader.Count;
+
+        // Compter les tournées par statut
+        PlanificationHeader.SetRange(Statut, PlanificationHeader.Statut::Plannified);
+        ToursPlannified := PlanificationHeader.Count;
+
+        PlanificationHeader.SetRange(Statut, PlanificationHeader.Statut::Loading);
+        ToursLoading := PlanificationHeader.Count;
+
+        PlanificationHeader.SetRange(Statut, PlanificationHeader.Statut::Inprogress);
+        ToursInProgress := PlanificationHeader.Count;
+
+        PlanificationHeader.SetRange(Statut, PlanificationHeader.Statut::Completed);
+        ToursCompleted := PlanificationHeader.Count;
+
+        PlanificationHeader.SetRange(Statut, PlanificationHeader.Statut::Stopped);
+        ToursStopped := PlanificationHeader.Count;
+    end;
+
+    var
+        TotalTours: Integer;
+        ToursPlannified: Integer;
+        ToursLoading: Integer;
+        ToursInProgress: Integer;
+        ToursCompleted: Integer;
+        ToursStopped: Integer;
 }

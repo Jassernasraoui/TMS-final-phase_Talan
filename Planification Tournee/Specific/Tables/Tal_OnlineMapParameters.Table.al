@@ -1,4 +1,4 @@
-table 77150 "Online Map Parameters"
+table 73650 "Online Map Parameters"
 {
     Caption = 'Online Map Parameter Setup';
     DataClassification = CustomerContent;

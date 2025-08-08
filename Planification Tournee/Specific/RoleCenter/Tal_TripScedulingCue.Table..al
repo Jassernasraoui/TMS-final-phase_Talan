@@ -1,4 +1,4 @@
-table 77015 TripScedulingCueTable
+table 73515 TripScedulingCueTable
 {
     DataClassification = ToBeClassified;
 

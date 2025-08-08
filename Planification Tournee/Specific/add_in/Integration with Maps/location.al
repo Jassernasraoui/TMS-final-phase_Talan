@@ -1,5 +1,5 @@
 
-page 77107 GoogleMapCardPart
+page 73607 GoogleMapCardPart
 {
     CaptionML = ENU = 'Map';
     PageType = CardPart;
@@ -13,7 +13,7 @@ page 77107 GoogleMapCardPart
             {
                 trigger ControlReady();
                 begin
-                    CurrPage.GoogleMap.updateMapPosition(Rec."Country/Region Code", Rec."Geographic Coordinates");
+                    CurrPage.GoogleMap.updateMapPosition(0, Rec."Geographic Coordinates");
                 end;
 
             }

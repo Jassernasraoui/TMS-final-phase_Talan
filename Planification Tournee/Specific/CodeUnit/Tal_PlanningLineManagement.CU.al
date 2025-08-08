@@ -1,4 +1,4 @@
-codeunit 77200 "Planning Lines Management"
+codeunit 73652 "Planning Lines Management"
 {
     // Codeunit pour gérer les fonctionnalités de la planification des tournées
 
@@ -24,14 +24,20 @@ codeunit 77200 "Planning Lines Management"
             DocBuffer."Document Type"::"Sales Order":
                 begin
                     AddSalesOrderToTour(TourHeader, DocBuffer);
+                    // Update the Sales Header with the tour number
+                    UpdateSalesHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
                 end;
             DocBuffer."Document Type"::"Purchase Order":
                 begin
                     AddPurchaseOrderToTour(TourHeader, DocBuffer);
+                    // Update the Purchase Header with the tour number
+                    UpdatePurchaseHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
                 end;
             DocBuffer."Document Type"::"Transfer Order":
                 begin
                     AddTransferOrderToTour(TourHeader, DocBuffer);
+                    // Update the Transfer Header with the tour number
+                    UpdateTransferHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
                 end;
             else
                 Error('Unsupported document type: %1', Format(DocBuffer."Document Type"));
@@ -87,17 +93,21 @@ codeunit 77200 "Planning Lines Management"
                     PlanningLine."Unit of Measure Code" := SalesLine."Unit of Measure Code";
                     PlanningLine."Expected Shipment Date" := SalesLine."Shipment Date";
                     PlanningLine."Customer No." := SalesLine."Sell-to Customer No.";
-                    PlanningLine."Account No." := SalesHeader."Sell-to Customer Name";
-                    PlanningLine."Location Code" := SalesHeader."Location Code";
-                    PlanningLine." Delivery Date" := SalesHeader."Shipment Date";
+                    //Bilel - salah hedhi jasser + dans les purch+transfer orders +( dans les vehicle preparation +salah lines no)
+                    PlanningLine."Account No." := SalesLine."Sell-to Customer no.";
+                    PlanningLine."Location Code" := Salesline."Location Code";
+                    PlanningLine." Delivery Date" := SalesLine."Shipment Date";
+                    PlanningLine."Net Weight" := SalesLine."Net Weight";
+                    PlanningLine."Gross Weight" := SalesLine."Gross Weight";
+                    PlanningLine."Unit Volume" := SalesLine."Unit Volume";
 
                     // Valeurs par défaut pour les nouveaux champs
-                    if (SalesLine."Shipment Date" >= TourHeader."Start Date") and
-                       (SalesLine."Shipment Date" <= TourHeader."End Date") then
+                    if (SalesLine."planned Shipment Date" >= TourHeader."Start Date") and
+                       (SalesLine."planned Shipment Date" <= TourHeader."End Date") then
                         PlanningLine."Assigned Day" := SalesLine."Shipment Date"
-                    else if (SalesHeader."Requested Delivery Date" >= TourHeader."Start Date") and
-                            (SalesHeader."Requested Delivery Date" <= TourHeader."End Date") then
-                        PlanningLine."Assigned Day" := SalesHeader."Requested Delivery Date"
+                    else if (SalesLine."planned Shipment Date" >= TourHeader."Start Date") and
+                            (SalesLine."planned Shipment Date" <= TourHeader."End Date") then
+                        PlanningLine."Assigned Day" := SalesLine."planned Shipment Date"
                     else
                         PlanningLine."Assigned Day" := TourHeader."Start Date";
 
@@ -184,9 +194,11 @@ codeunit 77200 "Planning Lines Management"
                     PlanningLine."Unit of Measure Code" := PurchLine."Unit of Measure Code";
                     PlanningLine."Expected Receipt Date" := PurchLine."Expected Receipt Date";
                     PlanningLine."Vendor No." := PurchLine."Buy-from Vendor No.";
-                    PlanningLine."Account No." := PurchHeader."Buy-from Vendor Name";
-                    PlanningLine."Location Code" := PurchHeader."Location Code";
-                    PlanningLine." Delivery Date" := PurchHeader."Expected Receipt Date";
+                    // PlanningLine."Account No." := PurchHeader."Buy-from Vendor Name";
+                    PlanningLine."Account No." := PurchLine."Buy-from Vendor No.";
+
+                    PlanningLine."Location Code" := PurchLine."Location Code";
+                    PlanningLine." Delivery Date" := PurchLine."Expected Receipt Date";
 
                     // Valeurs par défaut pour les nouveaux champs
                     if (PurchLine."Expected Receipt Date" >= TourHeader."Start Date") and
@@ -270,10 +282,10 @@ codeunit 77200 "Planning Lines Management"
                 PlanningLine."Quantity (Base)" := TransferLine."Quantity (Base)";
                 PlanningLine."Qty. per Unit of Measure" := TransferLine."Qty. per Unit of Measure";
                 PlanningLine."Unit of Measure Code" := TransferLine."Unit of Measure Code";
-                PlanningLine."Transfer-from Code" := TransferHeader."Transfer-from Code";
+                PlanningLine."Transfer-from Code" := TransferLine."Transfer-from Code";
                 PlanningLine."Location Code" := TransferLine."Transfer-to Code";
-                PlanningLine."Expected Receipt Date" := TransferHeader."Receipt Date";
-                PlanningLine." Delivery Date" := TransferHeader."Receipt Date";
+                PlanningLine."Expected Receipt Date" := TransferLine."Receipt Date";
+                PlanningLine." Delivery Date" := TransferLine."Receipt Date";
 
                 // Valeurs par défaut pour les nouveaux champs
                 if (TransferHeader."Receipt Date" >= TourHeader."Start Date") and
@@ -1035,14 +1047,20 @@ codeunit 77200 "Planning Lines Management"
             DocBuffer."Document Type"::"Sales Order":
                 begin
                     AddSalesLineToTour(TourHeader, DocBuffer);
+                    // Update the Sales Header with the tour number
+                    UpdateSalesHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
                 end;
             DocBuffer."Document Type"::"Purchase Order":
                 begin
                     AddPurchaseLineToTour(TourHeader, DocBuffer);
+                    // Update the Purchase Header with the tour number
+                    UpdatePurchaseHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
                 end;
             DocBuffer."Document Type"::"Transfer Order":
                 begin
                     AddTransferLineToTour(TourHeader, DocBuffer);
+                    // Update the Transfer Header with the tour number
+                    UpdateTransferHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
                 end;
             else
                 Error('Unsupported document type: %1', Format(DocBuffer."Document Type"));
@@ -1098,10 +1116,14 @@ codeunit 77200 "Planning Lines Management"
         PlanningLine."Qty. per Unit of Measure" := SalesLine."Qty. per Unit of Measure";
         PlanningLine."Unit of Measure Code" := SalesLine."Unit of Measure Code";
         PlanningLine."Expected Shipment Date" := SalesLine."Shipment Date";
-        PlanningLine."Customer No." := SalesHeader."Sell-to Customer No.";
-        PlanningLine."Account No." := SalesHeader."Sell-to Customer Name";
-        PlanningLine."Location Code" := SalesHeader."Location Code";
-        PlanningLine." Delivery Date" := SalesHeader."Shipment Date";
+        PlanningLine."Customer No." := SalesLine."Sell-to Customer No.";
+        PlanningLine."Account No." := SalesLine."Sell-to Customer no.";
+        PlanningLine."Location Code" := SalesLine."Location Code";
+        PlanningLine." Delivery Date" := SalesLine."Shipment Date";
+        PlanningLine."Ship-to Address" := SalesHeader."Ship-to Address";
+        PlanningLine."Net Weight" := SalesLine."Net Weight";
+        PlanningLine."Gross Weight" := SalesLine."Gross Weight";
+        PlanningLine."Unit Volume" := SalesLine."Unit Volume";
 
         // Valeurs par défaut pour les nouveaux champs
         if (SalesLine."Shipment Date" >= TourHeader."Start Date") and
@@ -1190,11 +1212,16 @@ codeunit 77200 "Planning Lines Management"
         PlanningLine."Qty. per Unit of Measure" := PurchLine."Qty. per Unit of Measure";
         PlanningLine."Unit of Measure Code" := PurchLine."Unit of Measure Code";
         PlanningLine."Expected Receipt Date" := PurchLine."Expected Receipt Date";
-        PlanningLine."Vendor No." := PurchHeader."Buy-from Vendor No.";
-        PlanningLine."Account No." := PurchHeader."Buy-from Vendor Name";
-        PlanningLine."Location Code" := PurchHeader."Location Code";
-        PlanningLine." Delivery Date" := PurchHeader."Expected Receipt Date";
+        PlanningLine."Vendor No." := PurchLine."Buy-from Vendor No.";
+        // PlanningLine."Account No." := PurchHeader."Buy-from Vendor Name";
+        PlanningLine."Account No." := PurchLine."Buy-from Vendor no.";
 
+        PlanningLine."Location Code" := PurchLine."Location Code";
+        PlanningLine." Delivery Date" := PurchLine."Expected Receipt Date";
+        PlanningLine."Net Weight" := PurchLine."Net Weight";
+        PlanningLine."Gross Weight" := PurchLine."Gross Weight";
+        PlanningLine."Unit Volume" := PurchLine."Unit Volume";
+        PlanningLine."Ship-to Address" := PurchHeader."Ship-to Address";
         // Valeurs par défaut pour les nouveaux champs
         if (PurchLine."Expected Receipt Date" >= TourHeader."Start Date") and
            (PurchLine."Expected Receipt Date" <= TourHeader."End Date") then
@@ -1274,11 +1301,14 @@ codeunit 77200 "Planning Lines Management"
         PlanningLine."Quantity (Base)" := TransferLine."Quantity (Base)";
         PlanningLine."Qty. per Unit of Measure" := TransferLine."Qty. per Unit of Measure";
         PlanningLine."Unit of Measure Code" := TransferLine."Unit of Measure Code";
-        PlanningLine."Expected Shipment Date" := TransferHeader."Shipment Date";
-        PlanningLine."Expected Receipt Date" := TransferHeader."Receipt Date";
-        PlanningLine."Location Code" := TransferHeader."Transfer-from Code";
-        PlanningLine." Delivery Date" := TransferHeader."Receipt Date";
+        PlanningLine."Expected Shipment Date" := TransferLine."Shipment Date";
+        PlanningLine."Expected Receipt Date" := TransferLine."Receipt Date";
+        PlanningLine."Location Code" := TransferLine."Transfer-from Code";
+        PlanningLine." Delivery Date" := TransferLine."Receipt Date";
         PlanningLine."Account No." := TransferHeader."Transfer-to Code";
+        PlanningLine."Net Weight" := TransferLine."Net Weight";
+        PlanningLine."Gross Weight" := TransferLine."Gross Weight";
+        PlanningLine."Unit Volume" := TransferLine."Unit Volume";
 
         // Valeurs par défaut pour les nouveaux champs
         if (TransferHeader."Shipment Date" >= TourHeader."Start Date") and
@@ -1312,5 +1342,52 @@ codeunit 77200 "Planning Lines Management"
 
         // Mettre à jour le nombre total de lignes de planification
         TourHeader.CalcFields("No. of Planning Lines", "Total Quantity");
+    end;
+
+    local procedure UpdateSalesHeaderTourNo(DocumentNo: Code[20]; TourNo: Code[20])
+    var
+        SalesHeader: Record "Sales Header";
+    begin
+        // Rechercher l'en-tête de vente
+        SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+        SalesHeader.SetRange("No.", DocumentNo);
+        if SalesHeader.FindFirst() then begin
+            // Mettre à jour le numéro de tournée
+            SalesHeader."Logistic Tour No." := TourNo;
+            SalesHeader.Modify(true);
+            Message('Le numéro de tournée %1 a été mis à jour dans la commande client %2', TourNo, DocumentNo);
+        end else
+            Error('Commande client %1 introuvable', DocumentNo);
+    end;
+
+    local procedure UpdatePurchaseHeaderTourNo(DocumentNo: Code[20]; TourNo: Code[20])
+    var
+        PurchHeader: Record "Purchase Header";
+    begin
+        // Rechercher l'en-tête d'achat
+        PurchHeader.SetRange("Document Type", PurchHeader."Document Type"::Order);
+        PurchHeader.SetRange("No.", DocumentNo);
+        if PurchHeader.FindFirst() then begin
+            // Mettre à jour le numéro de tournée
+            PurchHeader."Logistic Tour No." := TourNo;
+            PurchHeader.Modify(true);
+            Message('Le numéro de tournée %1 a été mis à jour dans la commande fournisseur %2', TourNo, DocumentNo);
+        end else
+            Error('Commande fournisseur %1 introuvable', DocumentNo);
+    end;
+
+    local procedure UpdateTransferHeaderTourNo(DocumentNo: Code[20]; TourNo: Code[20])
+    var
+        TransferHeader: Record "Transfer Header";
+    begin
+        // Rechercher l'en-tête de transfert
+        TransferHeader.SetRange("No.", DocumentNo);
+        if TransferHeader.FindFirst() then begin
+            // Mettre à jour le numéro de tournée
+            TransferHeader."Logistic Tour No." := TourNo;
+            TransferHeader.Modify(true);
+            Message('Le numéro de tournée %1 a été mis à jour dans l\ordre de transfert %2', TourNo, DocumentNo);
+        end else
+            Error('Ordre de transfert %1 introuvable', DocumentNo);
     end;
 }

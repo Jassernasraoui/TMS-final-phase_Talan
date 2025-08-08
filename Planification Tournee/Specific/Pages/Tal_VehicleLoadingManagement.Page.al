@@ -1,9 +1,9 @@
-page 77024 "Vehicle Loading Management"
+page 73524 "Vehicle Loading Management"
 {
     PageType = Worksheet;
     ApplicationArea = All;
     UsageCategory = Lists;
-    Caption = 'Vehicle Loading Management';
+    Caption = 'Vehicle Charging Management';
 
     layout
     {

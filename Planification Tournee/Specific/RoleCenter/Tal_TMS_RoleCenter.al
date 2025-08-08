@@ -1,4 +1,4 @@
-page 77120 "TMS Role Center"
+page 73620 "TMS Role Center"
 {
     PageType = RoleCenter;
     Caption = 'TMS Role Center';
@@ -19,11 +19,33 @@ page 77120 "TMS Role Center"
                     Caption = 'Trip Scheduling';
                     ApplicationArea = All;
                 }
+                part(Control1901851508; "SO Processor Activities")
+                {
+                    AccessByPermission = TableData "Sales Shipment Header" = R;
+                    ApplicationArea = Basic, Suite;
+                }
+                part(Control1; "Trailing Sales Orders Chart")
+                {
+                    AccessByPermission = TableData "Sales Shipment Header" = R;
+                    ApplicationArea = Basic, Suite;
+                }
+                part(Control55; "Help And Chart Wrapper")
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = '';
+                }
                 part(ProcessWorkflow; "TMS Process Workflow")
                 {
                     Caption = 'Process Workflow';
                     ApplicationArea = All;
                 }
+                part(Control2; "Power BI Embedded Report Part")
+                {
+                    Caption = 'Power BI Report';
+                    ApplicationArea = All;
+                    ToolTip = 'Power BI Report';
+                }
+
             }
         }
     }
@@ -43,6 +65,11 @@ page 77120 "TMS Role Center"
                     RunObject = Page "Trip Setup";
                     ApplicationArea = All;
                 }
+                action(locationSetup)
+                {
+                    RunObject = page "Tal Locations Setup";
+                    ApplicationArea = all;
+                }
             }
             group(MasterData)
             {
@@ -51,14 +78,45 @@ page 77120 "TMS Role Center"
 
                 action(Resources)
                 {
-                    Caption = 'Resources';
+                    Caption = 'Person Resources';
                     RunObject = Page "Resource List";
                     ApplicationArea = All;
                 }
                 action(VehiculeResource)
                 {
-                    Caption = 'Vehicule Resource list';
+                    Caption = 'Vehicule Resource';
                     RunObject = Page "Tal Vehicule Resource list";
+                    ApplicationArea = All;
+                }
+                action(customers)
+                {
+                    Caption = 'Customers';
+                    RunObject = Page "Customer List";
+                    ApplicationArea = All;
+                }
+                action(Items)
+                {
+                    Caption = 'Items';
+                    RunObject = Page "Item List";
+                    ApplicationArea = All;
+                }
+                action(salesOrders)
+                {
+                    Caption = 'Sales Orders';
+                    RunObject = Page "Sales Order List";
+                    ApplicationArea = All;
+                }
+
+                action(purchaseOrders)
+                {
+                    Caption = 'Purchase Orders';
+                    RunObject = Page "Purchase Order List";
+                    ApplicationArea = All;
+                }
+                action(transferOrders)
+                {
+                    Caption = 'Transfer Orders';
+                    RunObject = Page "Transfer Orders";
                     ApplicationArea = All;
                 }
             }
@@ -73,16 +131,16 @@ page 77120 "TMS Role Center"
                     RunObject = Page "Tour Planning List";
                     ApplicationArea = All;
                 }
-                action(VehicleLoadingList)
+                action(VehicleChargingList)
                 {
-                    Caption = 'Vehicle Loading List';
-                    RunObject = Page "Vehicle Loading List";
+                    Caption = 'Vehicle charging List';
+                    RunObject = Page "Vehicle charging List";
                     ApplicationArea = All;
                 }
                 action(TourExecution)
                 {
-                    Caption = 'Tour Execution';
-                    RunObject = Page "Tour Execution Page";
+                    Caption = 'Trip Execution';
+                    RunObject = Page "Tour Execution Tracking List";
                     ApplicationArea = All;
                     Image = ExecuteBatch;
                     ToolTip = 'Execute tours with or without loading';

@@ -1,4 +1,4 @@
-pageextension 77000 "Person " extends "Resource List"
+pageextension 73595 "Person " extends "Resource List"
 
 {
     Caption = 'Person Resources List';
@@ -50,6 +50,11 @@ pageextension 77000 "Person " extends "Resource List"
             {
                 ApplicationArea = all;
             }
+            // field("tours achieved"; rec."Tours achieved")
+            // {
+            //     ApplicationArea = All;
+            //     ToolTip = 'Specifies the number of tours achieved by the person.';
+            // }
         }
     }
 

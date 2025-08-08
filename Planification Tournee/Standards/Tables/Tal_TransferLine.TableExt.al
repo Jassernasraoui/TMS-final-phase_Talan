@@ -1,8 +1,8 @@
-tableextension 77002 "Tal Transfer Line" extends "Transfer Line"
+tableextension 73502 "Tal Transfer Line" extends "Transfer Line"
 {
     fields
     {
-        field(77001; "Logistic Tour No."; Code[20])
+        field(73501; "Logistic Tour No."; Code[20])
         {
             Caption = 'Logistic Tour No.';
             DataClassification = CustomerContent;

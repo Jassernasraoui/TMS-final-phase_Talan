@@ -1,4 +1,4 @@
-page 77136 "Tal Simple Calendar Page"
+page 73636 "Tal Simple Calendar Page"
 {
     PageType = CardPart;
     SourceTable = "Planning Lines";

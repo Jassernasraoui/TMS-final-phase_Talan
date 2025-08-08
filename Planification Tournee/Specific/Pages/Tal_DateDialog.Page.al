@@ -1,4 +1,4 @@
-page 77139 "Tal Date Dialog"
+page 73639 "Tal Date Dialog"
 {
     PageType = StandardDialog;
     Caption = 'Sélectionnez une date';

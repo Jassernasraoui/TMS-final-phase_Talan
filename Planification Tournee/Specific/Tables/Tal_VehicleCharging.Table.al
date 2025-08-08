@@ -1,4 +1,4 @@
-table 77401 "Vehicle Charging Header"
+table 73601 "Vehicle Charging Header"
 {
     DataClassification = ToBeClassified;
 
@@ -89,6 +89,13 @@ table 77401 "Vehicle Charging Header"
             Caption = 'Released';
             Editable = false;
         }
+        field(77017; "Transfer Order No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Transfer Order No.';
+
+            Editable = false;
+        }
     }
 
     keys
@@ -139,7 +146,7 @@ table 77401 "Vehicle Charging Header"
         if "Loading Sheet No." <> '' then begin
             if LoadingHeader.Get("Loading Sheet No.") then begin
                 "Tour No." := LoadingHeader."Tour No.";
-                "Truck No." := LoadingHeader."Truck No.";
+                "Truck No." := LoadingHeader."Vehicle No.";
                 "Driver No." := LoadingHeader."Driver No.";
                 "Loading Location" := LoadingHeader."Loading Location";
                 "Actual Weight (kg)" := LoadingHeader."Total Weight (kg)";

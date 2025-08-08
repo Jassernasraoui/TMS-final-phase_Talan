@@ -1,10 +1,10 @@
-page 77011 "Vehicle Loading List"
+page 73511 "Vehicle Loading List"
 {
     PageType = List;
     SourceTable = "Vehicle Loading Header";
     ApplicationArea = All;
     UsageCategory = Lists;
-    Caption = 'Vehicle Loading Preparation List';
+    Caption = ' Vehcile Charging Preparation ';
     Editable = True;
     CardPageId = "Vehicle Loading Card";
     SourceTableView = sorting("Loading Date") order(descending);
@@ -15,11 +15,15 @@ page 77011 "Vehicle Loading List"
         {
             repeater(Group)
             {
-                field("No."; Rec."No.") { ApplicationArea = All; }
+                field("No."; Rec."No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
                 field("Loading Date"; Rec."Loading Date") { ApplicationArea = All; }
-                field("Tour No."; Rec."Tour No.") { ApplicationArea = All; }
-                field("Truck No."; Rec."Truck No.") { ApplicationArea = All; }
-                field("Driver No."; Rec."Driver No.") { ApplicationArea = All; }
+                field("Tour No."; Rec."Tour No.") { ApplicationArea = All; Editable = false; Style = StandardAccent; }
+                field("Truck No."; Rec."Vehicle No.") { ApplicationArea = All; Editable = false; Style = StandardAccent; }
+                field("Driver No."; Rec."Driver No.") { ApplicationArea = All; Editable = false; Style = StandardAccent; }
                 field("Loading Location"; Rec."Loading Location") { ApplicationArea = All; }
                 field("Departure Time"; Rec."Departure Time") { ApplicationArea = All; }
                 field("Arrival Time"; Rec."Arrival Time") { ApplicationArea = All; }
@@ -188,6 +192,8 @@ page 77011 "Vehicle Loading List"
                     VehicleChargingHeader."Loading Sheet No." := Rec."No.";
                     VehicleChargingHeader."Charging Date" := Rec."Loading Date";
                     VehicleChargingHeader."Status" := VehicleChargingHeader."Status"::InProgress;
+                    VehicleChargingHeader."Actual Weight (kg)" := Rec."Total Weight (kg)";
+                    VehicleChargingHeader."Actual Volume (m³)" := Rec."Total Volume (m³)";
                     VehicleChargingHeader.Insert(true);
                     VehicleChargingHeader.GetLoadingInfo();
 

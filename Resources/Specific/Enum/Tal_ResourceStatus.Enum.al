@@ -1,4 +1,4 @@
-enum 77002 "Resource Status"
+enum 73502 "Resource Status"
 {
     Extensible = true;
     Caption = 'Resource Status';

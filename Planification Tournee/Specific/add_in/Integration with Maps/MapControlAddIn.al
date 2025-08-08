@@ -19,3 +19,4 @@ controladdin GoogleMapCtrl
     event ControlReady();
     procedure updateMapPosition(lat: Decimal; lng: Decimal);
 }
+

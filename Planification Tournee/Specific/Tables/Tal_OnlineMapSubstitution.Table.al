@@ -1,4 +1,4 @@
-table 77151 "Online Map Substitution"
+table 73651 "Online Map Substitution"
 {
     Caption = 'Online Map Substitution Parameter';
     DataClassification = CustomerContent;

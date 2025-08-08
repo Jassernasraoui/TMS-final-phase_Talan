@@ -1,16 +1,16 @@
 {
-    "version": "0.1.0",
+    "version": "0.2.0",
     "configurations": [
         {
             "name": "Your own server",
             "request": "launch",
             "type": "al",
             "environmentType": "OnPrem",
-            "server": "http://localhost:8080/BC250",
+            "server": "http://localhost:8080/BC250/",
             "serverInstance": "BC250",
-            "authentication": "Windows",
             "port": 7049,
-            "startupObjectId": 77007 ,
+            "authentication": "Windows",
+            "startupObjectId":73595,//el page eli bech yebda biha thot l id mteeha
             "startupObjectType": "Page",
             "breakOnError": "All",
             "launchBrowser": true,
@@ -19,7 +19,20 @@
             "tenant": "default",
             "usePublicURLFromServer": true,
             "schemaUpdateMode": "ForceSync"
-
+        },
+        {
+            "name": "BC Sandbox Cloud",
+            "type": "al",
+            "request": "launch",
+            "environmentType": "Sandbox",
+            "startupObjectId": 77120,
+            "startupObjectType": "Page",
+            "tenant": "db1a38d1-8076-4451-a3ca-abf95655db0f",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "schemaUpdateMode": "ForceSync",
+            "applicationInsightsKey": "",
+            "sandboxName": "Dev"
         }
     ]
 }

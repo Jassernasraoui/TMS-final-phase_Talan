@@ -1,4 +1,4 @@
-page 77018 "TMS Process Workflow"
+page 73518 "TMS Process Workflow"
 {
     PageType = CardPart;
     Caption = 'TMS Process Workflow';

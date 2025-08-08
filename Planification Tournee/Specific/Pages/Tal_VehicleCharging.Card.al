@@ -1,4 +1,4 @@
-page 77012 "Vehicle Charging Card"
+page 73512 "Vehicle Charging Card"
 {
     PageType = Card;
     SourceTable = "Vehicle Charging Header";
@@ -20,7 +20,9 @@ page 77012 "Vehicle Charging Card"
                 {
                     ApplicationArea = All;
                     ShowMandatory = true;
-                    Editable = not IsReleased;
+                    Style = StandardAccent;
+
+                    Editable = false;
 
                     trigger OnValidate()
                     begin
@@ -39,6 +41,7 @@ page 77012 "Vehicle Charging Card"
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    Style = StandardAccent;
                 }
                 field("Truck No."; rec."Truck No.")
                 {
@@ -54,6 +57,7 @@ page 77012 "Vehicle Charging Card"
                 {
                     ApplicationArea = All;
                     Editable = false;
+                    Visible = false; // Hide this field as it is not needed in the card view
                 }
             }
 
@@ -114,7 +118,7 @@ page 77012 "Vehicle Charging Card"
             action("Release")
             {
                 ApplicationArea = All;
-                Caption = 'Release';
+                // Caption = '"Generate Lines From Loading Sheet"';
                 Image = ReleaseDoc;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -163,12 +167,18 @@ page 77012 "Vehicle Charging Card"
                 trigger OnAction()
                 var
                     ConfirmMsg: Label 'Are you sure you want to start the charging process?';
+                    TransferShipmentHdr: Record "Transfer Shipment Header";
                 begin
                     if not Confirm(ConfirmMsg) then
                         exit;
 
                     if rec."Status" <> rec."Status"::InProgress then begin
                         Error('Charging must be released before it can be started.');
+                        //  Check that the Transfer Shipment has been posted
+                        TransferShipmentHdr.Reset();
+                        TransferShipmentHdr.SetRange("Transfer Order No.", rec."Transfer Order No.");
+                        if not TransferShipmentHdr.FindFirst() then
+                            Error('The transfer order has not been posted yet. Please post the shipment before starting the charging.');
                         exit;
                     end;
 
@@ -191,16 +201,47 @@ page 77012 "Vehicle Charging Card"
                 trigger OnAction()
                 var
                     ConfirmMsg: Label 'Are you sure you want to complete the charging process?';
+                    TransferShipmentHdr: Record "Transfer Shipment Header";
+                    TransferReceiptHdr: Record "Transfer Receipt Header";
+                    ChargingLine: Record "Vehicle Charging Line";
+                    transfeline: Record "Transfer line";
+                    HasOnlyPurchaseLines: Boolean;
+                    HasNonPurchaseLines: Boolean;
                 begin
                     if not Confirm(ConfirmMsg) then
                         exit;
 
-                    if rec."Status" <> rec."Status"::InProgress then begin
+                    if rec."Status" <> rec."Status"::InProgress then
                         Error('Charging must be in progress to complete it.');
-                        exit;
+
+                    // Vérifier si la feuille contient uniquement des lignes d'achat
+                    HasOnlyPurchaseLines := true;
+                    HasNonPurchaseLines := false;
+
+                    ChargingLine.Reset();
+                    ChargingLine.SetRange("Charging No.", rec."Vehicle Charging No.");
+                    if ChargingLine.FindSet() then
+                        repeat
+                            if ChargingLine."Document Type" <> ChargingLine."Document Type"::Purchase then begin
+                                HasOnlyPurchaseLines := false;
+                                HasNonPurchaseLines := true;
+                            end;
+                        until (ChargingLine.Next() = 0) or HasNonPurchaseLines;
+
+                    // Si la feuille contient des lignes non-achat, vérifier que l'ordre de transfert a été posté
+                    if HasNonPurchaseLines then begin
+                        //  Check that the Transfer Shipment has been posted
+                        TransferShipmentHdr.Reset();
+                        TransferShipmentHdr.SetRange("Transfer Order No.", rec."Transfer Order No.");
+                        if not TransferShipmentHdr.FindFirst() then
+                            Error('The transfer order has not been posted yet. Please post the shipment before completing the charging.');
+                        TransferReceiptHdr.Reset();
+                        TransferReceiptHdr.SetRange("Transfer Order No.", rec."Transfer Order No.");
+                        if not TransferReceiptHdr.FindFirst() then
+                            Error('The transfer order has not been posted yet. Please post the receipt before completing the charging.');
                     end;
 
-                    // Check for required fields and valid lines before completion
+                    // Business validations
                     rec.CheckRequiredFieldsAndLines();
 
                     rec."Status" := rec."Status"::Completed;
@@ -209,9 +250,64 @@ page 77012 "Vehicle Charging Card"
                     rec."Completion Date" := CurrentDateTime;
                     rec.Modify(true);
                     SetStatusStyle();
-                    Message('Charging process has been completed.');
+
+                    if HasOnlyPurchaseLines then
+                        Message('Charging process has been completed for purchase orders.')
+                    else
+                        Message('Charging process has been completed.');
                 end;
             }
+            action("Show Posted Shipment")
+            {
+                ApplicationArea = All;
+                Caption = 'Show Posted Shipment';
+                ToolTip = 'Open the posted shipment associated with this transfer order.';
+                Image = ViewDetails;
+                Promoted = true;
+                PromotedCategory = Process;
+                Enabled = rec."Transfer Order No." <> '';
+
+                trigger OnAction()
+                var
+                    TransferShipmentHdr: Record "Transfer Shipment Header";
+                    TransferShipmentCard: Page "Posted Transfer Shipment";
+                begin
+                    TransferShipmentHdr.Reset();
+                    TransferShipmentHdr.SetRange("Transfer Order No.", rec."Transfer Order No.");
+
+                    if not TransferShipmentHdr.FindFirst() then
+                        Error('No posted shipment found for Transfer Order No. %1.', rec."Transfer Order No.");
+
+                    Page.RunModal(Page::"Posted Transfer Shipment", TransferShipmentHdr);
+
+                end;
+            }
+            action("Show Posted Receipt")
+            {
+                ApplicationArea = All;
+                Caption = 'Show Posted Receipt';
+                ToolTip = 'Open the posted receipt associated with this transfer order.';
+                Image = ViewDetails;
+                Promoted = true;
+                PromotedCategory = Process;
+                Enabled = rec."Transfer Order No." <> '';
+
+                trigger OnAction()
+                var
+                    TransferReceiptHdr: Record "Transfer Receipt Header";
+                begin
+                    TransferReceiptHdr.Reset();
+                    TransferReceiptHdr.SetRange("Transfer Order No.", rec."Transfer Order No.");
+
+                    if not TransferReceiptHdr.FindFirst() then
+                        Error('No posted receipt found for Transfer Order No. %1.', rec."Transfer Order No.");
+
+                    Page.RunModal(Page::"Posted Transfer Receipt", TransferReceiptHdr);
+                end;
+            }
+
+
+
 
             action("Reopen")
             {
@@ -263,25 +359,25 @@ page 77012 "Vehicle Charging Card"
                 end;
             }
 
-            action("Generate Lines From Loading Sheet")
-            {
-                ApplicationArea = All;
-                Caption = 'Generate Lines From Loading Sheet';
-                Image = CreateLinesFromJob;
-                Promoted = true;
-                PromotedCategory = Process;
-                Enabled = not IsReleased;
+            // action("Generate Lines From Loading Sheet")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Generate Lines From Loading Sheet';
+            //     Image = CreateLinesFromJob;
+            //     Promoted = true;
+            //     PromotedCategory = Process;
+            //     Enabled = not IsReleased;
 
-                trigger OnAction()
-                begin
-                    if rec."Loading Sheet No." = '' then begin
-                        Error('Please select a loading sheet first.');
-                        exit;
-                    end;
+            //     trigger OnAction()
+            //     begin
+            //         if rec."Loading Sheet No." = '' then begin
+            //             Error('Please select a loading sheet first.');
+            //             exit;
+            //         end;
 
-                    GenerateChargingLines();
-                end;
-            }
+            //         GenerateChargingLines();
+            //     end;
+            // }
 
             action("View Loading Sheet")
             {
@@ -316,25 +412,45 @@ page 77012 "Vehicle Charging Card"
                 Image = Next;
                 Promoted = true;
                 PromotedCategory = Process;
-                Visible = false;
+                Enabled = (Rec.Status = Rec.Status::Completed);
 
                 trigger OnAction()
                 var
-                    TourExecutionPage: Page "Tour Execution Page";
-                    TourExecutionRec: Record "Tour Execution Tracking";
+                    TourExecutionMgt: Codeunit "Tour Execution Management";
                 begin
-                    if rec.Status <> rec.Status::Completed then begin
-                        Message('Charging phase must be completed before proceeding to execution.');
+                    if Rec.Status <> Rec.Status::Completed then begin
+                        Message('The charging document must be completed before proceeding to execution.');
                         exit;
                     end;
 
-                    // Optionally, filter the execution record to the current tour
-                    TourExecutionRec.SetRange("Tour No.", rec."Tour No.");
-
-                    // Open the execution page for this tour
-                    PAGE.Run(PAGE::"Tour Execution Page", TourExecutionRec);
+                    // Initialize tour execution
+                    TourExecutionMgt.InitializeTourExecution(Rec."Tour No.");
                 end;
             }
+            action("view Transfer Order to the Vehicle ")
+            {
+                ApplicationArea = All;
+                Caption = 'View Transfer Order';
+                Image = ViewDetails;
+                Promoted = true;
+                PromotedCategory = Process;
+                Enabled = rec."Transfer Order No." <> '';
+
+
+                trigger OnAction()
+                var
+                    TransferHeader: Record "Transfer Header";
+                    TransferCard: Page "Transfer Order";
+                begin
+                    if not TransferHeader.Get(rec."Transfer Order No.") then begin
+                        Error('Transfer order %1 not found.', rec."Transfer Order No.");
+                        exit;
+                    end;
+
+                    Page.RunModal(Page::"Transfer order", TransferHeader);
+                end;
+            }
+
         }
     }
 
@@ -387,11 +503,22 @@ page 77012 "Vehicle Charging Card"
                 ChargingLine."Stop No." := StopLine."Stop No.";
                 ChargingLine."Customer No." := StopLine."Customer No.";
                 ChargingLine."Delivery Address" := StopLine."Delivery Address";
-                ChargingLine."Planned Quantity" := StopLine."Quantity to Deliver";
+                ChargingLine."prepapred Quantity" := StopLine."Quantity to prepare"; // Use the correct field for planned quantity
                 ChargingLine."Actual Quantity" := 0; // Initialize to 0, will be filled during charging
-                ChargingLine."Quantity Difference" := -StopLine."Quantity to Deliver"; // Initially, difference is negative (not loaded)
+                ChargingLine."Quantity Difference" := StopLine."Quantity to prepare"; // Initially, difference is negative (not loaded)
                 ChargingLine."Loading Status" := ChargingLine."Loading Status"::Pending;
                 ChargingLine."Remarks" := StopLine.Remarks;
+
+                // Add the item information
+                ChargingLine."Item No." := StopLine.item;
+                ChargingLine."Description" := StopLine.Description;
+                ChargingLine."Unit of Measure Code" := StopLine."unit of measure code";
+                ChargingLine."Document Type" := StopLine.type;
+
+                // Initialize Purchased Quantity to 0 for Purchase document type
+                if StopLine.type = StopLine.type::Purchase then
+                    ChargingLine."prepapred Quantity" := StopLine."Quantity to deliver";
+
                 ChargingLine.Insert(true);
             until StopLine.Next() = 0;
             Message('Generated %1 charging lines from the loading sheet.', LineNo);

@@ -1,4 +1,4 @@
-page 77140 "Planning Lines Subpage"
+page 73640 "Planning Lines Subpage"
 {
     PageType = ListPart;
     SourceTable = "Planning Lines";

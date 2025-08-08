@@ -1,4 +1,4 @@
-page 77151 "Online Map Substitution Part"
+page 73651 "Online Map Substitution Part"
 {
     Caption = 'Online Map Substitution Parameter';
     PageType = ListPart;

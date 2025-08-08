@@ -1,4 +1,4 @@
-page 77114 "Daily Schedule ListPart"
+page 73614 "Daily Schedule ListPart"
 {
     PageType = ListPart;
     SourceTable = "Planning Lines";

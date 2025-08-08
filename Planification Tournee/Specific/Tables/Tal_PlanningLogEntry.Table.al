@@ -1,4 +1,4 @@
-table 77103 "Planning Log Entry"
+table 73603 "Planning Log Entry"
 {
     DataClassification = ToBeClassified;
     Caption = 'Planning Log Entry';

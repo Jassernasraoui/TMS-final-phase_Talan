@@ -1,4 +1,4 @@
-table 77104 "Planning Optimization Suggest."
+table 73604 "Planning Optimization Suggest."
 {
     DataClassification = ToBeClassified;
 

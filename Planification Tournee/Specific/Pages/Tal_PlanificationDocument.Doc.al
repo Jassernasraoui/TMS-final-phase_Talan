@@ -1,4 +1,4 @@
-page 77007 "Planification Document"
+page 73507 "Planification Document"
 {
     PageType = document;
     SourceTable = "Planification Header";
@@ -17,13 +17,18 @@ page 77007 "Planification Document"
             {
                 Caption = 'General';
 
-                field("Tour No."; Rec."Logistic Tour No.")
+                field("Logistic Tour No."; Rec."Logistic Tour No.")
                 {
                     ApplicationArea = All;
-                    Caption = 'Tour No.';
-                    ToolTip = 'Specifies the unique identifier for this tour.';
-                    Importance = Promoted;
+                    ToolTip = 'Sélectionnez un numéro généré automatiquement à partir de la série.';
+
+                    trigger OnAssistEdit()
+                    begin
+                        if Rec.AssistEdit(xRec) then
+                            CurrPage.Update();
+                    end;
                 }
+
 
                 field("Statut"; Rec."Statut")
                 {
@@ -73,73 +78,231 @@ page 77007 "Planification Document"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the starting time of working hours for each day.';
+                    Visible = false;
                 }
 
                 field("Working Hours End"; Rec."Working Hours End")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the ending time of working hours for each day.';
+                    Visible = false;
                 }
 
-                field("Max Visits Per Day"; Rec."Max Visits Per Day")
+                field("Max Visits Per Tour"; Rec."Max Visits Per Tour")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the maximum number of visits allowed per day.';
                 }
 
-                field("Non-Working Days"; Rec."Non-Working Days")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the days to exclude from planning (format: DD/MM/YYYY, comma-separated).';
-                    MultiLine = true;
-                }
+
             }
 
             group("Resources")
             {
                 Caption = 'Resources & Location';
+                group(Ressources)
+                {
 
-                field("Driver No."; Rec."Driver No.")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Driver/Technician';
-                    LookupPageId = "Resource List";
-                    ToolTip = 'Specifies the driver or technician assigned to this tour.';
+                    field("Driver No."; Rec."Driver No.")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Driver/Technician';
+                        LookupPageId = "Resource List";
+                        ToolTip = 'Specifies the driver or technician assigned to this tour.';
+                    }
+                    field("Conveyor Attendant"; Rec."Conveyor Attendant")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Conveyor Attendant';
+                        LookupPageId = "Resource List";
+                        ToolTip = 'Specifies the conveyor attendant assigned to this tour.';
+
+                    }
+
+                    field("Véhicule No."; Rec."Véhicule No.")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Vehicle';
+                        LookupPageId = "Tal Vehicule Resource list";
+                        ToolTip = 'Specifies the vehicle assigned to this tour.';
+                    }
                 }
-                field("conveyor attendant"; Rec."conveyor attendant")
+                group(Location)
+                {
+
+                    field("Start Location"; Rec."Start Location")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the starting location for the tour.';
+                        Editable = false;
+
+                        trigger OnValidate()
+                        var
+                            PlanningLine: Record "Planning Lines";
+                            Location: Record Location;
+                            NextLineNo: Integer;
+                            ConfirmManagement: Codeunit "Confirm Management";
+                        begin
+                            if xRec."Start Location" <> Rec."Start Location" then begin
+                                if Rec."Start Location" <> '' then begin
+                                    if ConfirmManagement.GetResponseOrDefault('Do you want to add the start location to the planning lines?', true) then begin
+                                        // Find if there's already a planning line marked as start location
+                                        PlanningLine.Reset();
+                                        PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+                                        PlanningLine.SetRange("Is Start Location", true);
+
+                                        if PlanningLine.FindFirst() then begin
+                                            // Update existing start location line
+                                            if Location.Get(Rec."Start Location") then begin
+                                                PlanningLine."Location Code" := Location.Code;
+                                                PlanningLine.Description := 'Start Location: ' + Location.Name;
+                                                PlanningLine.Address := Location.Address;
+                                                PlanningLine.City := Location.City;
+                                                PlanningLine."State (County)" := Location."Post Code";
+                                                PlanningLine."Country/Region Code" := Location."Country/Region Code";
+                                                PlanningLine.Modify();
+                                            end;
+                                        end else begin
+                                            // Create new planning line for start location
+                                            // Find the next line number
+                                            PlanningLine.Reset();
+                                            PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+                                            if PlanningLine.FindLast() then
+                                                NextLineNo := PlanningLine."Line No." + 10000
+                                            else
+                                                NextLineNo := 10000;
+
+                                            if Location.Get(Rec."Start Location") then begin
+                                                PlanningLine.Init();
+                                                PlanningLine."Logistic Tour No." := Rec."Logistic Tour No.";
+                                                PlanningLine."Line No." := NextLineNo;
+                                                PlanningLine."Type" := PlanningLine."Type"::Transfer;
+                                                PlanningLine."Location Code" := Location.Code;
+                                                PlanningLine.Description := 'Start Location: ' + Location.Name;
+                                                PlanningLine.Address := Location.Address;
+                                                PlanningLine.City := Location.City;
+                                                PlanningLine."State (County)" := Location."Post Code";
+                                                PlanningLine."Country/Region Code" := Location."Country/Region Code";
+                                                PlanningLine."Is Start Location" := true;
+                                                PlanningLine."Priority" := PlanningLine."Priority"::Critical;
+                                                PlanningLine.Insert();
+                                            end;
+                                        end;
+                                    end;
+                                end else begin
+                                    // Remove start location flag from any planning lines if the start location is cleared
+                                    PlanningLine.Reset();
+                                    PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+                                    PlanningLine.SetRange("Is Start Location", true);
+                                    if PlanningLine.FindSet() then begin
+                                        repeat
+                                            PlanningLine."Is Start Location" := false;
+                                            PlanningLine.Modify();
+                                        until PlanningLine.Next() = 0;
+                                    end;
+                                end;
+                            end;
+                        end;
+                    }
+
+                    field("End Location"; Rec."End Location")
+                    {
+                        ApplicationArea = All;
+                        ToolTip = 'Specifies the ending location for the tour.';
+                        Editable = false;
+
+                        trigger OnValidate()
+                        var
+                            PlanningLine: Record "Planning Lines";
+                            Location: Record Location;
+                            NextLineNo: Integer;
+                            ConfirmManagement: Codeunit "Confirm Management";
+                        begin
+                            if xRec."End Location" <> Rec."End Location" then begin
+                                if Rec."End Location" <> '' then begin
+                                    if ConfirmManagement.GetResponseOrDefault('Do you want to add the end location to the planning lines?', true) then begin
+                                        // Find if there's already a planning line marked as end location
+                                        PlanningLine.Reset();
+                                        PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+                                        PlanningLine.SetRange("Is End Location", true);
+
+                                        if PlanningLine.FindFirst() then begin
+                                            // Update existing end location line
+                                            if Location.Get(Rec."End Location") then begin
+                                                PlanningLine."Location Code" := Location.Code;
+                                                PlanningLine.Description := 'End Location: ' + Location.Name;
+                                                PlanningLine.Address := Location.Address;
+                                                PlanningLine.City := Location.City;
+                                                PlanningLine."State (County)" := Location."Post Code";
+                                                PlanningLine."Country/Region Code" := Location."Country/Region Code";
+                                                PlanningLine.Modify();
+                                            end;
+                                        end else begin
+                                            // Create new planning line for end location
+                                            // Find the next line number
+                                            PlanningLine.Reset();
+                                            PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+                                            if PlanningLine.FindLast() then
+                                                NextLineNo := PlanningLine."Line No." + 10000
+                                            else
+                                                NextLineNo := 10000;
+
+                                            if Location.Get(Rec."End Location") then begin
+                                                PlanningLine.Init();
+                                                PlanningLine."Logistic Tour No." := Rec."Logistic Tour No.";
+                                                PlanningLine."Line No." := NextLineNo;
+                                                PlanningLine."Type" := PlanningLine."Type"::Transfer;
+                                                PlanningLine."Location Code" := Location.Code;
+                                                PlanningLine.Description := 'End Location: ' + Location.Name;
+                                                PlanningLine.Address := Location.Address;
+                                                PlanningLine.City := Location.City;
+                                                PlanningLine."State (County)" := Location."Post Code";
+                                                PlanningLine."Country/Region Code" := Location."Country/Region Code";
+                                                PlanningLine."Is End Location" := true;
+                                                PlanningLine."Priority" := PlanningLine."Priority"::Critical;
+                                                PlanningLine.Insert();
+                                            end;
+                                        end;
+                                    end;
+                                end else begin
+                                    // Remove end location flag from any planning lines if the end location is cleared
+                                    PlanningLine.Reset();
+                                    PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+                                    PlanningLine.SetRange("Is End Location", true);
+                                    if PlanningLine.FindSet() then begin
+                                        repeat
+                                            PlanningLine."Is End Location" := false;
+                                            PlanningLine.Modify();
+                                        until PlanningLine.Next() = 0;
+                                    end;
+                                end;
+                            end;
+                        end;
+                    }
+                }
+                field("Non-Working Days"; Rec."Non-Working Days")
                 {
                     ApplicationArea = All;
-                    Caption = 'Conveyor Attendant';
-                    LookupPageId = "Resource List";
-                    ToolTip = 'Specifies the conveyor attendant assigned to this tour.';
+                    ToolTip = 'Specifies the days to exclude from planning (format: DD/MM/YYYY, comma-separated).';
+                    MultiLine = true;
+                    Visible = false;
                 }
 
-                field("Véhicule No."; Rec."Véhicule No.")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Vehicle';
-                    LookupPageId = "Tal Vehicule Resource list";
-                    ToolTip = 'Specifies the vehicle assigned to this tour.';
-                }
+                // field("Delivery Area"; rec."Delivery Area")
+                // {
+                //     ApplicationArea = All;
+                //     Caption = 'Delivery Area';
+                //     ToolTip = 'Specifies the geographic area for deliveries.';
 
-                field("Start Location"; Rec."Start Location")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the starting location for the tour.';
-                }
 
-                field("End Location"; Rec."End Location")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the ending location for the tour.';
-                }
-
-                field("Delivery Area"; rec."Delivery Area")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Delivery Area';
-                    ToolTip = 'Specifies the geographic area for deliveries.';
-                }
+                // }
+            }
+            part("Tour Planning Lines"; "Planning Lines")
+            {
+                Caption = 'Planning Lines';
+                SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
+                ApplicationArea = Basic, Suite;
+                Editable = true;
             }
 
             group("Logistics Details")
@@ -159,6 +322,7 @@ page 77007 "Planification Document"
                     ApplicationArea = All;
                     Caption = 'Warehouse Location';
                     LookupPageId = "Location list";
+                    Editable = false;
                     ToolTip = 'Specifies the warehouse location for the tour.';
                 }
 
@@ -168,7 +332,16 @@ page 77007 "Planification Document"
                     Caption = 'Warehouse Employee';
                     LookupPageId = "Warehouse Employees";
                     ToolTip = 'Specifies the warehouse employee responsible for the tour.';
+                    visible = false;
                 }
+                field("Number of Deliveries"; rec."Number of Deliveries")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Number of Deliveries';
+                    Visible = true;
+                }
+
 
                 field("Total Quantity"; Rec."Total Quantity")
                 {
@@ -176,6 +349,7 @@ page 77007 "Planification Document"
                     Caption = 'Total Quantity';
                     ToolTip = 'Specifies the total quantity of all planning lines.';
                     Editable = false;
+                    Visible = false;
                 }
 
                 field("Estimated Total Weight"; Rec."Estimated Total Weight")
@@ -184,6 +358,13 @@ page 77007 "Planification Document"
                     Caption = 'Estimated Total Weight (kg)';
                     Editable = false;
                     ToolTip = 'Shows the estimated total weight for all items in this tour.';
+                    trigger OnValidate()
+                    var
+                        PlanningLine: Record "Planning Lines";
+                        TotalWeight: Decimal;
+                    begin
+
+                    end;
                 }
 
                 field("Estimated Distance"; Rec."Estimated Distance")
@@ -203,22 +384,16 @@ page 77007 "Planification Document"
                 }
             }
 
-            part("Tour Planning Lines"; "Planning Lines")
-            {
-                Caption = 'Planning Lines';
-                SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
-                ApplicationArea = Basic, Suite;
-                Editable = true;
-            }
 
-            part("Daily Schedule"; "Daily Schedule ListPart")
-            {
-                Caption = 'Daily Schedule';
-                SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
-                ApplicationArea = Basic, Suite;
-                Editable = true;
-                Visible = true;
-            }
+
+            // part("Daily Schedule"; "Daily Schedule ListPart")
+            // {
+            //     Caption = 'Daily Schedule';
+            //     SubPageLink = "Logistic Tour No." = field("Logistic Tour No.");
+            //     ApplicationArea = Basic, Suite;
+            //     Editable = true;
+            //     Visible = true;
+            // }
         }
     }
     actions
@@ -245,6 +420,7 @@ page 77007 "Planification Document"
                         OpenSourceDocumentSelection();
                     end;
                 }
+
 
                 action("Get Sales Orders")
                 {
@@ -284,248 +460,441 @@ page 77007 "Planification Document"
                         GetTransferOrdersForPlanning();
                     end;
                 }
+
+
+                group("Planning Tools")
+                {
+                    Caption = 'Planning Tools';
+                    Image = Planning;
+
+                    // action("Auto-Assign Days")
+                    // {
+                    //     ApplicationArea = All;
+                    //     Caption = 'Auto-Assign Days';
+                    //     Image = Calendar;
+                    //     ToolTip = 'Intelligemment répartit les lignes de planification sur les jours disponibles de la tournée en tenant compte des dates prévues, des priorités, et des regroupements par emplacement. Propose des suggestions avant d''appliquer les changements.';
+
+                    //     trigger OnAction()
+                    //     begin
+                    //         AutoAssignDays();
+                    //     end;
+                    // }
+
+                    action("Group By Proximity")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Group By Proximity';
+                        Image = Group;
+                        ToolTip = 'Groups missions by geographic proximity.';
+
+                        trigger OnAction()
+                        begin
+                            GroupByProximity();
+                        end;
+                    }
+
+                    action("Group By Customer")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Group By Customer';
+                        Image = Customer;
+                        ToolTip = 'Groups missions by customer.';
+
+                        trigger OnAction()
+                        begin
+                            GroupByCustomer();
+                        end;
+                    }
+
+                    action("Group By Activity Type")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Group By Activity Type';
+                        Image = WorkCenterLoad;
+                        ToolTip = 'Groups missions by activity type.';
+
+                        trigger OnAction()
+                        begin
+                            GroupByActivityType();
+                        end;
+                    }
+
+                    action("Balance Workload")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Balance Workload';
+                        Image = Balance;
+                        ToolTip = 'Balances the workload across all planning days.';
+
+                        trigger OnAction()
+                        begin
+                            BalanceWorkload();
+                        end;
+                    }
+
+                    // action("Optimize Routes")
+                    // {
+                    //     ApplicationArea = All;
+                    //     Caption = 'Optimize Routes';
+                    //     Image = Route;
+                    //     ToolTip = 'Optimizes daily routes to minimize travel time.';
+
+                    //     trigger OnAction()
+                    //     begin
+                    //         OptimizeRoutes();
+                    //     end;
+                    // }
+                }
+
+                group("Views")
+                {
+                    Caption = 'Views';
+                    Image = View;
+
+                    action("Calendar View")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Calendar View';
+                        Image = Calendar;
+                        ToolTip = 'View the planning in a calendar format.';
+
+                        trigger OnAction()
+                        begin
+                            ShowCalendarView();
+                        end;
+                    }
+
+                    action("Show on Google Maps")
+                    {
+                        Caption = 'Show on Google Maps';
+                        ApplicationArea = All;
+
+                        trigger OnAction()
+                        var
+                            Place: Text;
+                            EncodedPlace: Text;
+                            URL: Text;
+                        begin
+                            Place := Rec."Delivery Area"; // Replace with your actual field name
+                            EncodedPlace := Place.Replace(' ', '%20'); // Replace spaces with %20
+                            URL := 'https://www.google.com/maps/search/?api=1&query=' + EncodedPlace;
+                            HYPERLINK(URL);
+                        end;
+                    }
+
+
+
+
+                    action("Route Overview")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Show All on Map';
+                        Image = Map;
+                        trigger OnAction()
+                        var
+                            PlanningLine: Record "Planning Lines";
+                            OnlineMapIntegration: Codeunit "Online Map Integration";
+                            Customer: Record Customer;
+                            Vendor: Record Vendor;
+                            Location: Record Location;
+                            SalesHeader: Record "Sales Header";
+                            PurchaseHeader: Record "Purchase Header";
+                            TransferHeader: Record "Transfer Header";
+                            ShipToAddress: Record "Ship-to Address";
+                            LocationsList: Text;
+                            MapUrl: Text;
+                            Address: Text;
+                            City: Text;
+                            PostCode: Text;
+                            CountryCode: Text;
+                            Latitude: Text;
+                            Longitude: Text;
+                            LocationName: Text;
+                            LocationCount: Integer;
+                        begin
+                            LocationsList := '';
+                            LocationCount := 0;
+
+                            // Get all planning lines
+                            PlanningLine.Reset();
+                            PlanningLine.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+
+                            if PlanningLine.FindSet() then begin
+                                repeat
+                                    Clear(Address);
+                                    Clear(City);
+                                    Clear(PostCode);
+                                    Clear(CountryCode);
+                                    Clear(Latitude);
+                                    Clear(Longitude);
+                                    Clear(LocationName);
+
+                                    // Extract address information based on document type
+                                    case PlanningLine."Type" of
+                                        PlanningLine."Type"::Sales:
+                                            begin
+                                                // Try to get customer address - first check if there's a ship-to address
+                                                if SalesHeader.Get(SalesHeader."Document Type"::Order, PlanningLine."Source ID") then begin
+                                                    if (SalesHeader."Ship-to Code" <> '') and ShipToAddress.Get(PlanningLine."Account No.", SalesHeader."Ship-to Code") then begin
+                                                        LocationName := ShipToAddress.Name;
+                                                        Address := ShipToAddress.Address;
+                                                        City := ShipToAddress.City;
+                                                        PostCode := ShipToAddress."Post Code";
+                                                        CountryCode := ShipToAddress."Country/Region Code";
+                                                    end else begin
+                                                        LocationName := SalesHeader."Ship-to Name";
+                                                        Address := SalesHeader."Ship-to Address";
+                                                        City := SalesHeader."Ship-to City";
+                                                        PostCode := SalesHeader."Ship-to Post Code";
+                                                        CountryCode := SalesHeader."Ship-to Country/Region Code";
+                                                    end;
+                                                end else if Customer.Get(PlanningLine."Account No.") then begin
+                                                    // Default to customer address
+                                                    LocationName := Customer.Name;
+                                                    Address := Customer.Address;
+                                                    City := Customer.City;
+                                                    PostCode := Customer."Post Code";
+                                                    CountryCode := Customer."Country/Region Code";
+                                                end;
+                                            end;
+                                        PlanningLine."Type"::Purchase:
+                                            begin
+                                                if Vendor.Get(PlanningLine."Account No.") then begin
+                                                    LocationName := Vendor.Name;
+                                                    Address := Vendor.Address;
+                                                    City := Vendor.City;
+                                                    PostCode := Vendor."Post Code";
+                                                    CountryCode := Vendor."Country/Region Code";
+                                                end;
+                                            end;
+                                        PlanningLine."Type"::Transfer:
+                                            begin
+                                                if Location.Get(PlanningLine."Location Code") then begin
+                                                    LocationName := Location.Name;
+                                                    Address := Location.Address;
+                                                    City := Location.City;
+                                                    PostCode := Location."Post Code";
+                                                    CountryCode := Location."Country/Region Code";
+                                                end;
+                                            end;
+                                    end;
+
+                                    // Build the formatted address if we have valid address information
+                                    if (Address <> '') or (City <> '') or (PostCode <> '') then begin
+                                        LocationCount += 1;
+
+                                        // Format the address for the map URL
+                                        if LocationsList <> '' then
+                                            LocationsList += '/';
+
+                                        // Format the address with proper URL encoding
+                                        LocationsList += EncodeUrl(
+                                            FormatAddress(Address, City, PostCode, CountryCode)
+                                        );
+                                    end;
+                                until PlanningLine.Next() = 0;
+                            end;
+
+                            if LocationCount > 0 then begin
+                                // Use Google Maps directions service for multiple locations
+                                if LocationCount > 1 then
+                                    MapUrl := 'https://www.google.com/maps/dir/' + LocationsList
+                                else
+                                    MapUrl := 'https://www.google.com/maps/search/?api=1&query=' + LocationsList;
+
+                                Hyperlink(MapUrl);
+                            end else
+                                Message('No valid addresses found in the current planning lines.');
+                        end;
+                    }
+                }
+
+                group("Diagnostics")
+                {
+                    Caption = 'Diagnostics';
+                    Image = TestDatabase;
+                    Visible = true;
+
+                    action("Test Document Addition")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Test Document Addition';
+                        Image = TestReport;
+                        ToolTip = 'Tests the document addition functionality with a diagnostic message.';
+
+                        trigger OnAction()
+                        begin
+                            TestDocumentAddition();
+                        end;
+                    }
+
+                    action("Check Planning Completeness")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Check Planning Completeness';
+                        Image = CheckList;
+                        ToolTip = 'Checks if all lines have assigned days and proper planning.';
+
+                        trigger OnAction()
+                        begin
+                            CheckPlanningCompleteness();
+                        end;
+                    }
+
+                    action("Fix Planning Lines")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Fix Planning Lines';
+                        Image = Repair;
+                        ToolTip = 'Attempts to fix common issues with planning lines.';
+
+                        trigger OnAction()
+                        begin
+                            FixPlanningLines();
+                        end;
+                    }
+
+                    action("Test Document Add")
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Test Add Document';
+                        Image = Document;
+                        ToolTip = 'Directly tests adding a document without using the selection page.';
+
+                        trigger OnAction()
+                        var
+                            SalesHeader: Record "Sales Header";
+                            DocBuffer: Record "Planning Document Buffer" temporary;
+                            SalesLine: Record "Sales Line";
+                            PlanningLineMgt: Codeunit "Planning Lines Management";
+                        begin
+                            // Make sure we have a valid tour number
+                            if Rec."Logistic Tour No." = '' then begin
+                                Error('Tour number is missing. Please save the document first.');
+                                exit;
+                            end;
+
+                            // Find a sales order to test with
+                            SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+                            SalesHeader.SetFilter(Status, '%1|%2', SalesHeader.Status::Open, SalesHeader.Status::Released);
+
+                            if not SalesHeader.FindFirst() then begin
+                                Message('No sales orders found for testing');
+                                exit;
+                            end;
+
+                            // Create test buffer record
+                            DocBuffer.Init();
+                            DocBuffer."Line No." := 1;
+                            DocBuffer."Document Type" := DocBuffer."Document Type"::"Sales Order";
+                            DocBuffer."Document No." := SalesHeader."No.";
+                            DocBuffer."Account Type" := DocBuffer."Account Type"::Customer;
+                            DocBuffer."Account No." := SalesHeader."Sell-to Customer No.";
+                            DocBuffer."Account Name" := SalesHeader."Sell-to Customer Name";
+                            DocBuffer."Location Code" := SalesHeader."Location Code";
+                            DocBuffer."Document Date" := SalesHeader."Document Date";
+                            DocBuffer."Delivery Date" := SalesLine."Planned Shipment Date";
+                            DocBuffer.Priority := SalesHeader.Priority;
+                            DocBuffer.Selected := true;
+
+                            // Explicitly set the Tour No. in the buffer
+                            DocBuffer."Tour No." := Rec."Logistic Tour No.";
+
+                            DocBuffer.Insert();
+
+                            // Call the PlanningLineMgt codeunit directly
+                            if Rec.Statut = Rec.Statut::Plannified then begin
+                                ClearLastError();
+                                Message('Attempting to add sales order %1 to tour %2...',
+                                    SalesHeader."No.", Rec."Logistic Tour No.");
+
+                                PlanningLineMgt.AddDocumentToTour(Rec, DocBuffer);
+                                Message('Document was successfully added.');
+                                CurrPage.Update(false);
+                            end else
+                                Message('Tour must be in Plannified status to add documents.');
+                        end;
+                    }
+                }
             }
-
-            group("Planning Tools")
+            group("Location Controls")
             {
-                Caption = 'Planning Tools';
-                Image = Planning;
+                Caption = 'Location Controls';
+                Image = Location;
 
-                action("Auto-Assign Days")
+                action("Set Default Locations")
                 {
                     ApplicationArea = All;
-                    Caption = 'Auto-Assign Days';
-                    Image = Calendar;
-                    ToolTip = 'Intelligemment répartit les lignes de planification sur les jours disponibles de la tournée en tenant compte des dates prévues, des priorités, et des regroupements par emplacement. Propose des suggestions avant d''appliquer les changements.';
-
-                    trigger OnAction()
-                    begin
-                        AutoAssignDays();
-                    end;
-                }
-
-                action("Group By Proximity")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Group By Proximity';
-                    Image = Group;
-                    ToolTip = 'Groups missions by geographic proximity.';
-
-                    trigger OnAction()
-                    begin
-                        GroupByProximity();
-                    end;
-                }
-
-                action("Group By Customer")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Group By Customer';
-                    Image = Customer;
-                    ToolTip = 'Groups missions by customer.';
-
-                    trigger OnAction()
-                    begin
-                        GroupByCustomer();
-                    end;
-                }
-
-                action("Group By Activity Type")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Group By Activity Type';
-                    Image = WorkCenterLoad;
-                    ToolTip = 'Groups missions by activity type.';
-
-                    trigger OnAction()
-                    begin
-                        GroupByActivityType();
-                    end;
-                }
-
-                action("Balance Workload")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Balance Workload';
-                    Image = Balance;
-                    ToolTip = 'Balances the workload across all planning days.';
-
-                    trigger OnAction()
-                    begin
-                        BalanceWorkload();
-                    end;
-                }
-
-                action("Optimize Routes")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Optimize Routes';
-                    Image = Route;
-                    ToolTip = 'Optimizes daily routes to minimize travel time.';
-
-                    trigger OnAction()
-                    begin
-                        OptimizeRoutes();
-                    end;
-                }
-            }
-
-            group("Views")
-            {
-                Caption = 'Views';
-                Image = View;
-
-                action("Calendar View")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Calendar View';
-                    Image = Calendar;
-                    ToolTip = 'View the planning in a calendar format.';
-
-                    trigger OnAction()
-                    begin
-                        ShowCalendarView();
-                    end;
-                }
-
-                action("Show on Google Maps")
-                {
-                    Caption = 'Show on Google Maps';
-                    ApplicationArea = All;
+                    Caption = 'Set Default Locations';
+                    Image = Default;
+                    ToolTip = 'Sets the start and end locations to the default values from company setup.';
 
                     trigger OnAction()
                     var
-                        Place: Text;
-                        EncodedPlace: Text;
-                        URL: Text;
+                        SetupRec: Record "Trip Setup";
+                        ConfirmManagement: Codeunit "Confirm Management";
                     begin
-                        Place := Rec."Delivery Area"; // Replace with your actual field name
-                        EncodedPlace := Place.Replace(' ', '%20'); // Replace spaces with %20
-                        URL := 'https://www.google.com/maps/search/?api=1&query=' + EncodedPlace;
-                        HYPERLINK(URL);
+                        if ConfirmManagement.GetResponseOrDefault('Do you want to set the start and end locations to the default values from company setup?', true) then begin
+                            SetupRec.Get();
+
+                            if SetupRec."Default Start Location" <> '' then
+                                Rec.Validate("Start Location", SetupRec."Default Start Location")
+                            else if SetupRec."Location Code" <> '' then
+                                Rec.Validate("Start Location", SetupRec."Location Code");
+
+                            if SetupRec."Default End Location" <> '' then
+                                Rec.Validate("End Location", SetupRec."Default End Location")
+                            else if SetupRec."Location Code" <> '' then
+                                Rec.Validate("End Location", SetupRec."Location Code");
+
+                            if setupRec."Default Start Location" <> '' then
+                                rec.Validate("Location Code", SetupRec."Location Code")
+
+                            else if setupRec."Location Code" <> '' then
+                                rec.Validate("Location Code", SetupRec."Location Code");
+
+                            Rec.Modify(true);
+                        end;
                     end;
                 }
 
-
-
-
-                action("Route Overview")
+                action("Clear Locations")
                 {
                     ApplicationArea = All;
-                    Caption = 'Route Overview';
-                    Image = Route;
-                    ToolTip = 'View an overview of all routes.';
-
-                    trigger OnAction()
-                    begin
-                        ShowRouteOverview();
-                    end;
-                }
-            }
-
-            group("Diagnostics")
-            {
-                Caption = 'Diagnostics';
-                Image = TestDatabase;
-                Visible = true;
-
-                action("Test Document Addition")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Test Document Addition';
-                    Image = TestReport;
-                    ToolTip = 'Tests the document addition functionality with a diagnostic message.';
-
-                    trigger OnAction()
-                    begin
-                        TestDocumentAddition();
-                    end;
-                }
-
-                action("Check Planning Completeness")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Check Planning Completeness';
-                    Image = CheckList;
-                    ToolTip = 'Checks if all lines have assigned days and proper planning.';
-
-                    trigger OnAction()
-                    begin
-                        CheckPlanningCompleteness();
-                    end;
-                }
-
-                action("Fix Planning Lines")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Fix Planning Lines';
-                    Image = RepairItem;
-                    ToolTip = 'Attempts to fix common issues with planning lines.';
-
-                    trigger OnAction()
-                    begin
-                        FixPlanningLines();
-                    end;
-                }
-
-                action("Test Document Add")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Test Add Document';
-                    Image = Document;
-                    ToolTip = 'Directly tests adding a document without using the selection page.';
+                    Caption = 'Clear Locations';
+                    Image = ClearFilter;
+                    ToolTip = 'Clears the start and end locations.';
 
                     trigger OnAction()
                     var
-                        SalesHeader: Record "Sales Header";
-                        DocBuffer: Record "Planning Document Buffer" temporary;
-                        PlanningLineMgt: Codeunit "Planning Lines Management";
+                        ConfirmManagement: Codeunit "Confirm Management";
                     begin
-                        // Make sure we have a valid tour number
-                        if Rec."Logistic Tour No." = '' then begin
-                            Error('Tour number is missing. Please save the document first.');
-                            exit;
+                        if ConfirmManagement.GetResponseOrDefault('Do you want to clear the start and end locations?', true) then begin
+                            Rec.Validate("Start Location", '');
+                            Rec.Validate("End Location", '');
+                            Rec.Modify(true);
                         end;
+                    end;
+                }
 
-                        // Find a sales order to test with
-                        SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
-                        SalesHeader.SetFilter(Status, '%1|%2', SalesHeader.Status::Open, SalesHeader.Status::Released);
+                action("Swap Locations")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Swap Start/End Locations';
+                    Image = Rotate;
+                    ToolTip = 'Swaps the start and end locations.';
 
-                        if not SalesHeader.FindFirst() then begin
-                            Message('No sales orders found for testing');
-                            exit;
+                    trigger OnAction()
+                    var
+                        TempLocation: Code[20];
+                        ConfirmManagement: Codeunit "Confirm Management";
+                    begin
+                        if ConfirmManagement.GetResponseOrDefault('Do you want to swap the start and end locations?', true) then begin
+                            TempLocation := Rec."Start Location";
+                            Rec.Validate("Start Location", Rec."End Location");
+                            Rec.Validate("End Location", TempLocation);
+                            Rec.Modify(true);
                         end;
-
-                        // Create test buffer record
-                        DocBuffer.Init();
-                        DocBuffer."Line No." := 1;
-                        DocBuffer."Document Type" := DocBuffer."Document Type"::"Sales Order";
-                        DocBuffer."Document No." := SalesHeader."No.";
-                        DocBuffer."Account Type" := DocBuffer."Account Type"::Customer;
-                        DocBuffer."Account No." := SalesHeader."Sell-to Customer No.";
-                        DocBuffer."Account Name" := SalesHeader."Sell-to Customer Name";
-                        DocBuffer."Location Code" := SalesHeader."Location Code";
-                        DocBuffer."Document Date" := SalesHeader."Document Date";
-                        DocBuffer."Delivery Date" := SalesHeader."Shipment Date";
-                        DocBuffer.Priority := DocBuffer.Priority::Normal;
-                        DocBuffer.Selected := true;
-
-                        // Explicitly set the Tour No. in the buffer
-                        DocBuffer."Tour No." := Rec."Logistic Tour No.";
-
-                        DocBuffer.Insert();
-
-                        // Call the PlanningLineMgt codeunit directly
-                        if Rec.Statut = Rec.Statut::Plannified then begin
-                            ClearLastError();
-                            Message('Attempting to add sales order %1 to tour %2...',
-                                SalesHeader."No.", Rec."Logistic Tour No.");
-
-                            PlanningLineMgt.AddDocumentToTour(Rec, DocBuffer);
-                            Message('Document was successfully added.');
-                            CurrPage.Update(false);
-                        end else
-                            Message('Tour must be in Plannified status to add documents.');
                     end;
                 }
             }
@@ -533,10 +902,10 @@ page 77007 "Planification Document"
 
         area(Navigation)
         {
-            action("Create Vehicle Loading Preparation")
+            action("Vehcile Charging Preparation")
             {
                 ApplicationArea = All;
-                Caption = 'Create Vehicle Loading Preparation';
+                Caption = 'Vehcile Charging Preparation';
                 Image = SuggestWorkMachCost;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -548,7 +917,7 @@ page 77007 "Planification Document"
                     VehicleLoadingCard: Page "Vehicle Loading Card";
                     VehicleStopLine: Record "vehicle Stop Line";
                     StopNo: Integer;
-                    NoSeriesMgt: Codeunit NoSeriesManagement;
+                    NoSeriesMgt: Codeunit "No. Series";
                     ErrorMsg: Text;
                 begin
                     // Validate required fields before creating the preparation
@@ -566,8 +935,8 @@ page 77007 "Planification Document"
                     if Rec."Driver No." = '' then
                         ErrorMsg += 'Driver No. must be specified.\';
 
-                    if Rec."Delivery Area" = '' then
-                        ErrorMsg += 'Delivery Area must be specified.\';
+                    // if Rec."Delivery Area" = '' then
+                    //     ErrorMsg += 'Delivery Area must be specified.\';
 
                     // Check if there are any planning lines
                     PlanningLine.Reset();
@@ -600,13 +969,14 @@ page 77007 "Planification Document"
 
                     // Create new vehicle loading header
                     VehicleLoadingHeader.Init();
-                    VehicleLoadingHeader."No." := NoSeriesMgt.GetNextNo('VLOAD', Today, true);
-                    VehicleLoadingHeader."Loading Date" := Rec."Start Date";
+                    VehicleLoadingHeader."No." := NoSeriesMgt.GetNextNo('VLOAD', Today);
+                    VehicleLoadingHeader."Loading Date" := Today;
                     VehicleLoadingHeader."Tour No." := Rec."Logistic Tour No.";
-                    VehicleLoadingHeader."Truck No." := Rec."Véhicule No.";
+                    VehicleLoadingHeader."Vehicle No." := Rec."Véhicule No.";
                     VehicleLoadingHeader."Driver No." := Rec."Driver No.";
-                    VehicleLoadingHeader."Loading Location" := Rec."Delivery Area";
+                    VehicleLoadingHeader."Loading Location" := Rec."Véhicule No."; // Assuming vehicle location is the loading location
                     VehicleLoadingHeader."Departure Time" := Rec."Working Hours Start";
+                    VehicleLoadingHeader."Warehouse Location" := rec."Location Code";
                     VehicleLoadingHeader."Status" := VehicleLoadingHeader."Status"::Planned;
 
                     // Calculate tour metrics
@@ -628,19 +998,26 @@ page 77007 "Planification Document"
                                 VehicleStopLine.Init();
                                 VehicleStopLine."Fiche No." := VehicleLoadingHeader."No.";
                                 VehicleStopLine."Stop No." := StopNo;
+                                VehicleStopLine.type := PlanningLine."Type";
                                 VehicleStopLine."Customer No." := PlanningLine."Account No.";
-                                VehicleStopLine."Delivery Address" := PlanningLine."Address";
+                                VehicleStopLine.item := PlanningLine."Item No.";
+                                VehicleStopLine."Delivery Address" := PlanningLine."ship-to Address";
                                 VehicleStopLine."Estimated Arrival Time" := PlanningLine."Time Slot Start";
                                 VehicleStopLine."Estimated Departure Time" := PlanningLine."Time Slot End";
                                 VehicleStopLine."Quantity to Deliver" := PlanningLine.Quantity;
-                                VehicleStopLine."Remarks" := PlanningLine.Description;
+                                VehicleStopLine.Description := PlanningLine.Description;
+                                // VehicleStopLine."Remarks" := PlanningLine.re;
+                                VehicleStopLine."Gross weight" := PlanningLine."Gross Weight";
+                                VehicleStopLine."Unit volume" := PlanningLine."Unit Volume";
+                                VehicleStopLine."Unit of Measure Code" := PlanningLine."Unit of Measure Code";
+
                                 VehicleStopLine.Insert(true);
 
                                 // Update header totals
                                 VehicleLoadingHeader."Number of Deliveries" += 1;
                                 VehicleLoadingHeader."Total Weight (kg)" += PlanningLine."Gross Weight";
-                            // Assuming volume calculation if available
-                            // VehicleLoadingHeader."Total Volume (m³)" += PlanningLine.Volume;
+                                // Assuming volume calculation if available
+                                VehicleLoadingHeader."Total Volume (m³)" += PlanningLine."Quantity" * PlanningLine."Unit Volume";
                             until PlanningLine.Next() = 0;
 
                         // Update the header with the calculated totals
@@ -658,7 +1035,7 @@ page 77007 "Planification Document"
             {
                 ApplicationArea = All;
                 Caption = 'Go to Execution';
-                Image = Next;
+                Image = NextRecord;
                 Promoted = true;
                 PromotedCategory = Process;
 
@@ -679,16 +1056,17 @@ page 77007 "Planification Document"
                 ToolTip = 'View the list of transfer routes that are set up to transfer items from one location to another.';
             }
 
-            action("Vehicle Loading Management")
-            {
-                ApplicationArea = All;
-                Caption = 'Vehicle Loading Management';
-                Image = MachineCenterLoad;
-                Promoted = true;
-                PromotedCategory = Process;
-                RunObject = Page "Vehicle Loading Management";
-                ToolTip = 'View and manage both loading preparation and vehicle charging operations.';
-            }
+            // action("Vehicle Loading Management")
+            // {
+            //     ApplicationArea = All;
+            //     Caption = 'Vehicle Loading Management';
+            //     Image = MachineCenterLoad;
+            //     Promoted = true;
+            //     PromotedCategory = Process;
+            //     RunObject = Page "Vehicle Loading Management";
+            //     ToolTip = 'View and manage both loading preparation and vehicle charging operations.';
+
+            // }
         }
     }
 
@@ -778,6 +1156,7 @@ page 77007 "Planification Document"
     var
         SalesHeader: Record "Sales Header";
         SalesHeaderPage: Page "Sales Order List";
+        salesline: Record "Sales Line";
         PlanningLineMgt: Codeunit "Planning Lines Management";
         DocBuffer: Record "Planning Document Buffer" temporary;
         SelectedCount: Integer;
@@ -793,10 +1172,10 @@ page 77007 "Planification Document"
         SalesHeader.SetFilter(Status, '%1|%2', SalesHeader.Status::Open, SalesHeader.Status::Released);
 
         if Rec."Start Date" <> 0D then
-            SalesHeader.SetFilter("Shipment Date", '>=%1', Rec."Start Date");
+            salesline.SetFilter("planned Shipment Date", '>=%1', Rec."Start Date");
 
         if Rec."End Date" <> 0D then
-            SalesHeader.SetFilter("Shipment Date", '<=%1', Rec."End Date");
+            salesline.SetFilter("planned Shipment Date", '<=%1', Rec."End Date");
 
         // Configure selection page
         SalesHeaderPage.SetTableView(SalesHeader);
@@ -817,12 +1196,12 @@ page 77007 "Planification Document"
                 DocBuffer."Document Type" := DocBuffer."Document Type"::"Sales Order";
                 DocBuffer."Document No." := SalesHeader."No.";
                 DocBuffer."Account Type" := DocBuffer."Account Type"::Customer;
-                DocBuffer."Account No." := SalesHeader."Sell-to Customer No.";
+                DocBuffer."Account No." := salesline."Sell-to Customer No.";
                 DocBuffer."Account Name" := SalesHeader."Sell-to Customer Name";
-                DocBuffer."Location Code" := SalesHeader."Location Code";
+                DocBuffer."Location Code" := salesline."Location Code";
                 DocBuffer."Document Date" := SalesHeader."Document Date";
-                DocBuffer."Delivery Date" := SalesHeader."Shipment Date";
-                DocBuffer.Priority := DocBuffer.Priority::Normal;
+                DocBuffer."Delivery Date" := SalesLine."Planned Shipment Date";
+                DocBuffer.Priority := SalesHeader.Priority;
                 DocBuffer.Selected := true;
 
                 // Explicitly set the Tour No. in the buffer
@@ -859,6 +1238,7 @@ page 77007 "Planification Document"
         PurchHeader: Record "Purchase Header";
         PurchHeaderPage: Page "Purchase Order List";
         PlanningLineMgt: Codeunit "Planning Lines Management";
+        PurchLine: Record "Purchase Line";
         DocBuffer: Record "Planning Document Buffer" temporary;
         SelectedCount: Integer;
     begin
@@ -867,10 +1247,10 @@ page 77007 "Planification Document"
         PurchHeader.SetFilter(Status, '%1|%2', PurchHeader.Status::Open, PurchHeader.Status::Released);
 
         if Rec."Start Date" <> 0D then
-            PurchHeader.SetFilter("Expected Receipt Date", '>=%1', Rec."Start Date");
+            PurchLine.SetFilter("Expected Receipt Date", '>=%1', Rec."Start Date");
 
         if Rec."End Date" <> 0D then
-            PurchHeader.SetFilter("Expected Receipt Date", '<=%1', Rec."End Date");
+            PurchLine.SetFilter("Expected Receipt Date", '<=%1', Rec."End Date");
 
         // Configure selection page
         PurchHeaderPage.SetTableView(PurchHeader);
@@ -891,7 +1271,7 @@ page 77007 "Planification Document"
                     DocBuffer."Account Name" := PurchHeader."Buy-from Vendor Name";
                     DocBuffer."Location Code" := PurchHeader."Location Code";
                     DocBuffer."Document Date" := PurchHeader."Document Date";
-                    DocBuffer."Delivery Date" := PurchHeader."Expected Receipt Date";
+                    DocBuffer."Delivery Date" := PurchLine."Expected Receipt Date";
                     DocBuffer.Priority := DocBuffer.Priority::Normal;
                     DocBuffer.Selected := true;
 
@@ -1318,18 +1698,70 @@ page 77007 "Planification Document"
         PlanHeader: Record "Planification Header";
     begin
         if PlanHeader.Get(TourNo) then begin
-            PlanHeader.Statut := PlanHeader.Statut::Inprogress;
+            PlanHeader.Statut := PlanHeader.Statut::loading;
             PlanHeader.Modify(true);
         end;
     end;
 
+    local procedure EncodeUrl(TextToEncode: Text): Text
+    var
+        TempText: Text;
+    begin
+        TempText := TextToEncode;
+        TempText := DelChr(TempText, '=', ' '); // Remove spaces
+        TempText := ReplaceStr(TempText, ' ', '+');
+        exit(TempText);
+    end;
+
+    local procedure ReplaceStr(Source: Text; OldValue: Text; NewValue: Text): Text
+    var
+        Pos: Integer;
+    begin
+        while true do begin
+            Pos := StrPos(Source, OldValue);
+            if Pos = 0 then
+                exit(Source);
+            Source := CopyStr(Source, 1, Pos - 1) + NewValue + CopyStr(Source, Pos + StrLen(OldValue));
+        end;
+    end;
+
+    local procedure FormatAddress(StreetAddress: Text; City: Text; PostCode: Text; CountryCode: Text): Text
+    var
+        FormattedAddress: Text;
+    begin
+        FormattedAddress := '';
+
+        if StreetAddress <> '' then
+            FormattedAddress += StreetAddress;
+
+        if City <> '' then begin
+            if FormattedAddress <> '' then
+                FormattedAddress += ', ';
+            FormattedAddress += City;
+        end;
+
+        if PostCode <> '' then begin
+            if FormattedAddress <> '' then
+                FormattedAddress += ' ';
+            FormattedAddress += PostCode;
+        end;
+
+        if CountryCode <> '' then begin
+            if FormattedAddress <> '' then
+                FormattedAddress += ', ';
+            FormattedAddress += CountryCode;
+        end;
+
+        exit(FormattedAddress);
+    end;
+
     // Add a procedure to update status to Closed when execution is completed
-    procedure SetStatusClosedIfExecutionCompleted(TourNo: Code[20])
+    procedure SetStatusCompletedIfExecutionCompleted(TourNo: Code[20])
     var
         PlanHeader: Record "Planification Header";
     begin
         if PlanHeader.Get(TourNo) then begin
-            PlanHeader.Statut := PlanHeader.Statut::Stopped;
+            PlanHeader.Statut := PlanHeader.Statut::Completed;
             PlanHeader.Modify(true);
         end;
     end;

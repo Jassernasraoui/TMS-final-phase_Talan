@@ -1,4 +1,4 @@
-table 77102 "Planning Document Buffer"
+table 73612 "Planning Document Buffer"
 {
     DataClassification = ToBeClassified;
 
@@ -29,7 +29,7 @@ table 77102 "Planning Document Buffer"
             OptionCaption = 'Customer,Vendor,Location';
         }
 
-        field(77005; "Account No."; Code[20])
+        field(77005; "Account No."; Code[100])
         {
             DataClassification = ToBeClassified;
         }
@@ -49,9 +49,21 @@ table 77102 "Planning Document Buffer"
             DataClassification = ToBeClassified;
         }
 
+        field(77035; "Document DateTime"; DateTime)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Document DateTime';
+        }
+
         field(77009; "Delivery Date"; Date)
         {
             DataClassification = ToBeClassified;
+        }
+
+        field(77036; "Requested Shipment DateTime"; DateTime)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Requested Shipment DateTime';
         }
 
         field(77010; "Total Quantity"; Decimal)
@@ -210,6 +222,25 @@ table 77102 "Planning Document Buffer"
             DataClassification = ToBeClassified;
             Caption = 'Item No.';
             Description = 'Item number for document lines';
+        }
+        field(77034; "Ship-to Address"; Code[100])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Ship-to Address';
+        }
+
+        field(77037; "Delivery Area"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Delivery Area';
+            Description = 'Area code derived from the ship-to address';
+        }
+
+        field(77038; "Before Cutoff"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Before Cutoff';
+            Description = 'Indicates if the document is before the logistics cutoff time';
         }
     }
 

@@ -1,4 +1,4 @@
-page 77137 "Tal Planning Map Page"
+page 73637 "Tal Planning Map Page"
 {
     PageType = CardPart;
     SourceTable = "Planning Lines";
@@ -206,7 +206,7 @@ page 77137 "Tal Planning Map Page"
                 Caption = '⚙️ Configuration Cartes';
                 ToolTip = 'Ouvrir la configuration des services de cartographie';
                 Image = Setup;
-                RunObject = Page "Tal Online Map Setup";
+                RunObject = Page "Online Map Setup";
             }
         }
     }

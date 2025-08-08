@@ -1,4 +1,4 @@
-enum 77120 "Style"
+enum 73620 "Style"
 {
     Extensible = false;
 

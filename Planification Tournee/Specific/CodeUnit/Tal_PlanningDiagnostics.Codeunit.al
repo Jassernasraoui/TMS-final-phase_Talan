@@ -1,10 +1,11 @@
-codeunit 77201 "Planning Diagnostics"
+codeunit 73651 "Planning Diagnostics"
 {
     // This codeunit is used for diagnostics and debugging of the tour planning system
 
     procedure TestDocumentAddition(var TourHeader: Record "Planification Header")
     var
         SalesHeader: Record "Sales Header";
+        Salesline: Record "Sales Line";
         DocBuffer: Record "Planning Document Buffer" temporary;
         PlanningLineMgt: Codeunit "Planning Lines Management";
         PlanningLine: Record "Planning Lines";
@@ -28,12 +29,12 @@ codeunit 77201 "Planning Diagnostics"
         DocBuffer."Document Type" := DocBuffer."Document Type"::"Sales Order";
         DocBuffer."Document No." := SalesHeader."No.";
         DocBuffer."Account Type" := DocBuffer."Account Type"::Customer;
-        DocBuffer."Account No." := SalesHeader."Sell-to Customer No.";
+        DocBuffer."Account No." := Salesline."Sell-to Customer No.";
         DocBuffer."Account Name" := SalesHeader."Sell-to Customer Name";
-        DocBuffer."Location Code" := SalesHeader."Location Code";
+        DocBuffer."Location Code" := Salesline."Location Code";
         DocBuffer."Document Date" := SalesHeader."Document Date";
-        DocBuffer."Delivery Date" := SalesHeader."Shipment Date";
-        DocBuffer.Priority := DocBuffer.Priority::Normal;
+        DocBuffer."Delivery Date" := Salesline."Shipment Date";
+        DocBuffer.Priority := SalesHeader.Priority;
         DocBuffer.Selected := true;
 
         // Explicitly set the Tour No. in the buffer

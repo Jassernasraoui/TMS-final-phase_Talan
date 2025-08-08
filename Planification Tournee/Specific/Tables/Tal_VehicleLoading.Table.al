@@ -1,4 +1,4 @@
-table 77400 "Vehicle Loading Header"
+table 73600 "Vehicle Loading Header"
 {
     DataClassification = ToBeClassified;
 
@@ -18,7 +18,7 @@ table 77400 "Vehicle Loading Header"
             DataClassification = ToBeClassified;
             NotBlank = true;
         }
-        field(77004; "Truck No."; Code[20])
+        field(77004; "Vehicle No."; Code[20])
         {
             DataClassification = ToBeClassified;
             NotBlank = true;
@@ -38,6 +38,10 @@ table 77400 "Vehicle Loading Header"
             DataClassification = ToBeClassified;
         }
         field(77008; "Arrival Time"; Time)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(77028; "Total Quantity"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
@@ -96,6 +100,12 @@ table 77400 "Vehicle Loading Header"
         field(77020; "Planned Route"; Text[250])
         {
             DataClassification = ToBeClassified;
+        }
+        field(77021; "Warehouse Location"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Transfer from location';
+            NotBlank = true;
         }
     }
 
@@ -161,7 +171,7 @@ table 77400 "Vehicle Loading Header"
         if "Tour No." = '' then
             ErrorMsg += 'Tour No. must be specified.\';
 
-        if "Truck No." = '' then
+        if "Vehicle No." = '' then
             ErrorMsg += 'Truck No. must be specified.\';
 
         if "Driver No." = '' then

@@ -1,4 +1,4 @@
-enum 77001 "Driver License Type"
+enum 73501 "Driver License Type"
 {
     Extensible = true;
 

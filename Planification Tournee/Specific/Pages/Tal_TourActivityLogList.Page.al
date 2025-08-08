@@ -1,4 +1,4 @@
-page 77013 "Tour Activity Log List"
+page 73513 "Tour Activity Log List"
 {
     ApplicationArea = All;
     Caption = 'Journal d''Activité Tournée';

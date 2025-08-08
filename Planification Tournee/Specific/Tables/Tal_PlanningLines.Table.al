@@ -1,103 +1,103 @@
-table 77101 "Planning Lines"
+table 73611 "Planning Lines"
 {
     DataClassification = ToBeClassified;
 
     fields
     {
-        field(77000; "Show Calender"; Boolean)
+        field(73500; "Show Calender"; Boolean)
         {
             DataClassification = ToBeClassified;
             Caption = 'Show All';
             Description = 'Show all schedule items regardless of the selected day.';
         }
-        field(77001; "Logistic Tour No."; Code[20])
+        field(73501; "Logistic Tour No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(77002; "Line No."; Integer)
+        field(73502; "Line No."; Integer)
         {
             DataClassification = ToBeClassified;
         }
-        field(77003; "Type"; Option)
+        field(73503; "Type"; Option)
         {
             OptionMembers = Sales,Purchase,Transfer;
             DataClassification = ToBeClassified;
         }
-        field(77004; "Source ID"; Code[20])
+        field(73504; "Source ID"; Code[100])
         {
             DataClassification = ToBeClassified;
         }
-        field(77005; "Item No."; Code[20])
+        field(73505; "Item No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }
-        field(77006; "Variant Code"; Code[10])
+        field(73506; "Variant Code"; Code[10])
         {
             DataClassification = ToBeClassified;
         }
-        field(77007; Description; Text[100])
+        field(73507; Description; Text[100])
         {
             DataClassification = ToBeClassified;
         }
-        field(77008; "Description 2"; Text[50])
+        field(73508; "Description 2"; Text[50])
         {
             DataClassification = ToBeClassified;
         }
-        field(77009; Quantity; Decimal)
+        field(73509; Quantity; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(77010; "Quantity (Base)"; Decimal)
+        field(73510; "Quantity (Base)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(77011; "Qty. per Unit of Measure"; Decimal)
+        field(73511; "Qty. per Unit of Measure"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(77012; "Unit of Measure Code"; Code[10])
+        field(73512; "Unit of Measure Code"; Code[10])
         {
             DataClassification = ToBeClassified;
         }
-        field(77013; "Qty. Rounding Precision"; Decimal)
+        field(73513; "Qty. Rounding Precision"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(77014; "Qty. Rounding Precision (Base)"; Decimal)
+        field(73514; "Qty. Rounding Precision (Base)"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(77015; "Unit Volume"; Decimal)
+        field(73515; "Unit Volume"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(77016; "Gross Weight"; Decimal)
+        field(73516; "Gross Weight"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
-        field(77017; "Transfer-from Code"; Code[100]) { }
+        field(73517; "Transfer-from Code"; Code[100]) { }
         field(17; "Net Weight"; Decimal)
         {
             DataClassification = ToBeClassified;
         }
 
-        field(77018; "Dimension Set ID"; Integer)
+        field(73518; "Dimension Set ID"; Integer)
         {
             DataClassification = ToBeClassified;
         }
-        field(77019; " Delivery Date"; Date)
+        field(73519; " Delivery Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(77020; "Expected Shipment Date"; Date)
+        field(73520; "Expected Shipment Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(77021; "Expected Receipt Date"; Date)
+        field(73521; "Expected Receipt Date"; Date)
         {
             DataClassification = ToBeClassified;
         }
-        field(77022; "Created At"; DateTime)
+        field(73522; "Created At"; DateTime)
         {
             DataClassification = ToBeClassified;
         }
@@ -148,14 +148,14 @@ table 77101 "Planning Lines"
         }
 
         // Champs pour le regroupement des missions
-        field(77031; "Customer No."; Code[20])
+        field(77031; "Customer No."; Code[100])
         {
             DataClassification = ToBeClassified;
             Caption = 'Customer No.';
             TableRelation = Customer."No.";
         }
 
-        field(77032; "Vendor No."; Code[20])
+        field(77032; "Vendor No."; Code[100])
         {
             DataClassification = ToBeClassified;
             Caption = 'Vendor No.';
@@ -239,7 +239,7 @@ table 77101 "Planning Lines"
             //     Rec.ValidateShortcutDimCode(2, "Shortcut Dimension 2 Code");
             // end;
         }
-        field(77043; "Account No."; Code[20])
+        field(77043; "Account No."; Code[100])
         {
             DataClassification = ToBeClassified;
         }
@@ -258,12 +258,28 @@ table 77101 "Planning Lines"
             DataClassification = ToBeClassified;
             Caption = 'Postal Code';
         }
-        field(77047; "Country/Region Code"; Decimal)
+        field(77047; "Country/Region Code"; Code[10])
         {
             DataClassification = ToBeClassified;
             Caption = 'Postal Code';
         }
+        field(77048; "Ship-to Address"; text[100])
+        {
+            DataClassification = ToBeClassified;
+        }
 
+        field(77049; "Is Start Location"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Is Start Location';
+            Description = 'Indicates if this line represents the start location of the tour';
+        }
+        field(77050; "Is End Location"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Is End Location';
+            Description = 'Indicates if this line represents the end location of the tour';
+        }
     }
 
     keys

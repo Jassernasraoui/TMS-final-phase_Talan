@@ -1,4 +1,4 @@
-codeunit 77150 "Online Map Integration"
+codeunit 73650 "Online Map Integration"
 {
     // Codeunit pour gérer l'intégration avec les services de cartographie en ligne
 

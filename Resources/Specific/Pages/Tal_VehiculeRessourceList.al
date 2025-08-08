@@ -1,4 +1,4 @@
-page 77003 "Tal Vehicule Resource list"
+page 73503 "Tal Vehicule Resource list"
 {
     PageType = list;
     SourceTable = Resource;
@@ -10,7 +10,6 @@ page 77003 "Tal Vehicule Resource list"
     AutoSplitKey = true;
     InsertAllowed = true;
     DeleteAllowed = false;
-
     layout
     {
         area(content)

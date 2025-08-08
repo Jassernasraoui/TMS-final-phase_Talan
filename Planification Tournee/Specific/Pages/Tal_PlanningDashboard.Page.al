@@ -1,4 +1,4 @@
-page 77138 "Tal Planning Dashboard"
+page 73638 "Tal Planning Dashboard"
 {
     PageType = Document;
     ApplicationArea = All;
@@ -10,23 +10,23 @@ page 77138 "Tal Planning Dashboard"
     {
         area(Content)
         {
-            group(CalendarMapContainer)
+            group(Calendar)
             {
                 Caption = '';
-                ShowCaption = false;
-
                 part(PlanningCalendar; "Tal Simple Calendar Page")
                 {
                     ApplicationArea = All;
                     Caption = 'Calendrier';
                     UpdatePropagation = Both;
                 }
-
-
+            }
+            group(Map)
+            {
+                Caption = '';
                 part(PlanningMap; "Tal Planning Map Page")
                 {
                     ApplicationArea = All;
-                    Caption = 'Carte';
+                    Caption = 'Carte de Planning';
                     UpdatePropagation = Both;
                 }
             }
