@@ -34,11 +34,32 @@ page 73523 "Vehicle Charging Line List"
                 field("Purchased Quantity"; rec."Purchased Quantity")
                 {
                     ApplicationArea = All;
-                    Caption = 'Purchased Quantity';
+                    Caption = 'Quantity Received';
                     ToolTip = 'Specifies the quantity that has been purchased (only for Purchase document type).';
                     Visible = true;
                     StyleExpr = 'Favorable';
                     Editable = IsPurchaseDocType;
+
+                    trigger OnValidate()
+                    var
+                        PurchasedQty: Decimal;
+                        stopline: Record "vehicle Stop Line";
+                    begin
+
+                        begin
+                            if PurchasedQty < 0 then
+                                Error('Purchased Quantity cannot be negative.');
+                            if PurchasedQty > rec."prepapred Quantity" then
+                                Error('Purchased Quantity cannot exceed the planned quantity.');
+
+                            rec."Purchased Quantity" := PurchasedQty;
+                            rec."Actual Quantity" := rec."Purchased Quantity";
+                            rec."Quantity Difference" := rec."prepapred Quantity" - rec."Actual Quantity";
+                            rec.Modify(true);
+
+                            Message('Purchased Quantity updated to %1.', PurchasedQty);
+                        end;
+                    end;
                 }
                 field("Charged Quantity"; rec."Actual Quantity")
                 {

@@ -241,6 +241,7 @@ page 73559 "Tour Closure Wizard"
                 trigger OnAction()
                 var
                     TourExecutionMgt: Codeunit "Tour Execution Mgt.";
+                    TourPostingMgt: Codeunit "Tour Posting Management";
                     ExecutionTracking: Record "Tour Execution Tracking";
                 begin
                     // Calculate quantity statistics
@@ -264,15 +265,19 @@ page 73559 "Tour Closure Wizard"
                     // Complete the tour
                     TourExecutionMgt.CompleteTour(Rec);
 
+                    // Create delivery notes for delivered items
+                    if Confirm('Do you want to create delivery notes (Bons de Livraison) for delivered items?', true) then
+                        TourPostingMgt.CreateDeliveryDocuments(Rec."Logistic Tour No.");
+
+                    // Post documents if requested
+                    if Confirm('Do you want to post the sales, purchase, and transfer documents associated with this tour?', true) then
+                        TourPostingMgt.PostTourDocuments(Rec."Logistic Tour No.");
+
                     // Show the final step
                     FinishedStepVisible := true;
                     DeliveryStatusStepVisible := false;
                     FinalizeStepVisible := false;
                     WelcomeStepVisible := false;
-
-                    // ActionFinish.Enabled := false;
-                    // ActionNext.Enabled := false;
-                    // ActionBack.Enabled := false;
 
                     // Generate closure summary
                     ClosureSummaryText := TourExecutionMgt.GenerateTourSummary(Rec."Logistic Tour No.");
@@ -285,6 +290,53 @@ page 73559 "Tour Closure Wizard"
                         Message('Un ordre de transfert retour %1 a été créé pour les quantités retournées.', ReturnTransferOrderNo);
 
                     CurrPage.Close();
+                end;
+            }
+
+
+            action("View Delivery Notes")
+            {
+                ApplicationArea = All;
+                Caption = 'View Delivery Notes';
+                Image = Shipment;
+                Promoted = true;
+                PromotedCategory = Process;
+                Visible = FinishedStepVisible;
+
+                trigger OnAction()
+                var
+                    SalesHeader: Record "Sales Header";
+                    SalesInvoiceList: Page "Sales Invoice List";
+                begin
+                    SalesHeader.Reset();
+                    SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Invoice);
+                    SalesHeader.SetRange("Logistic Tour No.", Rec."Logistic Tour No.");
+
+                    if SalesHeader.IsEmpty() then begin
+                        Message('No delivery notes found for this tour.');
+                        exit;
+                    end;
+
+                    SalesInvoiceList.SetTableView(SalesHeader);
+                    SalesInvoiceList.Run();
+                end;
+            }
+
+            action("Post Documents")
+            {
+                ApplicationArea = All;
+                Caption = 'Post Documents';
+                Image = PostDocument;
+                Promoted = true;
+                PromotedCategory = Process;
+                Visible = FinishedStepVisible and not Rec."Documents Posted";
+
+                trigger OnAction()
+                var
+                    TourPostingMgt: Codeunit "Tour Posting Management";
+                begin
+                    if Confirm('Do you want to post the sales, purchase, and transfer documents associated with this tour?', true) then
+                        TourPostingMgt.PostTourDocuments(Rec."Logistic Tour No.");
                 end;
             }
 

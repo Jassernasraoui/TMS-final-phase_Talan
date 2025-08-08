@@ -89,6 +89,8 @@ page 73501 "Vehicle Stop List"
                     Caption = 'Quantity Prepared';
                     ToolTip = 'Specifies the quantity that has been prepared for delivery.';
                     style = StandardAccent;
+                    Editable = QuantityToPrepareEditable;
+
                     ShowMandatory = true;
 
                 }

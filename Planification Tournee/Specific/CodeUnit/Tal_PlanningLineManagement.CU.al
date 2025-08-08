@@ -26,18 +26,24 @@ codeunit 73652 "Planning Lines Management"
                     AddSalesOrderToTour(TourHeader, DocBuffer);
                     // Update the Sales Header with the tour number
                     UpdateSalesHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
+                    // Check compatibility after adding all lines
+                    CheckVehicleCompatibility(TourHeader);
                 end;
             DocBuffer."Document Type"::"Purchase Order":
                 begin
                     AddPurchaseOrderToTour(TourHeader, DocBuffer);
                     // Update the Purchase Header with the tour number
                     UpdatePurchaseHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
+                    // Check compatibility after adding all lines
+                    CheckVehicleCompatibility(TourHeader);
                 end;
             DocBuffer."Document Type"::"Transfer Order":
                 begin
                     AddTransferOrderToTour(TourHeader, DocBuffer);
                     // Update the Transfer Header with the tour number
                     UpdateTransferHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
+                    // Check compatibility after adding all lines
+                    CheckVehicleCompatibility(TourHeader);
                 end;
             else
                 Error('Unsupported document type: %1', Format(DocBuffer."Document Type"));
@@ -1049,18 +1055,24 @@ codeunit 73652 "Planning Lines Management"
                     AddSalesLineToTour(TourHeader, DocBuffer);
                     // Update the Sales Header with the tour number
                     UpdateSalesHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
+                    // Check compatibility after adding the line
+                    CheckVehicleCompatibility(TourHeader);
                 end;
             DocBuffer."Document Type"::"Purchase Order":
                 begin
                     AddPurchaseLineToTour(TourHeader, DocBuffer);
                     // Update the Purchase Header with the tour number
                     UpdatePurchaseHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
+                    // Check compatibility after adding the line
+                    CheckVehicleCompatibility(TourHeader);
                 end;
             DocBuffer."Document Type"::"Transfer Order":
                 begin
                     AddTransferLineToTour(TourHeader, DocBuffer);
                     // Update the Transfer Header with the tour number
                     UpdateTransferHeaderTourNo(DocBuffer."Document No.", TourHeader."Logistic Tour No.");
+                    // Check compatibility after adding the line
+                    CheckVehicleCompatibility(TourHeader);
                 end;
             else
                 Error('Unsupported document type: %1', Format(DocBuffer."Document Type"));
@@ -1389,5 +1401,12 @@ codeunit 73652 "Planning Lines Management"
             Message('Le numéro de tournée %1 a été mis à jour dans l\ordre de transfert %2', TourNo, DocumentNo);
         end else
             Error('Ordre de transfert %1 introuvable', DocumentNo);
+    end;
+
+    procedure CheckVehicleCompatibility(var TourHeader: Record "Planification Header")
+    var
+        CompatCheck: Codeunit "Vehicle Item Compat. Check";
+    begin
+        CompatCheck.CheckVehicleItemCompatibilityForTour(TourHeader);
     end;
 }

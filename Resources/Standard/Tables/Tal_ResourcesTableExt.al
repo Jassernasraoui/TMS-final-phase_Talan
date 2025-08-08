@@ -215,6 +215,54 @@ tableextension 73596 " Ressources Table" extends Resource
                 end;
             end;
         }
+
+        field(73031; "Primary Capability"; Enum "Vehicle Capabilities")
+        {
+            Caption = 'Primary Capability';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the primary capability of the vehicle.';
+        }
+
+        field(73032; "Secondary Capability"; Enum "Vehicle Capabilities")
+        {
+            Caption = 'Secondary Capability';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the secondary capability of the vehicle.';
+        }
+
+        field(73033; "Temperature Range Min"; Decimal)
+        {
+            Caption = 'Min Temperature (°C)';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the minimum temperature the vehicle can maintain.';
+            BlankZero = true;
+            DecimalPlaces = 1;
+            MinValue = -50;
+        }
+
+        field(73034; "Temperature Range Max"; Decimal)
+        {
+            Caption = 'Max Temperature (°C)';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the maximum temperature the vehicle can maintain.';
+            BlankZero = true;
+            DecimalPlaces = 1;
+            MaxValue = 100;
+        }
+
+        field(73035; "Hazmat Certification"; Boolean)
+        {
+            Caption = 'Hazmat Certification';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies whether the vehicle is certified for hazardous materials.';
+        }
+
+        field(73036; "Special Equipment"; Text[250])
+        {
+            Caption = 'Special Equipment';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies any special equipment installed in the vehicle.';
+        }
         // field(77032; "Tours achieved"; Integer)
         // {
         //     FieldClass = FlowField;

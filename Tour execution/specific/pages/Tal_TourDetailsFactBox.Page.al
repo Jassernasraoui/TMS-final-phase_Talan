@@ -1,4 +1,4 @@
-page 73560 "Tour Details FactBox"
+page 73561 "Tour Details FactBox"
 {
     Caption = 'Détails Tournée';
     PageType = CardPart;

@@ -219,6 +219,51 @@ page 73504 " Tal Vehicule resources card "
                 }
             }
 
+            group("Cargo Capabilities")
+            {
+                Caption = 'Cargo Capabilities';
+
+                field("Primary Capability"; Rec."Primary Capability")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the primary capability of the vehicle.';
+                    Importance = Promoted;
+                }
+
+                field("Secondary Capability"; Rec."Secondary Capability")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the secondary capability of the vehicle.';
+                }
+
+                field("Temperature Range Min"; Rec."Temperature Range Min")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the minimum temperature the vehicle can maintain.';
+                    Visible = ShowTemperatureFields;
+                }
+
+                field("Temperature Range Max"; Rec."Temperature Range Max")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the maximum temperature the vehicle can maintain.';
+                    Visible = ShowTemperatureFields;
+                }
+
+                field("Hazmat Certification"; Rec."Hazmat Certification")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies whether the vehicle is certified for hazardous materials.';
+                }
+
+                field("Special Equipment"; Rec."Special Equipment")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies any special equipment installed in the vehicle.';
+                    MultiLine = true;
+                }
+            }
+
             group("Capacity")
             {
                 field("Max Capacity Charge "; rec."Max Capacity Charge")
@@ -382,9 +427,22 @@ page 73504 " Tal Vehicule resources card "
                 PromotedOnly = true;
 
                 trigger OnAction()
+                var
+                    VehicleMaintenance: Record "Vehicle Maintenance";
+                    VehicleMaintenanceCard: Page "Vehicle Maintenance Card";
                 begin
-                    // Add logic for maintenance planning
-                    Message('Maintenance planning initiated.');
+                    VehicleMaintenance.Init();
+                    VehicleMaintenance.Validate("Vehicle No.", Rec."No.");
+                    VehicleMaintenance.Validate("Maintenance Type", VehicleMaintenance."Maintenance Type"::"Regular Service");
+                    VehicleMaintenance.Validate(Description, 'Scheduled Maintenance');
+                    VehicleMaintenance.Validate(Status, VehicleMaintenance.Status::Planned);
+                    VehicleMaintenance.Validate("Scheduled Date", WorkDate());
+                    VehicleMaintenance.Insert(true);
+
+                    Commit();
+                    Clear(VehicleMaintenanceCard);
+                    VehicleMaintenanceCard.SetRecord(VehicleMaintenance);
+                    VehicleMaintenanceCard.Run();
                 end;
             }
 
@@ -399,9 +457,12 @@ page 73504 " Tal Vehicule resources card "
                 PromotedOnly = true;
 
                 trigger OnAction()
+                var
+                    VehicleMaintenanceHistory: Report "Vehicle Maintenance History";
                 begin
-                    // Add logic to display maintenance history
-                    Message('Displaying maintenance history.');
+                    Clear(VehicleMaintenanceHistory);
+                    VehicleMaintenanceHistory.SetTableView(Rec);
+                    VehicleMaintenanceHistory.Run();
                 end;
             }
 
@@ -416,26 +477,68 @@ page 73504 " Tal Vehicule resources card "
                 PromotedOnly = true;
 
                 trigger OnAction()
+                var
+                    VehicleMaintenanceKPI: Report "Vehicle Maintenance KPI";
                 begin
-                    // Add logic to display maintenance KPIs
-                    Message('Displaying vehicle maintenance KPIs.');
+                    Clear(VehicleMaintenanceKPI);
+                    VehicleMaintenanceKPI.SetTableView(Rec);
+                    VehicleMaintenanceKPI.Run();
                 end;
             }
 
-            action("Maintenance Dashboard")
+            action("Vehicle Maintenance")
             {
                 ApplicationArea = All;
-                Caption = 'Maintenance Dashboard';
-                Image = AnalysisView;
-                ToolTip = 'Access the dashboard for vehicle maintenance overview.';
+                Caption = 'Vehicle Maintenance Dashboard';
+                Image = ServiceTasks;
+                ToolTip = 'View and manage maintenance for this vehicle.';
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedOnly = true;
 
                 trigger OnAction()
+                var
+                    VehicleMaintenanceDashboard: Page "Vehicle Maintenance Dashboard";
+                    VehicleMaintenance: Record "Vehicle Maintenance";
                 begin
-                    // Add logic to open maintenance dashboard
-                    Message('Opening maintenance dashboard.');
+                    // Filter maintenance records for this vehicle
+                    VehicleMaintenance.SetRange("Vehicle No.", Rec."No.");
+
+                    // Open the dashboard
+                    Clear(VehicleMaintenanceDashboard);
+                    VehicleMaintenanceDashboard.SetVehicleFilter(Rec."No.");
+                    VehicleMaintenanceDashboard.Run();
+                end;
+            }
+
+            action("Schedule Maintenance")
+            {
+                ApplicationArea = All;
+                Caption = 'Schedule Maintenance';
+                Image = NewDocument;
+                ToolTip = 'Schedule a new maintenance record for this vehicle.';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                var
+                    VehicleMaintenance: Record "Vehicle Maintenance";
+                    VehicleMaintenanceCard: Page "Vehicle Maintenance Card";
+                begin
+                    VehicleMaintenance.Init();
+                    VehicleMaintenance.Validate("Vehicle No.", Rec."No.");
+                    VehicleMaintenance.Validate("Maintenance Type", VehicleMaintenance."Maintenance Type"::"Regular Service");
+                    VehicleMaintenance.Validate(Description, 'Scheduled Maintenance');
+                    VehicleMaintenance.Validate(Status, VehicleMaintenance.Status::Planned);
+                    VehicleMaintenance.Validate("Scheduled Date", WorkDate());
+                    VehicleMaintenance.Validate("Odometer Reading", Rec."Current kilometres");
+                    VehicleMaintenance.Insert(true);
+
+                    Commit();
+                    Clear(VehicleMaintenanceCard);
+                    VehicleMaintenanceCard.SetRecord(VehicleMaintenance);
+                    VehicleMaintenanceCard.Run();
                 end;
             }
 
@@ -450,9 +553,12 @@ page 73504 " Tal Vehicule resources card "
                 PromotedOnly = true;
 
                 trigger OnAction()
+                var
+                    VehicleUsageAndCosts: Report "Vehicle Usage and Costs";
                 begin
-                    // Add logic to generate usage and costs report
-                    Message('Usage and costs report generated.');
+                    Clear(VehicleUsageAndCosts);
+                    VehicleUsageAndCosts.SetTableView(Rec);
+                    VehicleUsageAndCosts.Run();
                 end;
             }
 
@@ -467,9 +573,22 @@ page 73504 " Tal Vehicule resources card "
                 PromotedOnly = true;
 
                 trigger OnAction()
+                var
+                    ReportSelection: Integer;
+                    SelectionErr: Label 'You must select a report.';
                 begin
-                    // Add logic to display other reports
-                    Message('Displaying other reports.');
+                    ReportSelection := StrMenu('Vehicle Maintenance History,Vehicle Maintenance KPI,Vehicle Usage and Costs', 1, 'Select a report to run:');
+
+                    case ReportSelection of
+                        0:
+                            Error(SelectionErr);
+                        1:
+                            Report.Run(Report::"Vehicle Maintenance History", true, false, Rec);
+                        2:
+                            Report.Run(Report::"Vehicle Maintenance KPI", true, false, Rec);
+                        3:
+                            Report.Run(Report::"Vehicle Usage and Costs", true, false, Rec);
+                    end;
                 end;
             }
         }
@@ -483,11 +602,13 @@ page 73504 " Tal Vehicule resources card "
         end;
 
         UpdateTourStatistics();
+        UpdateVisibility();
     end;
 
     trigger OnAfterGetRecord()
     begin
         UpdateTourStatistics();
+        UpdateVisibility();
     end;
 
     local procedure UpdateTourStatistics()
@@ -524,6 +645,14 @@ page 73504 " Tal Vehicule resources card "
         ToursStopped := PlanificationHeader.Count;
     end;
 
+    local procedure UpdateVisibility()
+    begin
+        ShowTemperatureFields := (Rec."Primary Capability" = Rec."Primary Capability"::Refrigerated) or
+                                (Rec."Primary Capability" = Rec."Primary Capability"::"Climate Controlled") or
+                                (Rec."Secondary Capability" = Rec."Secondary Capability"::Refrigerated) or
+                                (Rec."Secondary Capability" = Rec."Secondary Capability"::"Climate Controlled");
+    end;
+
     var
         TotalTours: Integer;
         ToursPlannified: Integer;
@@ -531,4 +660,5 @@ page 73504 " Tal Vehicule resources card "
         ToursInProgress: Integer;
         ToursCompleted: Integer;
         ToursStopped: Integer;
+        ShowTemperatureFields: Boolean;
 }
